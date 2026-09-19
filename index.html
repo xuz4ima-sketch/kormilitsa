@@ -110,22 +110,42 @@ section{padding-block:clamp(48px,8vw,88px);scroll-margin-top:calc(var(--hh) + va
   transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease,color .14s ease;
   overflow:hidden;
 }
-.btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line-hard)}
+.btn .arrow{transition:transform .18s cubic-bezier(.2,.7,.2,1)}
 .btn-primary{background:var(--terra);color:var(--paper);border-color:var(--terra-dark);box-shadow:0 3px 0 var(--terra-dark)}
-.btn-primary:hover{background:#A93C1A;box-shadow:0 5px 0 var(--terra-dark)}
-.btn-primary:active{box-shadow:0 1px 0 var(--terra-dark)}
+/* светлая кромка сверху — край краски на оттиске */
+.btn-primary::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
+  background:rgba(255,253,247,.36);pointer-events:none}
 .btn-primary::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(105deg,rgba(255,253,247,0) 34%,rgba(255,253,247,.4) 50%,rgba(255,253,247,0) 66%);
   transform:translateX(-130%);
 }
-.btn-primary:hover::after{animation:sheen .75s ease-out}
 @keyframes sheen{to{transform:translateX(130%)}}
 .btn-ghost{background:var(--cream)}
-.btn .arrow{transition:transform .18s ease}
-.btn:hover .arrow{transform:translateX(4px)}
 .btn-wide{width:100%}
+
+/* наведение — только там, где есть настоящий курсор: на тач-экране
+   такой эффект «залипает» после касания */
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+  .btn:hover .arrow{transform:translateX(4px)}
+  .btn-primary:hover{background:#A93C1A;box-shadow:0 5px 0 var(--terra-dark)}
+  .btn-primary:hover::after{animation:sheen .75s ease-out}
+}
+/* с клавиатуры кнопка ведёт себя ровно так же, как под мышью */
+.btn:focus-visible{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+.btn:focus-visible .arrow{transform:translateX(4px)}
+.btn-primary:focus-visible{box-shadow:0 5px 0 var(--terra-dark)}
+.btn-primary:focus-visible::after{animation:sheen .75s ease-out}
+/* нажатие: кнопка садится на бумагу, тень уходит в ноль */
+.btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 0 0 var(--line-hard)}
+.btn-primary:active:not([disabled]){box-shadow:0 0 0 var(--terra-dark)}
+
+.btn[disabled]{cursor:default;transform:none;box-shadow:none;
+  background:var(--cream);color:var(--muted);border-color:var(--line)}
+.btn[disabled]::before,.btn[disabled]::after{display:none}
+.btn[data-state="sent"]{background:var(--open);border-color:#15642A;color:#fff;
+  box-shadow:0 3px 0 #15642A;cursor:default;transform:none}
 
 /* ---------- шапка ---------- */
 .site{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;
@@ -158,8 +178,13 @@ section{padding-block:clamp(48px,8vw,88px);scroll-margin-top:calc(var(--hh) + va
   border:var(--bw) solid var(--line-hard);border-radius:var(--r);background:var(--gold);color:var(--ink);
   font-weight:700;font-size:15px;cursor:pointer;box-shadow:var(--shadow);
   transition:transform .14s ease,box-shadow .14s ease}
-.cart-btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
-.cart-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line-hard)}
+@media (hover:hover) and (pointer:fine){
+  .cart-btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+}
+.cart-btn:focus-visible{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+.cart-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--line-hard)}
+/* счётчик подпрыгивает, когда в корзину что-то кладут */
+.cart-btn .badge{transition:transform .2s cubic-bezier(.2,.9,.3,1.3)}
 .cart-btn .label{display:none}
 @media (min-width:480px){.cart-btn .label{display:inline}}
 .badge{min-width:22px;height:22px;padding:0 6px;display:grid;place-items:center;border-radius:11px;
@@ -228,8 +253,10 @@ section{padding-block:clamp(48px,8vw,88px);scroll-margin-top:calc(var(--hh) + va
 .chip{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;white-space:nowrap;
   border:var(--bw) solid var(--line);border-radius:var(--r);background:transparent;color:var(--muted);
   font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;transition:background-color .14s,color .14s,border-color .14s}
-.chip:hover{color:var(--ink);border-color:var(--line-hard)}
-.chip[aria-current="true"]{background:var(--terra);border-color:var(--terra-dark);color:var(--paper)}
+@media (hover:hover) and (pointer:fine){ .chip:hover{color:var(--ink);border-color:var(--line-hard);background:var(--cream)} }
+.chip:active{transform:translateY(1px)}
+.chip[aria-current="true"]{background:var(--terra);border-color:var(--terra-dark);color:var(--paper);
+  box-shadow:0 2px 0 var(--terra-dark)}
 
 .menu-head{display:flex;flex-direction:column;gap:10px;margin-bottom:clamp(22px,4vw,34px)}
 .cat{padding-block:0;margin-bottom:clamp(34px,5vw,54px);scroll-margin-top:calc(var(--hh) + var(--cb) + 14px)}
@@ -262,19 +289,30 @@ section{padding-block:clamp(48px,8vw,88px);scroll-margin-top:calc(var(--hh) + va
   border:var(--bw) solid var(--line-hard);border-radius:var(--r);background:var(--cream);color:var(--ink);
   font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);
   transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease}
-.add:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard);background:var(--gold)}
-.add:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line-hard)}
 .add .plus{width:22px;height:22px;flex:none;display:grid;place-items:center;border-radius:50%;
-  background:var(--terra);color:var(--paper);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
-.add:hover .plus{transform:rotate(90deg)}
+  background:var(--terra);color:var(--paper);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),background-color .16s ease}
 .add .plus svg{width:12px;height:12px;stroke-width:2.6}
+@media (hover:hover) and (pointer:fine){
+  .add:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard);background:var(--gold)}
+  .add:hover .plus{transform:rotate(90deg);background:var(--terra-dark)}
+}
+.add:focus-visible{transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard);background:var(--gold)}
+.add:focus-visible .plus{transform:rotate(90deg);background:var(--terra-dark)}
+.add:active{transform:translateY(3px);box-shadow:0 0 0 var(--line-hard);background:var(--gold)}
+.add:active .plus{transform:rotate(90deg) scale(.88)}
 
 .step{display:inline-flex;align-items:center;gap:2px;border:var(--bw) solid var(--line-hard);border-radius:var(--r);
   background:var(--paper);box-shadow:var(--shadow);animation:pop .22s cubic-bezier(.2,.9,.3,1.25)}
 @keyframes pop{from{transform:scale(.86);opacity:0}to{transform:scale(1);opacity:1}}
-.step button{width:42px;height:42px;display:grid;place-items:center;border:0;background:transparent;color:var(--ink);cursor:pointer;border-radius:4px}
-.step button:hover{background:var(--cream)}
-.step .qty{min-width:34px;text-align:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.step button{width:42px;height:42px;display:grid;place-items:center;border:0;background:transparent;
+  color:var(--ink);cursor:pointer;border-radius:4px;-webkit-tap-highlight-color:transparent;
+  transition:background-color .14s ease,transform .1s ease}
+@media (hover:hover) and (pointer:fine){ .step button:hover{background:var(--cream)} }
+.step button:focus-visible{background:var(--cream)}
+.step button:active{background:var(--gold);transform:scale(.92)}
+.step .qty{min-width:34px;text-align:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;
+  border-inline:2px dotted var(--line);padding-inline:4px}
 .bump{animation:bump .3s cubic-bezier(.2,.9,.3,1.3)}
 @keyframes bump{0%{transform:translateY(0)}35%{transform:translateY(-6px) scale(1.14)}100%{transform:translateY(0)}}
 
@@ -348,8 +386,11 @@ footer{border-top:var(--bw) solid var(--line-hard);background:var(--cream);paddi
 .icon-btn{width:44px;height:44px;flex:none;display:grid;place-items:center;
   border:var(--bw) solid var(--line-hard);border-radius:var(--r);background:var(--paper);color:var(--ink);
   cursor:pointer;box-shadow:var(--shadow);transition:transform .14s ease,box-shadow .14s ease,background-color .14s}
-.icon-btn:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
-.icon-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line-hard)}
+@media (hover:hover) and (pointer:fine){
+  .icon-btn:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+}
+.icon-btn:focus-visible{background:var(--gold);transform:translateY(-2px);box-shadow:0 5px 0 var(--line-hard)}
+.icon-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--line-hard)}
 .cart-body{flex:1 1 auto;overflow-y:auto;padding:16px;
   padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .cart-empty{text-align:center;padding:40px 8px}
@@ -364,9 +405,14 @@ footer{border-top:var(--bw) solid var(--line-hard);background:var(--cream);paddi
 .cline-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .cline-sum{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
 .step-sm{display:inline-flex;align-items:center;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--paper)}
-.step-sm button{width:34px;height:34px;display:grid;place-items:center;border:0;background:transparent;color:var(--ink);cursor:pointer}
-.step-sm button:hover{background:var(--cream)}
-.step-sm .qty{min-width:28px;text-align:center;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.step-sm button{width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;
+  color:var(--ink);cursor:pointer;border-radius:4px;-webkit-tap-highlight-color:transparent;
+  transition:background-color .14s ease,transform .1s ease}
+@media (hover:hover) and (pointer:fine){ .step-sm button:hover{background:var(--cream)} }
+.step-sm button:focus-visible{background:var(--cream)}
+.step-sm button:active{background:var(--gold);transform:scale(.92)}
+.step-sm .qty{min-width:30px;text-align:center;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;
+  border-inline:2px dotted var(--line)}
 .totals{margin-top:16px;padding:14px;border:var(--bw) solid var(--line-hard);border-radius:var(--r);background:var(--cream)}
 .trow{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding-block:4px;font-variant-numeric:tabular-nums}
 .trow.big{margin-top:8px;padding-top:10px;border-top:var(--bw) solid var(--line-hard);font-size:19px;font-weight:800}
@@ -391,7 +437,11 @@ footer{border-top:var(--bw) solid var(--line-hard);background:var(--cream);paddi
   border:var(--bw) solid var(--line-hard);border-radius:var(--r);background:var(--paper);
   font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-soft)}
 .seg input{position:absolute;opacity:0;width:1px;height:1px}
-.seg:has(input:checked){background:var(--gold)}
+.seg{transition:background-color .14s ease,box-shadow .14s ease,transform .1s ease}
+@media (hover:hover) and (pointer:fine){ .seg:hover{background:var(--cream)} }
+.seg:active{transform:translateY(1px)}
+/* выбранный вариант выглядит вдавленным, а не просто закрашенным */
+.seg:has(input:checked){background:var(--gold);box-shadow:inset 0 2px 0 rgba(66,54,22,.22)}
 .seg:has(input:focus-visible){outline:3px solid var(--terra);outline-offset:2px}
 .fallback{margin-top:4px;padding:12px;border:var(--bw) dashed var(--terra);border-radius:var(--r);background:var(--cream);font-size:14px}
 .fallback p{margin-bottom:10px}
@@ -403,7 +453,10 @@ footer{border-top:var(--bw) solid var(--line-hard);background:var(--cream);paddi
   font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 var(--terra-dark);
   animation:pop .24s cubic-bezier(.2,.9,.3,1.25)}
 .fab .fab-sum{margin-left:auto;font-variant-numeric:tabular-nums}
-.fab:active{transform:translateY(2px);box-shadow:0 1px 0 var(--terra-dark)}
+.fab::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
+  background:rgba(255,253,247,.36);border-radius:var(--r) var(--r) 0 0;pointer-events:none}
+.fab:focus-visible{transform:translateY(-2px);box-shadow:0 5px 0 var(--terra-dark)}
+.fab:active{transform:translateY(3px);box-shadow:0 0 0 var(--terra-dark)}
 @media (min-width:1024px){.fab{display:none!important}}
 
 /* появление первого экрана */
@@ -985,9 +1038,13 @@ html{scroll-behavior:smooth}
     if (q > 0){ qty.textContent = q; bump(qty); }
   }
 
+  var prevCount = 0;
+
   function renderCart(){
     var t = totals();
     els.count.textContent = t.n;
+    if (t.n > prevCount) bump(els.count);
+    prevCount = t.n;
     els.fabCount.textContent = t.n;
     els.fabSum.textContent = rub(t.total);
     els.fab.hidden = t.n === 0;
@@ -1148,8 +1205,27 @@ html{scroll-behavior:smooth}
     });
   });
 
+  var sendBtn = els.form.querySelector('button[type="submit"]');
+  var sendLabel = sendBtn.innerHTML;
+  var sendTimer = null;
+
+  function sendState(state){
+    window.clearTimeout(sendTimer);
+    if (state === 'sent'){
+      sendBtn.disabled = true;
+      sendBtn.setAttribute('data-state', 'sent');
+      sendBtn.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Сообщение готово';
+      sendTimer = window.setTimeout(function(){ sendState('idle'); }, 3200);
+    } else {
+      sendBtn.disabled = false;
+      sendBtn.removeAttribute('data-state');
+      sendBtn.innerHTML = sendLabel;
+    }
+  }
+
   els.form.addEventListener('submit', function(e){
     e.preventDefault();
+    if (sendBtn.disabled) return;
     var bad = [];
 
     if (fName.value.trim().length < 2){ showError(fName, eName, 'Напишите имя — хотя бы два символа.'); bad.push(fName); }
@@ -1192,6 +1268,7 @@ html{scroll-behavior:smooth}
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    sendState('sent');
     els.live.textContent = 'Сообщение с заказом готово и открывается в WhatsApp.';
   });
 
