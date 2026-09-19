@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Кормилица — домашняя халяльная кухня</title>
-<meta name="description" content="Хинкал, манты, курзе, чуду, галушки, пицца, роллы, шаурма и бургеры ручной работы. Только халяль. Замороженные полуфабрикаты домашнего производства.">
+<meta name="description" content="Домашняя халяльная кухня «Кормилица». Хинкал, манты, курзе и галушки ручной лепки — замороженные полуфабрикаты. Чуду, пицца, роллы, шаурма и бургеры — горячими, готовим после заказа.">
 <meta name="theme-color" content="#F6F0E4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1A1712" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="photos/logo-mark.png">
@@ -346,17 +346,15 @@ section{padding-block:clamp(56px,8vw,96px)}
 /* ---------- как приготовить ---------- */
 .cook{background:var(--surface);border-block:1px solid var(--line)}
 .cook-grid{display:grid;gap:16px;grid-template-columns:1fr}
-@media (min-width:720px){.cook-grid{grid-template-columns:1fr 1fr}}
-@media (min-width:1080px){.cook-grid{grid-template-columns:repeat(3,1fr)}}
-.recipe{padding:22px;border-radius:var(--r-lg);background:var(--bg);border:1px solid var(--line)}
-.recipe h3{padding-bottom:10px;border-bottom:1px dashed var(--line-strong)}
-.recipe.wide{grid-row:span 2}
-.recipe h3{font-size:1.4rem;margin-bottom:12px}
-.how{display:flex;flex-direction:column;gap:12px}
-.how li{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start}
-.how .m{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--line);color:var(--accent-text)}
-.how b{display:block;font-weight:700;font-size:15px}
-.how span{font-size:15px;color:var(--muted)}
+@media (min-width:600px){.cook-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.cook-grid{grid-template-columns:repeat(3,1fr)}}
+.recipe{display:grid;grid-template-columns:44px 1fr;gap:2px 14px;align-content:start;padding:22px;border-radius:var(--r-lg);background:var(--bg);border:1px solid var(--line)}
+.recipe .m{grid-row:span 3;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:var(--wheat-soft);color:var(--accent-text)}
+.recipe h3{font-size:1.35rem}
+.recipe .way{font-size:14px;font-weight:600;color:var(--olive)}
+.recipe p:not(.way){margin-top:6px;font-size:15px;color:var(--muted)}
+.recipe.hot{background:transparent;border:1.5px dashed var(--line-strong)}
+@media (min-width:1024px){.recipe.hot{grid-column:span 2}}
 .cook-foot{margin-top:22px;font-size:1.4rem}
 
 /* ---------- отзывы (шаблон) ---------- */
@@ -545,8 +543,8 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section class="hero" aria-labelledby="heroTitle">
     <div class="wrap hero-in">
       <div>
-        <h1 id="heroTitle">Домашняя еда, которая ждёт вас в морозилке</h1>
-        <p class="hero-sub">Хинкал, манты, курзе и чуду лепим руками, как для своих. Пиццу, роллы, шаурму и бургеры собираем так же — и сразу замораживаем. Мясо только халяль. Вечером достали, приготовили — и ужин на столе.</p>
+        <h1 id="heroTitle">Домашняя еда: горячая к&nbsp;столу и&nbsp;в&nbsp;запас</h1>
+        <p class="hero-sub">Хинкал, манты, курзе и галушки лепим руками и замораживаем — дома останется только сварить. А чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими. Мясо только халяль.</p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#menu">Смотреть меню</a>
           <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>Написать в WhatsApp</a>
@@ -615,7 +613,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     <div class="wrap">
       <div class="sec-head reveal">
         <h2 class="h2" id="menuTitle">Меню</h2>
-        <p class="lead">Всё приезжает замороженным. Как приготовить — написали ниже и на каждой упаковке.</p>
+        <p class="lead">Хинкал, манты, курзе и галушки — замороженные полуфабрикаты ручной лепки. Чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими.</p>
       </div>
       <div class="tabs" role="tablist" aria-label="Категории меню" id="tabs"></div>
       <div class="menu-panel" id="menuPanel" role="tabpanel" tabindex="-1"></div>
@@ -696,61 +694,40 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="cook" class="cook" aria-labelledby="cookTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="cookTitle">Как приготовить дома</h2>
+        <h2 class="h2" id="cookTitle">Как приготовить полуфабрикаты</h2>
         <p class="lead">Размораживать заранее не нужно — готовьте прямо из морозилки. Время указано примерно: точное написано на этикетке.</p>
       </div>
       <div class="cook-grid">
-        <article class="recipe wide reveal">
-          <h3>Национальная кухня</h3>
-          <ul class="how">
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pot"/></svg></span>
-              <div><b>Хинкал</b><span>Опустите в кипящую подсоленную воду, помешайте, чтобы не прилип. Варите 12–15 минут после всплытия.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-steam"/></svg></span>
-              <div><b>Манты</b><span>Смажьте ярусы мантоварки маслом, выложите манты с зазором. На пару 35–40 минут.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pot"/></svg></span>
-              <div><b>Курзе</b><span>В кипящую подсоленную воду, 8–10 минут после всплытия. Подавайте с растопленным маслом или сметаной.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pot"/></svg></span>
-              <div><b>Галушки</b><span>Варите в бульоне или подсоленной воде 10–12 минут, мясо разогрейте отдельно.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pan"/></svg></span>
-              <div><b>Чуду</b><span>На сухой сковороде под крышкой, по 3–4 минуты с каждой стороны. Горячее смажьте сливочным маслом.</span></div></li>
-          </ul>
+        <article class="recipe reveal">
+          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
+          <h3>Хинкал</h3>
+          <p class="way">Варить</p>
+          <p>Опустите в кипящую подсоленную воду и помешайте, чтобы не прилип. Варите 12–15 минут после всплытия.</p>
         </article>
         <article class="recipe reveal">
-          <h3>Пицца</h3>
-          <ul class="how">
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-oven"/></svg></span>
-              <div><b>Духовка</b><span>Разогрейте до 200–220 °C, выпекайте 12–15 минут, пока сыр не расплавится.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pan"/></svg></span>
-              <div><b>Сковорода</b><span>Под крышкой на слабом огне 8–10 минут — корж останется хрустящим.</span></div></li>
-          </ul>
+          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-steam"/></svg></span>
+          <h3>Манты</h3>
+          <p class="way">На пару</p>
+          <p>Смажьте ярусы мантоварки маслом и выложите манты с зазором. Готовьте на пару 35–40 минут.</p>
         </article>
         <article class="recipe reveal">
-          <h3>Роллы</h3>
-          <ul class="how">
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-oven"/></svg></span>
-              <div><b>Запечённые</b><span><span class="fill-me">[Способ и время — уточнить]</span></span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-snow"/></svg></span>
-              <div><b>С тобико</b><span><span class="fill-me">[Способ и время — уточнить]</span></span></div></li>
-          </ul>
+          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
+          <h3>Курзе</h3>
+          <p class="way">Варить</p>
+          <p>В кипящую подсоленную воду, 8–10 минут после всплытия. Подавайте с растопленным маслом или сметаной.</p>
         </article>
         <article class="recipe reveal">
-          <h3>Шаурма</h3>
-          <ul class="how">
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pan"/></svg></span>
-              <div><b>Сковорода-гриль</b><span>Без масла на среднем огне, по 4–5 минут с каждой стороны.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-oven"/></svg></span>
-              <div><b>Духовка</b><span>В фольге при 180 °C 15–20 минут, последние 3 минуты — без фольги.</span></div></li>
-          </ul>
+          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
+          <h3>Галушки</h3>
+          <p class="way">Варить</p>
+          <p>Варите в бульоне или подсоленной воде 10–12 минут. Мясо разогрейте отдельно.</p>
         </article>
-        <article class="recipe reveal">
-          <h3>Бургеры</h3>
-          <ul class="how">
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-oven"/></svg></span>
-              <div><b>Духовка</b><span>Целиком в фольге при 180 °C 15–20 минут.</span></div></li>
-            <li><span class="m" aria-hidden="true"><svg class="ico ico-sm"><use href="#i-pan"/></svg></span>
-              <div><b>Сковорода</b><span>Котлету прогрейте под крышкой, булку подсушите срезом вниз, соберите заново.</span></div></li>
-          </ul>
-        </article>
+        <aside class="recipe hot reveal">
+          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-clock"/></svg></span>
+          <h3>Чуду, пицца, роллы, шаурма, бургеры</h3>
+          <p class="way">Готовить не нужно</p>
+          <p>Их мы готовим сами после заказа и отдаём горячими. Пицца, роллы, шаурма и бургеры будут готовы за 15–20 минут.</p>
+        </aside>
       </div>
       <p class="hand cook-foot">Приятного аппетита — и приходите за добавкой!</p>
     </div>
@@ -931,13 +908,13 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
         desc:'Говядина халяль с луком, защип косичкой',
         alt:'Курзе с защипом косичкой, зеленью и сметаной на белой тарелке'},
       {id:'chudu', photo:'photos/chudu.jpg', name:'Чуду с мясом', price:400, w:'4 шт',
-        desc:'Тонкое тесто, говяжий фарш халяль с луком',
+        desc:'Тонкое тесто, говяжий фарш халяль с луком. Подаём горячим',
         alt:'Чуду с мясной начинкой, разрезанное на доске'},
       {id:'galushki', photo:'photos/galushki.jpg', name:'Галушки с курицей', price:480, w:'1 кг',
         desc:'Галушки из домашнего теста, отварная курица халяль, бульон',
         alt:'Галушки с отварной курицей и пиалой бульона на большом блюде', pos:'50% 70%'}
     ]},
-    { id:'pizza', title:'Пицца', note:'30 см, тесто своё', items:[
+    { id:'pizza', title:'Пицца', note:'горячая, 15–20 минут', items:[
       {id:'pizza-pepperoni', photo:'photos/pizza-pepperoni.jpg', name:'Пепперони', price:620, w:'30 см · 650 г',
         desc:'Говяжья пепперони халяль, моцарелла, томатный соус',
         alt:'Пицца пепперони на деревянной доске, один кусок приподнят'},
@@ -954,7 +931,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
         desc:'Курица халяль, листья салата, томаты черри, пармезан, сливочный соус',
         alt:'Пицца «Цезарь» с курицей, листьями салата, томатами черри и пармезаном'}
     ]},
-    { id:'rolls', title:'Роллы', note:'8 штук в наборе', items:[
+    { id:'rolls', title:'Роллы', note:'готовим к заказу, 15–20 минут', items:[
       {id:'rolls-baked', photo:'photos/rolls-baked.jpg', name:'Запечённые роллы', price:450, w:'8 шт', pending:true,
         desc:'Состав уточняется',
         alt:'Восемь запечённых роллов с золотистой корочкой в белом контейнере'},
@@ -962,12 +939,12 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
         desc:'Состав уточняется',
         alt:'Роллы в хрустящей панировке с огурцом и сливочным сыром, сверху икра тобико'}
     ]},
-    { id:'shawarma', title:'Шаурма', note:'лаваш с гриля', items:[
+    { id:'shawarma', title:'Шаурма', note:'горячая, 15–20 минут', items:[
       {id:'shawarma', photo:'photos/shawarma.jpg', name:'Шаурма с курицей', price:300, w:'1 шт · 400 г',
         desc:'Курица халяль, свежие овощи, лаваш, чесночный соус',
         alt:'Две шаурмы в лаваше с полосками гриля, в разрезе курица, томаты и зелень'}
     ]},
-    { id:'burgers', title:'Бургеры', note:'котлеты рубим сами', items:[
+    { id:'burgers', title:'Бургеры', note:'горячие, 15–20 минут', items:[
       {id:'burger-classic', photo:'photos/burger-classic.jpg', name:'Классический бургер', price:350, w:'1 шт · 280 г',
         desc:'Котлета из говядины халяль, сыр, томат, лук, листья салата, соус',
         alt:'Классический бургер с говяжьей котлетой, сыром, томатом и салатом в булочке с кунжутом'},
