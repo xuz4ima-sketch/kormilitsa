@@ -14,11 +14,16 @@
     var d = document.documentElement;
     d.classList.add('js');
     try { var t = localStorage.getItem('kormilitsa-theme'); if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t); } catch(e){}
+    /* язык: ?lang=ar в ссылке → сохранённый выбор → язык браузера */
+    var l = (/[?&]lang=(ar|ru)\b/.exec(location.search) || [])[1];
+    if (!l){ try { l = localStorage.getItem('kormilitsa-lang'); } catch(e){} }
+    if (l !== 'ar' && l !== 'ru') l = /^ar\b/i.test(navigator.language || '') ? 'ar' : 'ru';
+    if (l === 'ar'){ d.lang = 'ar'; d.dir = 'rtl'; }
   })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Onest:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Onest:wght@400;500;600;700&family=Caveat:wght@500;600&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Aref+Ruqaa:wght@400;700&display=swap">
 
 <style>
 /* ---------- токены ----------
@@ -99,6 +104,16 @@
   --scrim:rgba(0,0,0,.62);
 }
 
+/* ---------- арабская версия ----------
+   Lora, Onest и Caveat не знают арабского, поэтому у каждой своя пара:
+   Amiri — книжный насх к заголовкам, IBM Plex Sans Arabic — к тексту,
+   Aref Ruqaa — рукописный рукъа вместо Caveat. */
+:root[lang="ar"]{
+  --f-head:'Amiri','Lora',Georgia,serif;
+  --f-body:'IBM Plex Sans Arabic','Onest','Segoe UI',system-ui,sans-serif;
+  --f-hand:'Aref Ruqaa','Amiri',serif;
+}
+
 /* ---------- основа ---------- */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 12px)}
@@ -154,15 +169,15 @@ section{padding-block:clamp(56px,8vw,96px)}
   -webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);
   border-bottom:1px solid var(--line)}
 .site-in{height:100%;display:flex;align-items:center;gap:8px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;min-height:44px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-inline-end:auto;min-height:44px}
 .logo img{width:62px;height:auto}
 .logo-word{display:flex;flex-direction:column;line-height:1.05}
 .logo-word b{font-family:var(--f-head);font-weight:600;font-size:20px;letter-spacing:.02em}
 .logo-word span{font-size:12px;color:var(--muted)}
 @media (max-width:379px){.logo-word span{display:none}.logo img{width:52px}}
 .nav{display:none}
-@media (min-width:1080px){.nav{display:flex;gap:2px;margin-right:8px}}
-.nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:999px;font-size:15px;font-weight:500;text-decoration:none}
+@media (min-width:1080px){.nav{display:flex;gap:2px;margin-inline-end:8px}}
+.nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;white-space:nowrap;border-radius:999px;font-size:15px;font-weight:500;text-decoration:none}
 .nav a:hover{background:var(--tint)}
 .hdr-phone{display:none}
 @media (min-width:820px){.hdr-phone{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:999px;
@@ -182,7 +197,7 @@ section{padding-block:clamp(56px,8vw,96px)}
 @media (max-width:479px){.site-in{gap:6px}.logo-word b{font-size:18px}}
 .menu-btn{display:inline-grid}
 @media (min-width:1080px){.menu-btn{display:none}}
-.order-btn{position:relative;min-height:44px;padding:0 16px 0 14px;gap:8px}
+.order-btn{position:relative;min-height:44px;padding-block:0;padding-inline:14px 16px;gap:8px;white-space:nowrap}
 .order-btn .label{display:none}
 @media (min-width:480px){.order-btn .label{display:inline}}
 .badge{min-width:22px;height:22px;padding:0 6px;display:inline-grid;place-items:center;border-radius:11px;
@@ -232,8 +247,8 @@ section{padding-block:clamp(56px,8vw,96px)}
 .perks-list{display:grid;gap:28px 24px;grid-template-columns:1fr}
 @media (min-width:600px){.perks-list{grid-template-columns:1fr 1fr}}
 @media (min-width:1024px){.perks-list{grid-template-columns:repeat(4,1fr);gap:0}
-  .perk{padding-inline:24px;border-left:1px dashed var(--line-strong)}
-  .perk:first-child{border-left:0;padding-left:0}}
+  .perk{padding-inline:24px;border-inline-start:1px dashed var(--line-strong)}
+  .perk:first-child{border-inline-start:0;padding-inline-start:0}}
 .perk{display:flex;gap:16px;align-items:flex-start}
 .perk h3{margin:4px 0 4px}
 .perk .gem{flex:none;width:48px;height:48px;display:grid;place-items:center;position:relative;color:var(--accent-text)}
@@ -326,7 +341,7 @@ section{padding-block:clamp(56px,8vw,96px)}
 .promo .ornament{position:absolute;left:0;right:0;top:0;opacity:.35;background:currentColor}
 .promo-art{position:relative;min-height:200px}
 .promo-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--photo-filter)}
-.promo-a .promo-art{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:18px 18px 18px 0}
+.promo-a .promo-art{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-block:18px;padding-inline:0 18px}
 @media (max-width:519px){.promo-a .promo-art{padding:0 18px 18px}}
 .promo-a .promo-art .pic{position:relative;border-radius:var(--r);overflow:hidden;background:rgba(0,0,0,.15)}
 .promo-a .promo-art .pic:first-child{grid-row:span 2}
@@ -337,7 +352,7 @@ section{padding-block:clamp(56px,8vw,96px)}
 @media (min-width:640px){.steps{grid-template-columns:1fr 1fr}}
 @media (min-width:1024px){.steps{grid-template-columns:repeat(4,1fr);gap:18px}}
 .stepc{position:relative;padding:22px 20px 22px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
-.stepc .no{position:absolute;top:14px;right:18px;font-family:var(--f-head);font-size:2.4rem;font-weight:600;line-height:1;color:var(--wheat);opacity:.8}
+.stepc .no{position:absolute;top:14px;inset-inline-end:18px;font-family:var(--f-head);font-size:2.4rem;font-weight:600;line-height:1;color:var(--wheat);opacity:.8}
 .stepc .ic{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:var(--wheat-soft);color:var(--accent-text);margin-bottom:16px}
 .stepc .ic .ico{width:22px;height:22px}
 .stepc h3{font-family:var(--f-body);font-size:17px;font-weight:700;letter-spacing:0;line-height:1.3}
@@ -396,25 +411,28 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 /* ---------- корзина ---------- */
 .scrim{position:fixed;inset:0;z-index:70;background:var(--scrim);opacity:0;transition:opacity .22s ease}
 .scrim.on{opacity:1}
-.cart{position:fixed;top:0;right:0;z-index:80;height:100%;width:min(440px,100%);display:flex;flex-direction:column;
+.cart{position:fixed;top:0;inset-inline-end:0;z-index:80;height:100%;width:min(440px,100%);display:flex;flex-direction:column;
   background:var(--bg);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
 .cart.on{transform:none}
+[dir="rtl"] .cart:not(.on){transform:translateX(-100%)}
 .cart-head{display:flex;align-items:center;gap:12px;padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));
   border-bottom:1px solid var(--line);background:var(--surface)}
-.cart-head h2{font-size:1.5rem;margin-right:auto}
+.cart-head h2{font-size:1.5rem;margin-inline-end:auto}
 .cart-body{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .cart-empty{text-align:center;padding:48px 8px}
 .cart-empty .ico{width:40px;height:40px;margin:0 auto;color:var(--wheat)}
 .cart-empty p{color:var(--muted);margin:12px auto 20px;max-width:30ch}
 .cart-lines-head{display:flex;align-items:center;gap:12px}
 .cart-lines-head h3{font-family:var(--f-body);font-size:15px;font-weight:600;letter-spacing:0;color:var(--muted)}
-.clear-all{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--line);
+.clear-all{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--line);
   border-radius:999px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer}
 .clear-all:hover{color:var(--ink);border-color:var(--line-strong)}
 .clear-all[data-armed="1"]{background:var(--danger);border-color:var(--danger);color:#fff}
 .cline{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding-block:12px;border-bottom:1px dashed var(--line-strong)}
 .cline.leaving{animation:lineOut .24s ease-in forwards}
 @keyframes lineOut{to{opacity:0;transform:translateX(24px)}}
+[dir="rtl"] .cline.leaving{animation-name:lineOutRtl}
+@keyframes lineOutRtl{to{opacity:0;transform:translateX(-24px)}}
 .cline-img{width:60px;height:45px;border-radius:6px;overflow:hidden;background:var(--tint)}
 .cline-img img{width:100%;height:100%;object-fit:cover}
 .cline b{display:block;font-size:15px;font-weight:600;line-height:1.3}
@@ -453,8 +471,34 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 .fab{position:fixed;left:16px;right:16px;bottom:0;z-index:55;margin-bottom:calc(14px + env(safe-area-inset-bottom,0px));
   display:flex;align-items:center;gap:10px;min-height:56px;padding:0 20px;border:0;border-radius:999px;background:var(--accent);color:var(--on-accent);
   font-size:16px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-lg);animation:pop .24s cubic-bezier(.2,.9,.3,1.25)}
-.fab .fab-sum{margin-left:auto;font-variant-numeric:tabular-nums}
+.fab .fab-sum{margin-inline-start:auto;font-variant-numeric:tabular-nums}
 @media (min-width:1080px){.fab{display:none!important}}
+
+/* ---------- арабский: высота строк и выключка ---------- */
+/* арабскому письму нужна высокая строка и нулевой трекинг — иначе связки рвутся */
+:root[lang="ar"] body{line-height:1.7}
+:root[lang="ar"] h1,:root[lang="ar"] h2,:root[lang="ar"] h3,:root[lang="ar"] .logo-word b{letter-spacing:0;line-height:1.4}
+:root[lang="ar"] .hero h1{line-height:1.35;font-weight:700;font-size:clamp(2.3rem,5.2vw,3.8rem)}
+:root[lang="ar"] .h2{font-weight:700;font-size:clamp(2rem,4.8vw,3rem)}
+:root[lang="ar"] .hand{line-height:1.5;font-weight:400}
+:root[lang="ar"] .card h4{line-height:1.45}
+:root[lang="ar"] .card .desc.pending{font-style:normal}
+:root[lang="ar"] .ph figcaption{font-size:clamp(.95rem,2vw,1.15rem);padding-top:2px}
+[dir="rtl"] #fPhone{text-align:right}
+
+/* ---------- переключатель языка ---------- */
+.lang-btn{display:none;width:auto;min-width:44px;padding:0 12px;font-size:15px;font-weight:700;line-height:1}
+.lang-btn [lang="ar"]{font-family:'IBM Plex Sans Arabic',var(--f-body)}
+@media (min-width:820px){.lang-btn{display:inline-grid}}
+/* на узком десктопе рядом с разделами места мало: у телефона остаётся только иконка */
+@media (min-width:1080px) and (max-width:1279px){
+  .hdr-phone span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .nav a{padding:0 8px}
+  .logo img{width:52px}
+}
+.drawer-nav .drawer-lang{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 4px;border:0;border-top:1px solid var(--line);
+  background:transparent;font-size:17px;font-weight:500;text-align:start;cursor:pointer}
+.drawer-lang .ico{color:var(--accent-text)}
 
 /* ---------- появление блоков ---------- */
 .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.75,.2,1)}
@@ -494,25 +538,27 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     <symbol id="i-oven" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 8h17"/><rect x="7" y="11" width="10" height="6.5" rx="1"/><path d="M7 5.8h.01M10 5.8h.01"/></symbol>
     <symbol id="i-steam" viewBox="0 0 24 24"><path d="M4 14h16l-1.2 5.2A2 2 0 0 1 16.9 21H7.1a2 2 0 0 1-1.9-1.8L4 14Z"/><path d="M8 10c-1-1.2 1-2 0-3.5M12 10c-1-1.2 1-2 0-3.5M16 10c-1-1.2 1-2 0-3.5"/></symbol>
     <symbol id="i-quote" viewBox="0 0 24 24"><path d="M9.5 7C6.5 8 5 10.2 5 13.5V17h4.5v-4.5H7.2c.1-1.8 1-3 2.8-3.7L9.5 7ZM18.5 7c-3 1-4.5 3.2-4.5 6.5V17h4.5v-4.5h-2.3c.1-1.8 1-3 2.8-3.7L18.5 7Z"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4 18-7Z"/></symbol>
   </defs>
 </svg>
 
 <header class="site" id="top">
   <div class="wrap site-in">
-    <a class="logo" href="#top" aria-label="Кормилица — в начало страницы">
+    <a class="logo" href="#top" aria-label="Кормилица — в начало страницы" data-i18n-attr="aria-label:logoAria">
       <img src="photos/logo-mark.png" alt="" width="364" height="216" decoding="async">
-      <span class="logo-word"><b>Кормилица</b><span>домашняя кухня</span></span>
+      <span class="logo-word"><b data-i18n="brand">Кормилица</b><span data-i18n="brandSub">домашняя кухня</span></span>
     </a>
-    <nav class="nav" aria-label="Разделы сайта">
-      <a href="#menu">Меню</a>
-      <a href="#how">Как заказать</a>
-      <a href="#cook">Как приготовить</a>
-      <a href="#reviews">Отзывы</a>
-      <a href="#contacts">Контакты</a>
+    <nav class="nav" aria-label="Разделы сайта" data-i18n-attr="aria-label:navAria">
+      <a href="#menu" data-i18n="navMenu">Меню</a>
+      <a href="#how" data-i18n="navHow">Как заказать</a>
+      <a href="#cook" data-i18n="navCook">Как приготовить</a>
+      <a href="#reviews" data-i18n="navReviews">Отзывы</a>
+      <a href="#contacts" data-i18n="navContacts">Контакты</a>
     </nav>
-    <a class="hdr-phone" data-phone-link href="tel:+79286813532"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span data-phone-text>+7 928 681-35-32</span></a>
-    <a class="icon-btn tel-btn" data-phone-link href="tel:+79286813532" aria-label="Позвонить"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
+    <a class="hdr-phone" data-phone-link href="tel:+79286813532"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span data-phone-text dir="ltr">+7 928 681-35-32</span></a>
+    <a class="icon-btn tel-btn" data-phone-link href="tel:+79286813532" aria-label="Позвонить" data-i18n-attr="aria-label:call"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
+    <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-label="Arabic — عربي"><span data-lang-label lang="ar">عربي</span></button>
     <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Переключить тему">
       <svg class="ico sun" aria-hidden="true"><use href="#i-sun"/></svg>
       <svg class="ico moon" aria-hidden="true"><use href="#i-moon"/></svg>
@@ -522,18 +568,19 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     </button>
     <button class="btn btn-primary order-btn" id="cartOpen" type="button" aria-expanded="false" aria-controls="cartPanel">
       <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-      <span class="label">Заказать</span>
+      <span class="label" data-i18n="order">Заказать</span>
       <span class="badge" id="cartCount" aria-label="Блюд в корзине">0</span>
     </button>
   </div>
-  <nav class="drawer-nav" id="drawerNav" aria-label="Разделы сайта" hidden>
+  <nav class="drawer-nav" id="drawerNav" aria-label="Разделы сайта" data-i18n-attr="aria-label:navAria" hidden>
     <ul class="wrap">
-      <li><a href="#menu">Меню</a></li>
-      <li><a href="#how">Как заказать</a></li>
-      <li><a href="#cook">Как приготовить</a></li>
-      <li><a href="#reviews">Отзывы</a></li>
-      <li><a href="#contacts">Контакты и доставка</a></li>
-      <li><a data-phone-link href="tel:+79286813532">Позвонить: <span data-phone-text>+7 928 681-35-32</span></a></li>
+      <li><a href="#menu" data-i18n="navMenu">Меню</a></li>
+      <li><a href="#how" data-i18n="navHow">Как заказать</a></li>
+      <li><a href="#cook" data-i18n="navCook">Как приготовить</a></li>
+      <li><a href="#reviews" data-i18n="navReviews">Отзывы</a></li>
+      <li><a href="#contacts" data-i18n="navContactsFull">Контакты и доставка</a></li>
+      <li><a data-phone-link href="tel:+79286813532"><span data-i18n="callColon">Позвонить:</span>&nbsp;<span data-phone-text dir="ltr">+7 928 681-35-32</span></a></li>
+      <li><button class="drawer-lang" type="button" data-lang-toggle><svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-label lang="ar">العربية</span></button></li>
     </ul>
   </nav>
 </header>
@@ -543,66 +590,66 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section class="hero" aria-labelledby="heroTitle">
     <div class="wrap hero-in">
       <div>
-        <h1 id="heroTitle">Домашняя еда: горячая к&nbsp;столу и&nbsp;в&nbsp;запас</h1>
-        <p class="hero-sub">Хинкал, манты, курзе и галушки лепим руками и замораживаем — дома останется только сварить. А чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими. Мясо только халяль.</p>
+        <h1 id="heroTitle" data-i18n="heroTitle">Домашняя еда: горячая к&nbsp;столу и&nbsp;в&nbsp;запас</h1>
+        <p class="hero-sub" data-i18n="heroSub">Хинкал, манты, курзе и галушки лепим руками и замораживаем — дома останется только сварить. А чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими. Мясо только халяль.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#menu">Смотреть меню</a>
-          <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>Написать в WhatsApp</a>
+          <a class="btn btn-primary" href="#menu" data-i18n="heroMenu">Смотреть меню</a>
+          <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="heroWa">Написать в WhatsApp</span></a>
         </div>
         <div class="hero-note">
           <div class="seal">
-            <svg viewBox="0 0 120 120" role="img" aria-label="Халяль">
+            <svg viewBox="0 0 120 120" role="img" aria-label="Халяль" data-i18n-attr="aria-label:halal">
               <defs><path id="sealRing" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" fill="none"/></defs>
               <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" stroke-width="2"/>
               <circle cx="60" cy="60" r="33" fill="none" stroke="currentColor" stroke-width="1.5"/>
-              <text font-family="Onest, sans-serif" font-size="11" font-weight="700" letter-spacing="3.2" fill="currentColor">
+              <text direction="ltr" font-family="Onest, sans-serif" font-size="11" font-weight="700" letter-spacing="3.2" fill="currentColor">
                 <textPath href="#sealRing" startOffset="2%">ХАЛЯЛЬ · HALAL · ХАЛЯЛЬ · HALAL ·</textPath>
               </text>
               <text x="60" y="68" text-anchor="middle" font-size="24" fill="currentColor" lang="ar" direction="rtl">حلال</text>
             </svg>
           </div>
-          <p class="hand">Готовим как для своей семьи</p>
+          <p class="hand" data-i18n="heroNote">Готовим как для своей семьи</p>
         </div>
       </div>
 
-      <div class="collage" aria-label="Наши блюда">
+      <div class="collage" aria-label="Наши блюда" data-i18n-attr="aria-label:collage">
         <figure class="ph ph-manty">
-          <div class="shot"><img src="photos/manty.jpg" alt="Манты ручной лепки на белой тарелке с зелёным луком" width="547" height="365" decoding="async"></div>
-          <figcaption>манты</figcaption>
+          <div class="shot"><img src="photos/manty.jpg" alt="Манты ручной лепки на белой тарелке с зелёным луком" data-i18n-attr="alt:altManty" width="547" height="365" decoding="async"></div>
+          <figcaption data-i18n="capManty">манты</figcaption>
         </figure>
         <figure class="ph ph-burger">
-          <div class="shot"><img src="photos/burger-double.jpg" alt="Двойной чизбургер с двумя говяжьими котлетами, сыром, томатом и салатом" width="1200" height="900" fetchpriority="high" decoding="async"></div>
+          <div class="shot"><img src="photos/burger-double.jpg" alt="Двойной чизбургер с двумя говяжьими котлетами, сыром, томатом и салатом" data-i18n-attr="alt:altBurger" width="1200" height="900" fetchpriority="high" decoding="async"></div>
         </figure>
         <figure class="ph ph-pizza">
-          <div class="shot"><img src="photos/pizza-pepperoni.jpg" alt="Пицца пепперони на деревянной доске, один кусок приподнят лопаткой" width="610" height="503" decoding="async"></div>
+          <div class="shot"><img src="photos/pizza-pepperoni.jpg" alt="Пицца пепперони на деревянной доске, один кусок приподнят лопаткой" data-i18n-attr="alt:altPizza" width="610" height="503" decoding="async"></div>
         </figure>
         <figure class="ph ph-khinkal">
-          <div class="shot"><img src="photos/khinkal-dar.jpg" alt="Даргинский хинкал с отварной говядиной и картофелем" width="554" height="554" decoding="async"></div>
-          <figcaption>хинкал</figcaption>
+          <div class="shot"><img src="photos/khinkal-dar.jpg" alt="Даргинский хинкал с отварной говядиной и картофелем" data-i18n-attr="alt:altKhinkal" width="554" height="554" decoding="async"></div>
+          <figcaption data-i18n="capKhinkal">хинкал</figcaption>
         </figure>
       </div>
     </div>
   </section>
 
   <!-- 2. преимущества -->
-  <section class="perks" aria-label="Почему у нас вкусно">
+  <section class="perks" aria-label="Почему у нас вкусно" data-i18n-attr="aria-label:perksAria">
     <div class="wrap">
       <ul class="perks-list">
         <li class="perk reveal">
           <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-hands"/></svg></span>
-          <div><h3>Лепим руками</h3><p>Каждый хинкал и каждый защип курзе — вручную, небольшими партиями.</p></div>
+          <div><h3 data-i18n="perk1">Лепим руками</h3><p data-i18n="perk1t">Каждый хинкал и каждый защип курзе — вручную, небольшими партиями.</p></div>
         </li>
         <li class="perk reveal">
           <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
-          <div><h3>Только халяль</h3><p>Всё меню халяль — от хинкала до бургеров.</p></div>
+          <div><h3 data-i18n="perk2">Только халяль</h3><p data-i18n="perk2t">Всё меню халяль — от хинкала до бургеров.</p></div>
         </li>
         <li class="perk reveal">
           <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-leaf"/></svg></span>
-          <div><h3>Простые продукты</h3><p>Мясо, мука, овощи и зелень — то же, что у вас на кухне.</p></div>
+          <div><h3 data-i18n="perk3">Простые продукты</h3><p data-i18n="perk3t">Мясо, мука, овощи и зелень — то же, что у вас на кухне.</p></div>
         </li>
         <li class="perk reveal">
           <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-snow"/></svg></span>
-          <div><h3>Заморозка бережёт вкус</h3><p>Замораживаем сразу после лепки, поэтому сочность доживает до вашего ужина.</p></div>
+          <div><h3 data-i18n="perk4">Заморозка бережёт вкус</h3><p data-i18n="perk4t">Замораживаем сразу после лепки, поэтому сочность доживает до вашего ужина.</p></div>
         </li>
       </ul>
     </div>
@@ -612,24 +659,24 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="menu" aria-labelledby="menuTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="menuTitle">Меню</h2>
-        <p class="lead">Хинкал, манты, курзе и галушки — замороженные полуфабрикаты ручной лепки. Чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими.</p>
+        <h2 class="h2" id="menuTitle" data-i18n="navMenu">Меню</h2>
+        <p class="lead" data-i18n="menuLead">Хинкал, манты, курзе и галушки — замороженные полуфабрикаты ручной лепки. Чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими.</p>
       </div>
-      <div class="tabs" role="tablist" aria-label="Категории меню" id="tabs"></div>
+      <div class="tabs" role="tablist" aria-label="Категории меню" data-i18n-attr="aria-label:tabsAria" id="tabs"></div>
       <div class="menu-panel" id="menuPanel" role="tabpanel" tabindex="-1"></div>
     </div>
   </section>
 
   <!-- 4. баннеры акций -->
-  <section class="promos-sec" aria-label="Акции" style="padding-top:0">
+  <section class="promos-sec" aria-label="Акции" data-i18n-attr="aria-label:promosAria" style="padding-top:0">
     <div class="wrap promos">
       <article class="promo promo-a reveal">
         <span class="ornament" aria-hidden="true"></span>
         <div class="promo-body">
-          <p class="hand">про запас</p>
-          <h3>Морозилка, полная домашнего</h3>
-          <p><span class="fill-me">[Условия акции — уточнить]</span></p>
-          <a class="btn" href="#menu" data-go-tab="national">Собрать набор</a>
+          <p class="hand" data-i18n="promoAHand">про запас</p>
+          <h3 data-i18n="promoA">Морозилка, полная домашнего</h3>
+          <p><span class="fill-me" data-i18n="fillPromo">[Условия акции — уточнить]</span></p>
+          <a class="btn" href="#menu" data-go-tab="national" data-i18n="promoABtn">Собрать набор</a>
         </div>
         <div class="promo-art" aria-hidden="true">
           <div class="pic"><img src="photos/khinkal-avar.jpg" alt="" loading="lazy" decoding="async" width="420" height="420"></div>
@@ -640,13 +687,13 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
       <article class="promo promo-b reveal">
         <span class="ornament" aria-hidden="true"></span>
         <div class="promo-body">
-          <p class="hand">на выходные</p>
-          <h3>Бургеры к семейному вечеру</h3>
-          <p><span class="fill-me">[Условия акции — уточнить]</span></p>
-          <a class="btn btn-primary" href="#menu" data-go-tab="burgers">Выбрать бургеры</a>
+          <p class="hand" data-i18n="promoBHand">на выходные</p>
+          <h3 data-i18n="promoB">Бургеры к семейному вечеру</h3>
+          <p><span class="fill-me" data-i18n="fillPromo">[Условия акции — уточнить]</span></p>
+          <a class="btn btn-primary" href="#menu" data-go-tab="burgers" data-i18n="promoBBtn">Выбрать бургеры</a>
         </div>
         <div class="promo-art">
-          <img src="photos/burger-onion.jpg" alt="Бургер с двумя котлетами, сыром и карамелизированным луком" loading="lazy" decoding="async" width="1200" height="900">
+          <img src="photos/burger-onion.jpg" alt="Бургер с двумя котлетами, сыром и карамелизированным луком" data-i18n-attr="alt:altOnion" loading="lazy" decoding="async" width="1200" height="900">
         </div>
       </article>
     </div>
@@ -658,33 +705,33 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="how" aria-labelledby="howTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="howTitle">Как заказать</h2>
-        <p class="lead">Без регистрации и оплаты на сайте. Заказ уходит нам сообщением в WhatsApp.</p>
+        <h2 class="h2" id="howTitle" data-i18n="navHow">Как заказать</h2>
+        <p class="lead" data-i18n="howLead">Без регистрации и оплаты на сайте. Заказ уходит нам сообщением в WhatsApp.</p>
       </div>
       <ol class="steps">
         <li class="stepc reveal">
           <span class="no num" aria-hidden="true">1</span>
           <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-list"/></svg></span>
-          <h3>Выберите блюда</h3>
-          <p>Нажимайте «В корзину» — количество можно поменять прямо в карточке.</p>
+          <h3 data-i18n="step1">Выберите блюда</h3>
+          <p data-i18n="step1t">Нажимайте «В корзину» — количество можно поменять прямо в карточке.</p>
         </li>
         <li class="stepc reveal">
           <span class="no num" aria-hidden="true">2</span>
           <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-bag"/></svg></span>
-          <h3>Проверьте корзину</h3>
-          <p>Укажите имя, телефон и адрес, если нужна доставка.</p>
+          <h3 data-i18n="step2">Проверьте корзину</h3>
+          <p data-i18n="step2t">Укажите имя, телефон и адрес, если нужна доставка.</p>
         </li>
         <li class="stepc reveal">
           <span class="no num" aria-hidden="true">3</span>
           <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-wa"/></svg></span>
-          <h3>Отправьте в WhatsApp</h3>
-          <p>Сообщение со списком блюд и суммой мы соберём сами — останется нажать «Отправить».</p>
+          <h3 data-i18n="step3">Отправьте в WhatsApp</h3>
+          <p data-i18n="step3t">Сообщение со списком блюд и суммой мы соберём сами — останется нажать «Отправить».</p>
         </li>
         <li class="stepc reveal">
           <span class="no num" aria-hidden="true">4</span>
           <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-truck"/></svg></span>
-          <h3>Получите заказ</h3>
-          <p>Ответим, подтвердим время и привезём. Или заберёте сами.</p>
+          <h3 data-i18n="step4">Получите заказ</h3>
+          <p data-i18n="step4t">Ответим, подтвердим время и привезём. Или заберёте сами.</p>
         </li>
       </ol>
     </div>
@@ -694,42 +741,42 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="cook" class="cook" aria-labelledby="cookTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="cookTitle">Как приготовить полуфабрикаты</h2>
-        <p class="lead">Размораживать заранее не нужно — готовьте прямо из морозилки. Время указано примерно: точное написано на этикетке.</p>
+        <h2 class="h2" id="cookTitle" data-i18n="cookTitle">Как приготовить полуфабрикаты</h2>
+        <p class="lead" data-i18n="cookLead">Размораживать заранее не нужно — готовьте прямо из морозилки. Время указано примерно: точное написано на этикетке.</p>
       </div>
       <div class="cook-grid">
         <article class="recipe reveal">
           <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3>Хинкал</h3>
-          <p class="way">Варить</p>
-          <p>Опустите в кипящую подсоленную воду и помешайте, чтобы не прилип. Варите 12–15 минут после всплытия.</p>
+          <h3 data-i18n="cook1">Хинкал</h3>
+          <p class="way" data-i18n="boil">Варить</p>
+          <p data-i18n="cook1t">Опустите в кипящую подсоленную воду и помешайте, чтобы не прилип. Варите 12–15 минут после всплытия.</p>
         </article>
         <article class="recipe reveal">
           <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-steam"/></svg></span>
-          <h3>Манты</h3>
-          <p class="way">На пару</p>
-          <p>Смажьте ярусы мантоварки маслом и выложите манты с зазором. Готовьте на пару 35–40 минут.</p>
+          <h3 data-i18n="cook2">Манты</h3>
+          <p class="way" data-i18n="steam">На пару</p>
+          <p data-i18n="cook2t">Смажьте ярусы мантоварки маслом и выложите манты с зазором. Готовьте на пару 35–40 минут.</p>
         </article>
         <article class="recipe reveal">
           <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3>Курзе</h3>
-          <p class="way">Варить</p>
-          <p>В кипящую подсоленную воду, 8–10 минут после всплытия. Подавайте с растопленным маслом или сметаной.</p>
+          <h3 data-i18n="cook3">Курзе</h3>
+          <p class="way" data-i18n="boil">Варить</p>
+          <p data-i18n="cook3t">В кипящую подсоленную воду, 8–10 минут после всплытия. Подавайте с растопленным маслом или сметаной.</p>
         </article>
         <article class="recipe reveal">
           <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3>Галушки</h3>
-          <p class="way">Варить</p>
-          <p>Варите в бульоне или подсоленной воде 10–12 минут. Мясо разогрейте отдельно.</p>
+          <h3 data-i18n="cook4">Галушки</h3>
+          <p class="way" data-i18n="boil">Варить</p>
+          <p data-i18n="cook4t">Варите в бульоне или подсоленной воде 10–12 минут. Мясо разогрейте отдельно.</p>
         </article>
         <aside class="recipe hot reveal">
           <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-clock"/></svg></span>
-          <h3>Чуду, пицца, роллы, шаурма, бургеры</h3>
-          <p class="way">Готовить не нужно</p>
-          <p>Их мы готовим сами после заказа и отдаём горячими. Пицца, роллы, шаурма и бургеры будут готовы за 15–20 минут.</p>
+          <h3 data-i18n="cook5">Чуду, пицца, роллы, шаурма, бургеры</h3>
+          <p class="way" data-i18n="cook5way">Готовить не нужно</p>
+          <p data-i18n="cook5t">Их мы готовим сами после заказа и отдаём горячими. Пицца, роллы, шаурма и бургеры будут готовы за 15–20 минут.</p>
         </aside>
       </div>
-      <p class="hand cook-foot">Приятного аппетита — и приходите за добавкой!</p>
+      <p class="hand cook-foot" data-i18n="cookFoot">Приятного аппетита — и приходите за добавкой!</p>
     </div>
   </section>
 
@@ -737,8 +784,8 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="reviews" aria-labelledby="revTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="revTitle">Отзывы</h2>
-        <p class="lead">Здесь будут отзывы наших покупателей.</p>
+        <h2 class="h2" id="revTitle" data-i18n="navReviews">Отзывы</h2>
+        <p class="lead" data-i18n="revLead">Здесь будут отзывы наших покупателей.</p>
       </div>
       <div class="reviews-grid" id="reviewsGrid">
         <!--
@@ -750,13 +797,13 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
             <figcaption>Имя, город · месяц и год</figcaption>
           </figure>
         -->
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p>Место для первого отзыва</p></div>
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p>Место для второго отзыва</p></div>
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p>Место для третьего отзыва</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev1">Место для первого отзыва</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev2">Место для второго отзыва</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev3">Место для третьего отзыва</p></div>
       </div>
       <div class="reviews-cta">
-        <p>Уже пробовали нашу еду? Напишите пару слов в WhatsApp — с вашего разрешения опубликуем отзыв здесь.</p>
-        <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>Оставить отзыв</a>
+        <p data-i18n="revCta">Уже пробовали нашу еду? Напишите пару слов в WhatsApp — с вашего разрешения опубликуем отзыв здесь.</p>
+        <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="revBtn">Оставить отзыв</span></a>
       </div>
     </div>
   </section>
@@ -765,25 +812,25 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <section id="contacts" aria-labelledby="conTitle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2 class="h2" id="conTitle">Контакты и доставка</h2>
+        <h2 class="h2" id="conTitle" data-i18n="navContactsFull">Контакты и доставка</h2>
       </div>
       <div class="contacts">
         <div class="panel reveal">
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>
-            <div><div class="k">Телефон</div><a class="v num" data-phone-link href="tel:+79286813532"><span data-phone-text>+7 928 681-35-32</span></a></div></div>
+            <div><div class="k" data-i18n="phone">Телефон</div><a class="v num" data-phone-link href="tel:+79286813532"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>
-            <div><div class="k">WhatsApp — сюда же приходят заказы</div><a class="v num" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><span data-phone-text>+7 928 681-35-32</span></a></div></div>
+            <div><div class="k" data-i18n="waK">WhatsApp — сюда же приходят заказы</div><a class="v num" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
-            <div><div class="k">Самовывоз</div><div class="v"><span class="fill-me">[Адрес — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="pickupCap">Самовывоз</div><div class="v"><span class="fill-me" data-i18n="fillAddr">[Адрес — уточнить]</span></div></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>
-            <div><div class="k">Когда принимаем заказы</div><div class="v"><span class="fill-me">[Часы работы — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="hoursK">Когда принимаем заказы</div><div class="v"><span class="fill-me" data-i18n="fillHours">[Часы работы — уточнить]</span></div></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-truck"/></svg>
-            <div><div class="k">Доставка</div><div class="v"><span class="fill-me">[Зона, стоимость и порог бесплатной доставки — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="delivery">Доставка</div><div class="v"><span class="fill-me" data-i18n="fillDelivery">[Зона, стоимость и порог бесплатной доставки — уточнить]</span></div></div></div>
         </div>
         <div class="panel logo-card reveal">
-          <img src="photos/logo.jpg" alt="Логотип «Кормилица»: доска с мукой, колосья пшеницы и скалка, подпись «Полуфабрикаты домашнего производства»" width="640" height="640" loading="lazy" decoding="async">
-          <p class="lead">Соберите корзину — мы подготовим сообщение со списком блюд, вам останется отправить его.</p>
-          <button class="btn btn-primary" type="button" data-open-cart>Открыть корзину</button>
+          <img src="photos/logo.jpg" data-i18n-attr="alt:altLogo" alt="Логотип «Кормилица»: доска с мукой, колосья пшеницы и скалка, подпись «Полуфабрикаты домашнего производства»" width="640" height="640" loading="lazy" decoding="async">
+          <p class="lead" data-i18n="logoLead">Соберите корзину — мы подготовим сообщение со списком блюд, вам останется отправить его.</p>
+          <button class="btn btn-primary" type="button" data-open-cart data-i18n="openCart">Открыть корзину</button>
         </div>
       </div>
     </div>
@@ -794,9 +841,9 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   <div class="wrap">
     <div class="ornament" aria-hidden="true" style="margin-bottom:24px"></div>
     <div class="foot-in">
-      <div>© <span class="num">2026</span> «Кормилица» — домашняя халяльная кухня</div>
-      <nav class="foot-nav" aria-label="Разделы в подвале">
-        <a href="#menu">Меню</a><a href="#how">Как заказать</a><a href="#cook">Как приготовить</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a>
+      <div data-i18n="copy">© <span class="num">2026</span> «Кормилица» — домашняя халяльная кухня</div>
+      <nav class="foot-nav" aria-label="Разделы в подвале" data-i18n-attr="aria-label:footAria">
+        <a href="#menu" data-i18n="navMenu">Меню</a><a href="#how" data-i18n="navHow">Как заказать</a><a href="#cook" data-i18n="navCook">Как приготовить</a><a href="#reviews" data-i18n="navReviews">Отзывы</a><a href="#contacts" data-i18n="navContacts">Контакты</a>
       </nav>
     </div>
   </div>
@@ -804,7 +851,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 
 <button class="fab" id="fab" type="button" hidden aria-controls="cartPanel">
   <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-  <span>Корзина · <span class="num" id="fabCount">0</span></span>
+  <span><span data-i18n="cart">Корзина</span> · <span class="num" id="fabCount">0</span></span>
   <span class="fab-sum" id="fabSum">0 ₽</span>
 </button>
 
@@ -812,63 +859,63 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 
 <aside class="cart" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
   <div class="cart-head">
-    <h2 id="cartTitle">Корзина</h2>
-    <button class="icon-btn" id="cartClose" type="button" aria-label="Закрыть корзину"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2 id="cartTitle" data-i18n="cart">Корзина</h2>
+    <button class="icon-btn" id="cartClose" type="button" aria-label="Закрыть корзину" data-i18n-attr="aria-label:cartClose"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="cart-body">
     <div id="cartEmpty" class="cart-empty">
       <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-      <p>Пока пусто. Загляните в меню — там хинкал, манты, пицца и бургеры.</p>
-      <button class="btn btn-primary" id="toMenu" type="button">Перейти в меню</button>
+      <p data-i18n="cartEmpty">Пока пусто. Загляните в меню — там хинкал, манты, пицца и бургеры.</p>
+      <button class="btn btn-primary" id="toMenu" type="button" data-i18n="toMenu">Перейти в меню</button>
     </div>
 
     <div id="cartFilled" hidden>
       <div class="cart-lines-head">
-        <h3>Ваш заказ</h3>
+        <h3 data-i18n="yourOrder">Ваш заказ</h3>
         <button type="button" class="clear-all" id="clearAll"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-x"/></svg><span id="clearAllLabel">Очистить</span></button>
       </div>
       <div id="cartLines"></div>
 
       <div class="totals">
-        <div class="trow"><span>Блюда</span><span id="tSub">0 ₽</span></div>
+        <div class="trow"><span data-i18n="dishes">Блюда</span><span id="tSub">0 ₽</span></div>
         <div class="trow"><span id="tDelLabel">Доставка</span><span id="tDel"></span></div>
-        <div class="trow big"><span>Итого</span><span id="tAll">0 ₽</span></div>
+        <div class="trow big"><span data-i18n="total">Итого</span><span id="tAll">0 ₽</span></div>
         <p class="freehint" id="freeHint" hidden></p>
       </div>
 
       <form class="form" id="orderForm" novalidate>
-        <h3>Куда и кому привезти</h3>
+        <h3 data-i18n="formTitle">Куда и кому привезти</h3>
         <div class="field">
-          <span class="label" id="wayLabel">Способ получения</span>
+          <span class="label" id="wayLabel" data-i18n="way">Способ получения</span>
           <div class="segmented" role="radiogroup" aria-labelledby="wayLabel">
-            <label class="seg"><input type="radio" name="way" id="wayDelivery" value="delivery" checked><svg class="ico ico-sm" aria-hidden="true"><use href="#i-truck"/></svg>Доставка</label>
-            <label class="seg"><input type="radio" name="way" id="wayPickup" value="pickup"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-pin"/></svg>Самовывоз</label>
+            <label class="seg"><input type="radio" name="way" id="wayDelivery" value="delivery" checked><svg class="ico ico-sm" aria-hidden="true"><use href="#i-truck"/></svg><span data-i18n="delivery">Доставка</span></label>
+            <label class="seg"><input type="radio" name="way" id="wayPickup" value="pickup"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="pickupCap">Самовывоз</span></label>
           </div>
         </div>
         <div class="field">
-          <label for="fName">Имя <span class="req" aria-hidden="true">*</span></label>
-          <input id="fName" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" aria-describedby="eName">
+          <label for="fName"><span data-i18n="name">Имя</span> <span class="req" aria-hidden="true">*</span></label>
+          <input id="fName" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" data-i18n-attr="placeholder:namePh" aria-describedby="eName">
           <p class="err" id="eName" hidden></p>
         </div>
         <div class="field">
-          <label for="fPhone">Телефон <span class="req" aria-hidden="true">*</span></label>
-          <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00" aria-describedby="ePhone">
+          <label for="fPhone"><span data-i18n="phone">Телефон</span> <span class="req" aria-hidden="true">*</span></label>
+          <input id="fPhone" dir="ltr" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00" aria-describedby="ePhone">
           <p class="err" id="ePhone" hidden></p>
         </div>
         <div class="field" id="addrField">
-          <label for="fAddr">Адрес доставки <span class="req" aria-hidden="true">*</span></label>
-          <input id="fAddr" name="addr" type="text" autocomplete="street-address" placeholder="Улица, дом, квартира, этаж" aria-describedby="eAddr">
+          <label for="fAddr"><span data-i18n="addr">Адрес доставки</span> <span class="req" aria-hidden="true">*</span></label>
+          <input id="fAddr" name="addr" type="text" autocomplete="street-address" placeholder="Улица, дом, квартира, этаж" data-i18n-attr="placeholder:addrPh" aria-describedby="eAddr">
           <p class="err" id="eAddr" hidden></p>
         </div>
         <div class="field">
-          <label for="fNote">Комментарий</label>
-          <textarea id="fNote" name="note" placeholder="Когда удобно получить, код домофона"></textarea>
+          <label for="fNote" data-i18n="note">Комментарий</label>
+          <textarea id="fNote" name="note" placeholder="Когда удобно получить, код домофона" data-i18n-attr="placeholder:notePh"></textarea>
         </div>
-        <button class="btn btn-primary btn-wide" type="submit"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>Отправить заказ в WhatsApp</button>
-        <p class="fine">Платить на сайте не нужно. Мы ответим в WhatsApp, подтвердим заказ и время.</p>
+        <button class="btn btn-primary btn-wide" type="submit"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="send">Отправить заказ в WhatsApp</span></button>
+        <p class="fine" data-i18n="fine">Платить на сайте не нужно. Мы ответим в WhatsApp, подтвердим заказ и время.</p>
         <div class="fallback" id="waFallback" hidden>
-          <p><b>WhatsApp не открылся?</b> Нажмите кнопку ниже — сообщение уже готово.</p>
-          <a class="btn btn-ghost btn-wide" id="waLink" href="#" target="_blank" rel="noopener">Открыть WhatsApp</a>
+          <p data-i18n="fallback"><b>WhatsApp не открылся?</b> Нажмите кнопку ниже — сообщение уже готово.</p>
+          <a class="btn btn-ghost btn-wide" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="openWa">Открыть WhatsApp</a>
         </div>
       </form>
     </div>
@@ -892,83 +939,360 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   var FREE_FROM    = null;   // например 2000
 
   /* Меню. price — цена-заглушка в рублях, w — вес или количество.
-     Чтобы добавить блюдо: скопируйте строку, поменяйте id, фото и текст. */
+     ar — то же название, описание, вес и подпись к фото по-арабски.
+     Чтобы добавить блюдо: скопируйте строку, поменяйте id, фото и текст на обоих языках. */
   var MENU = [
-    { id:'national', title:'Национальная кухня', note:'лепим руками', items:[
+    { id:'national', title:'Национальная кухня', note:'лепим руками',
+      ar:{title:'المطبخ التقليدي', note:'نصنعها بأيدينا'}, items:[
       {id:'khinkal-avar', photo:'photos/khinkal-avar.jpg', name:'Хинкал аварский', price:450, w:'1 кг',
         desc:'Пышные ромбики из домашнего теста, говядина халяль, томатный соус с чесноком',
-        alt:'Аварский хинкал: ромбики из теста, отварная говядина и томатный соус в пиале'},
+        alt:'Аварский хинкал: ромбики из теста, отварная говядина и томатный соус в пиале',
+        ar:{name:'خينكال أواري', w:'1 كغ',
+          desc:'قطع منتفخة على شكل معيّنات من عجين بيتي، لحم بقر حلال، صلصة طماطم بالثوم',
+          alt:'خينكال أواري: قطع عجين على شكل معيّنات ولحم بقر مسلوق وصلصة طماطم في وعاء'}},
       {id:'khinkal-dar', photo:'photos/khinkal-dar.jpg', name:'Хинкал даргинский', price:450, w:'1 кг',
         desc:'Тесто рулетиками-«улитками», отварная говядина халяль, картофель, томатный соус',
-        alt:'Даргинский хинкал: тесто улитками, отварная говядина и картофель с укропом'},
+        alt:'Даргинский хинкал: тесто улитками, отварная говядина и картофель с укропом',
+        ar:{name:'خينكال دارغيني', w:'1 كغ',
+          desc:'عجين ملفوف على شكل حلزونات، لحم بقر حلال مسلوق، بطاطس، صلصة طماطم',
+          alt:'خينكال دارغيني: عجين ملفوف كالحلزون ولحم بقر مسلوق وبطاطس مع الشبت'}},
       {id:'manty', photo:'photos/manty.jpg', name:'Манты с говядиной', price:520, w:'1 кг · около 20 шт',
         desc:'Говядина халяль с луком в тонком тесте ручной лепки',
-        alt:'Манты ручной лепки на белой тарелке с зелёным луком'},
+        alt:'Манты ручной лепки на белой тарелке с зелёным луком',
+        ar:{name:'مانتي بلحم البقر', w:'1 كغ · نحو 20 قطعة',
+          desc:'لحم بقر حلال مع البصل في عجين رقيق مشكَّل يدويًا',
+          alt:'مانتي مصنوعة يدويًا على طبق أبيض مع البصل الأخضر'}},
       {id:'kurze', photo:'photos/kurze.jpg', name:'Курзе с мясом', price:500, w:'1 кг',
         desc:'Говядина халяль с луком, защип косичкой',
-        alt:'Курзе с защипом косичкой, зеленью и сметаной на белой тарелке'},
+        alt:'Курзе с защипом косичкой, зеленью и сметаной на белой тарелке',
+        ar:{name:'كورزه باللحم', w:'1 كغ',
+          desc:'لحم بقر حلال مع البصل، بحافة مضفورة',
+          alt:'كورزه بحافة مضفورة مع الأعشاب والقشدة الحامضة على طبق أبيض'}},
       {id:'chudu', photo:'photos/chudu.jpg', name:'Чуду с мясом', price:400, w:'4 шт',
         desc:'Тонкое тесто, говяжий фарш халяль с луком. Подаём горячим',
-        alt:'Чуду с мясной начинкой, разрезанное на доске'},
+        alt:'Чуду с мясной начинкой, разрезанное на доске',
+        ar:{name:'تشودو باللحم', w:'4 قطع',
+          desc:'عجين رقيق، لحم بقر مفروم حلال مع البصل. نقدّمه ساخنًا',
+          alt:'تشودو محشو باللحم ومقطّع على لوح'}},
       {id:'galushki', photo:'photos/galushki.jpg', name:'Галушки с курицей', price:480, w:'1 кг',
         desc:'Галушки из домашнего теста, отварная курица халяль, бульон',
-        alt:'Галушки с отварной курицей и пиалой бульона на большом блюде', pos:'50% 70%'}
+        alt:'Галушки с отварной курицей и пиалой бульона на большом блюде', pos:'50% 70%',
+        ar:{name:'غالوشكي بالدجاج', w:'1 كغ',
+          desc:'قطع عجين بيتي، دجاج حلال مسلوق، مرق',
+          alt:'غالوشكي مع دجاج مسلوق ووعاء مرق على طبق كبير'}}
     ]},
-    { id:'pizza', title:'Пицца', note:'горячая, 15–20 минут', items:[
+    { id:'pizza', title:'Пицца', note:'горячая, 15–20 минут',
+      ar:{title:'البيتزا', note:'ساخنة، خلال 15–20 دقيقة'}, items:[
       {id:'pizza-pepperoni', photo:'photos/pizza-pepperoni.jpg', name:'Пепперони', price:620, w:'30 см · 650 г',
         desc:'Говяжья пепперони халяль, моцарелла, томатный соус',
-        alt:'Пицца пепперони на деревянной доске, один кусок приподнят'},
+        alt:'Пицца пепперони на деревянной доске, один кусок приподнят',
+        ar:{name:'ببروني', w:'30 سم · 650 غ',
+          desc:'ببروني لحم بقر حلال، موتزاريلا، صلصة طماطم',
+          alt:'بيتزا ببروني على لوح خشبي، وإحدى القطع مرفوعة'}},
       {id:'pizza-meat', photo:'photos/pizza-meat.jpg', name:'Мясная', price:680, w:'30 см · 700 г',
         desc:'Говяжий фарш халяль, моцарелла, томатный соус',
-        alt:'Мясная пицца с говяжьим фаршем и моцареллой'},
+        alt:'Мясная пицца с говяжьим фаршем и моцареллой',
+        ar:{name:'بيتزا اللحم', w:'30 سم · 700 غ',
+          desc:'لحم بقر مفروم حلال، موتزاريلا، صلصة طماطم',
+          alt:'بيتزا باللحم البقري المفروم والموتزاريلا'}},
       {id:'pizza-4cheese', photo:'photos/pizza-4cheese.jpg', name:'Четыре сыра', price:650, w:'30 см · 600 г',
         desc:'Моцарелла, чеддер, пармезан, сыр с голубой плесенью, сливочный соус',
-        alt:'Пицца «Четыре сыра», нарезанная на восемь кусков'},
+        alt:'Пицца «Четыре сыра», нарезанная на восемь кусков',
+        ar:{name:'أربعة أجبان', w:'30 سم · 600 غ',
+          desc:'موتزاريلا، شيدر، بارميزان، جبنة زرقاء، صلصة كريمية',
+          alt:'بيتزا «أربعة أجبان» مقطّعة إلى ثماني قطع'}},
       {id:'pizza-mushroom', photo:'photos/pizza-mushroom.jpg', name:'Курица с грибами', price:600, w:'30 см · 650 г',
         desc:'Куриное филе халяль, шампиньоны, моцарелла, томатный соус',
-        alt:'Пицца с курицей и шампиньонами на деревянной подставке'},
+        alt:'Пицца с курицей и шампиньонами на деревянной подставке',
+        ar:{name:'دجاج بالفطر', w:'30 سم · 650 غ',
+          desc:'فيليه دجاج حلال، فطر، موتزاريلا، صلصة طماطم',
+          alt:'بيتزا بالدجاج والفطر على حامل خشبي'}},
       {id:'pizza-caesar', photo:'photos/pizza-caesar.jpg', name:'Цезарь', price:650, w:'30 см · 650 г',
         desc:'Курица халяль, листья салата, томаты черри, пармезан, сливочный соус',
-        alt:'Пицца «Цезарь» с курицей, листьями салата, томатами черри и пармезаном'}
+        alt:'Пицца «Цезарь» с курицей, листьями салата, томатами черри и пармезаном',
+        ar:{name:'سيزر', w:'30 سم · 650 غ',
+          desc:'دجاج حلال، أوراق خس، طماطم كرزية، بارميزان، صلصة كريمية',
+          alt:'بيتزا «سيزر» بالدجاج وأوراق الخس والطماطم الكرزية والبارميزان'}}
     ]},
-    { id:'rolls', title:'Роллы', note:'готовим к заказу, 15–20 минут', items:[
+    { id:'rolls', title:'Роллы', note:'готовим к заказу, 15–20 минут',
+      ar:{title:'الرولات', note:'نحضّرها عند الطلب، خلال 15–20 دقيقة'}, items:[
       {id:'rolls-baked', photo:'photos/rolls-baked.jpg', name:'Запечённые роллы', price:450, w:'8 шт', pending:true,
         desc:'Состав уточняется',
-        alt:'Восемь запечённых роллов с золотистой корочкой в белом контейнере'},
+        alt:'Восемь запечённых роллов с золотистой корочкой в белом контейнере',
+        ar:{name:'رولات مخبوزة', w:'8 قطع',
+          desc:'المكوّنات قيد التحديد',
+          alt:'ثماني رولات مخبوزة بقشرة ذهبية في علبة بيضاء'}},
       {id:'rolls-tobiko', photo:'photos/rolls-tobiko.jpg', name:'Роллы с тобико', price:480, w:'8 шт', pending:true,
         desc:'Состав уточняется',
-        alt:'Роллы в хрустящей панировке с огурцом и сливочным сыром, сверху икра тобико'}
+        alt:'Роллы в хрустящей панировке с огурцом и сливочным сыром, сверху икра тобико',
+        ar:{name:'رولات بالتوبيكو', w:'8 قطع',
+          desc:'المكوّنات قيد التحديد',
+          alt:'رولات بغلاف مقرمش مع الخيار والجبن الكريمي، وفوقها بيض سمك التوبيكو'}}
     ]},
-    { id:'shawarma', title:'Шаурма', note:'горячая, 15–20 минут', items:[
+    { id:'shawarma', title:'Шаурма', note:'горячая, 15–20 минут',
+      ar:{title:'الشاورما', note:'ساخنة، خلال 15–20 دقيقة'}, items:[
       {id:'shawarma', photo:'photos/shawarma.jpg', name:'Шаурма с курицей', price:300, w:'1 шт · 400 г',
         desc:'Курица халяль, свежие овощи, лаваш, чесночный соус',
-        alt:'Две шаурмы в лаваше с полосками гриля, в разрезе курица, томаты и зелень'}
+        alt:'Две шаурмы в лаваше с полосками гриля, в разрезе курица, томаты и зелень',
+        ar:{name:'شاورما دجاج', w:'1 قطعة · 400 غ',
+          desc:'دجاج حلال، خضار طازجة، خبز صاج، صلصة الثوم',
+          alt:'لفّتا شاورما بخطوط الشواء، وفي المقطع دجاج وطماطم وأعشاب'}}
     ]},
-    { id:'burgers', title:'Бургеры', note:'горячие, 15–20 минут', items:[
+    { id:'burgers', title:'Бургеры', note:'горячие, 15–20 минут',
+      ar:{title:'البرغر', note:'ساخن، خلال 15–20 دقيقة'}, items:[
       {id:'burger-classic', photo:'photos/burger-classic.jpg', name:'Классический бургер', price:350, w:'1 шт · 280 г',
         desc:'Котлета из говядины халяль, сыр, томат, лук, листья салата, соус',
-        alt:'Классический бургер с говяжьей котлетой, сыром, томатом и салатом в булочке с кунжутом'},
+        alt:'Классический бургер с говяжьей котлетой, сыром, томатом и салатом в булочке с кунжутом',
+        ar:{name:'برغر كلاسيكي', w:'1 قطعة · 280 غ',
+          desc:'قطعة لحم بقر حلال، جبن، طماطم، بصل، خس، صلصة',
+          alt:'برغر كلاسيكي بقطعة لحم بقر وجبن وطماطم وخس في خبز بالسمسم'}},
       {id:'burger-double', photo:'photos/burger-double.jpg', name:'Двойной чизбургер', price:420, w:'1 шт · 380 г',
         desc:'Две котлеты из говядины халяль, чеддер, томат, лук, листья салата, соус',
-        alt:'Двойной чизбургер с двумя говяжьими котлетами, чеддером и соусом'},
+        alt:'Двойной чизбургер с двумя говяжьими котлетами, чеддером и соусом',
+        ar:{name:'تشيز برغر مزدوج', w:'1 قطعة · 380 غ',
+          desc:'قطعتا لحم بقر حلال، شيدر، طماطم، بصل، خس، صلصة',
+          alt:'تشيز برغر مزدوج بقطعتي لحم بقر وجبن شيدر وصلصة'}},
       {id:'burger-onion', photo:'photos/burger-onion.jpg', name:'С карамелизированным луком', price:430, w:'1 шт · 380 г',
         desc:'Две котлеты из говядины халяль, чеддер, карамелизированный лук, сладкий перец, соус',
-        alt:'Бургер с двумя котлетами, плавленым сыром и карамелизированным луком'},
+        alt:'Бургер с двумя котлетами, плавленым сыром и карамелизированным луком',
+        ar:{name:'بالبصل المكرمل', w:'1 قطعة · 380 غ',
+          desc:'قطعتا لحم بقر حلال، شيدر، بصل مكرمل، فلفل حلو، صلصة',
+          alt:'برغر بقطعتي لحم وجبن ذائب وبصل مكرمل'}},
       {id:'burger-chicken', photo:'photos/burger-chicken.jpg', name:'Куриный бургер', price:340, w:'1 шт · 300 г',
         desc:'Куриное филе халяль в хрустящей панировке, чеддер, красный лук, соус',
-        alt:'Куриный бургер с филе в хрустящей панировке, сыром и красным луком'}
+        alt:'Куриный бургер с филе в хрустящей панировке, сыром и красным луком',
+        ar:{name:'برغر دجاج', w:'1 قطعة · 300 غ',
+          desc:'فيليه دجاج حلال بغلاف مقرمش، شيدر، بصل أحمر، صلصة',
+          alt:'برغر دجاج بفيليه مقرمش وجبن وبصل أحمر'}}
     ]}
   ];
+
+  /* Арабский перевод текстов страницы. Ключ — значение data-i18n в разметке,
+     русский текст берётся прямо из разметки. */
+  var AR = {
+    title:'كورميليتسا — مطبخ منزلي حلال',
+    description:'مطبخ «كورميليتسا» المنزلي الحلال. خينكال ومانتي وكورزه وغالوشكي مصنوعة يدويًا ومجمّدة. تشودو وبيتزا ورولات وشاورما وبرغر نحضّرها ساخنة بعد الطلب.',
+    logoAria:'كورميليتسا — إلى أعلى الصفحة',
+    brand:'كورميليتسا',
+    brandSub:'مطبخ منزلي',
+    navAria:'أقسام الموقع',
+    navMenu:'القائمة',
+    navHow:'كيف تطلبون',
+    navCook:'طريقة التحضير',
+    navReviews:'آراء العملاء',
+    navContacts:'التواصل',
+    navContactsFull:'التواصل والتوصيل',
+    call:'اتصال',
+    callColon:'اتصلوا بنا:',
+    order:'اطلبوا الآن',
+
+    heroTitle:'طعام بيتي: ساخن إلى المائدة، ومجمّد للأيام القادمة',
+    heroSub:'نصنع الخينكال والمانتي والكورزه والغالوشكي بأيدينا ونجمّدها — ولا يبقى عليكم في البيت إلا سلقها. أما التشودو والبيتزا والرولات والشاورما والبرغر فنحضّرها بعد الطلب ونسلّمها ساخنة. اللحم حلال فقط.',
+    heroMenu:'تصفّحوا القائمة',
+    heroWa:'راسلونا على واتساب',
+    halal:'حلال',
+    heroNote:'نطبخ كما نطبخ لعائلتنا',
+    collage:'أطباقنا',
+    altManty:'مانتي مصنوعة يدويًا على طبق أبيض مع البصل الأخضر',
+    capManty:'مانتي',
+    altBurger:'تشيز برغر مزدوج بقطعتين من لحم البقر مع الجبن والطماطم والخس',
+    altPizza:'بيتزا ببروني على لوح خشبي، وإحدى القطع مرفوعة بالمجرفة',
+    altKhinkal:'خينكال دارغيني مع لحم بقر مسلوق وبطاطس',
+    capKhinkal:'خينكال',
+
+    perksAria:'لماذا طعامنا لذيذ',
+    perk1:'نصنعها بأيدينا',
+    perk1t:'كل قطعة خينكال وكل حافة كورزه تُشكَّل يدويًا، وبكميات صغيرة.',
+    perk2:'حلال فقط',
+    perk2t:'القائمة كلها حلال — من الخينكال إلى البرغر.',
+    perk3:'مكوّنات بسيطة',
+    perk3t:'لحم ودقيق وخضار وأعشاب — كالتي في مطبخكم تمامًا.',
+    perk4:'التجميد يحفظ الطعم',
+    perk4t:'نجمّدها فور تشكيلها، فتبقى طريّة وغنية بالعصارة حتى موعد عشائكم.',
+
+    menuLead:'الخينكال والمانتي والكورزه والغالوشكي — منتجات نصف جاهزة مجمّدة مصنوعة يدويًا. أما التشودو والبيتزا والرولات والشاورما والبرغر فنحضّرها بعد الطلب ونسلّمها ساخنة.',
+    tabsAria:'أصناف القائمة',
+
+    promosAria:'العروض',
+    promoAHand:'للمؤونة',
+    promoA:'فريزر مليء بالطعام البيتي',
+    promoABtn:'كوّنوا مجموعتكم',
+    promoBHand:'لعطلة نهاية الأسبوع',
+    promoB:'برغر لسهرة عائلية',
+    promoBBtn:'اختاروا البرغر',
+    fillPromo:'[شروط العرض — قيد التحديد]',
+    altOnion:'برغر بقطعتي لحم وجبن وبصل مكرمل',
+
+    howLead:'بلا تسجيل وبلا دفع على الموقع. يصلنا طلبكم رسالةً على واتساب.',
+    step1:'اختاروا الأطباق',
+    step1t:'اضغطوا «إلى السلة» — ويمكن تغيير الكمية مباشرة في البطاقة.',
+    step2:'راجعوا السلة',
+    step2t:'اكتبوا الاسم ورقم الهاتف، والعنوان إن كنتم تحتاجون التوصيل.',
+    step3:'أرسلوا الطلب عبر واتساب',
+    step3t:'نجهّز الرسالة بقائمة الأطباق والمبلغ بأنفسنا — ويبقى عليكم الضغط على «إرسال».',
+    step4:'استلموا طلبكم',
+    step4t:'سنرد عليكم ونؤكد الوقت ونوصل الطلب. أو تستلمونه بأنفسكم.',
+
+    cookTitle:'طريقة تحضير المنتجات نصف الجاهزة',
+    cookLead:'لا حاجة لإذابتها مسبقًا — اطبخوها مباشرة من الفريزر. الأوقات تقريبية، والوقت الدقيق مكتوب على الملصق.',
+    boil:'بالسلق',
+    steam:'على البخار',
+    cook1:'الخينكال',
+    cook1t:'ضعوه في ماء مغلي مملّح وحرّكوه كي لا يلتصق. اسلقوه 12–15 دقيقة بعد أن يطفو.',
+    cook2:'المانتي',
+    cook2t:'ادهنوا طبقات قدر البخار بالزيت ورتّبوا المانتي مع ترك مسافات بينها. اطهوها على البخار 35–40 دقيقة.',
+    cook3:'الكورزه',
+    cook3t:'في ماء مغلي مملّح، 8–10 دقائق بعد أن تطفو. قدّموها مع الزبدة المذابة أو القشدة الحامضة.',
+    cook4:'الغالوشكي',
+    cook4t:'اسلقوها في المرق أو في ماء مملّح 10–12 دقيقة. سخّنوا اللحم على حدة.',
+    cook5:'التشودو والبيتزا والرولات والشاورما والبرغر',
+    cook5way:'لا تحتاج إلى طهي',
+    cook5t:'نحضّرها نحن بعد الطلب ونسلّمها ساخنة. البيتزا والرولات والشاورما والبرغر تكون جاهزة خلال 15–20 دقيقة.',
+    cookFoot:'بالهناء والشفاء — وعودوا إلينا لطلب المزيد!',
+
+    revLead:'هنا ستظهر آراء عملائنا.',
+    rev1:'مكان للرأي الأول',
+    rev2:'مكان للرأي الثاني',
+    rev3:'مكان للرأي الثالث',
+    revCta:'جرّبتم طعامنا؟ اكتبوا لنا بضع كلمات على واتساب — وبإذنكم سننشر رأيكم هنا.',
+    revBtn:'اتركوا رأيكم',
+
+    phone:'الهاتف',
+    waK:'واتساب — وإليه تصل الطلبات أيضًا',
+    pickupCap:'الاستلام الذاتي',
+    fillAddr:'[العنوان — قيد التحديد]',
+    hoursK:'متى نستقبل الطلبات',
+    fillHours:'[ساعات العمل — قيد التحديد]',
+    delivery:'التوصيل',
+    fillDelivery:'[منطقة التوصيل وتكلفته وحدّ التوصيل المجاني — قيد التحديد]',
+    altLogo:'شعار «كورميليتسا»: لوح عليه دقيق وسنابل قمح ونشّابة، مع عبارة «منتجات نصف جاهزة منزلية الصنع» بالروسية',
+    logoLead:'املؤوا السلة — وسنجهّز رسالة بقائمة الأطباق، ولا يبقى عليكم إلا إرسالها.',
+    openCart:'افتحوا السلة',
+    copy:'© <span class="num">2026</span> «كورميليتسا» — مطبخ منزلي حلال',
+    footAria:'أقسام الموقع في التذييل',
+
+    cart:'السلة',
+    cartClose:'إغلاق السلة',
+    cartEmpty:'السلة فارغة حتى الآن. ألقوا نظرة على القائمة — ففيها الخينكال والمانتي والبيتزا والبرغر.',
+    toMenu:'إلى القائمة',
+    yourOrder:'طلبكم',
+    dishes:'الأطباق',
+    total:'المجموع',
+    formTitle:'إلى أين نوصل الطلب ولمن',
+    way:'طريقة الاستلام',
+    name:'الاسم',
+    namePh:'بماذا نناديكم',
+    addr:'عنوان التوصيل',
+    addrPh:'الشارع، المبنى، الشقة، الطابق',
+    note:'ملاحظة',
+    notePh:'الوقت المناسب للاستلام، رمز الاتصال الداخلي',
+    send:'أرسلوا الطلب عبر واتساب',
+    fine:'لا حاجة للدفع على الموقع. سنرد عليكم عبر واتساب ونؤكد الطلب والوقت.',
+    fallback:'<b>لم يُفتح واتساب؟</b> اضغطوا الزر أدناه — الرسالة جاهزة.',
+    openWa:'فتح واتساب'
+  };
+
+  /* Строки, которые собирает скрипт: корзина, ошибки формы, сообщение в WhatsApp */
+  var STR = {
+    ru:{
+      title:'Кормилица — домашняя халяльная кухня',
+      langBtn:'عربي', langDrawer:'العربية', langLabel:'Arabic — عربي', langCode:'ar',
+      themeToLight:'Включить светлую тему', themeToDark:'Включить тёмную тему',
+      navOpen:'Открыть разделы', navClose:'Закрыть разделы',
+      allMenu:'Всё меню', toCart:'В корзину',
+      dec:'Убрать одну порцию: ', inc:'Добавить порцию: ',
+      currency:' ₽', pickup:'самовывоз', tbd:'уточним', free:'бесплатно',
+      inCart:'Блюд в корзине: ', pickupCap:'Самовывоз', delivery:'Доставка', plusDelivery:' + доставка',
+      freeLeft:'До бесплатной доставки осталось {sum}.',
+      added:'{name} — в корзине. Всего блюд: {n}, на {sum}.',
+      clear:'Очистить', clearSure:'Точно очистить?', cleared:'Корзина очищена.',
+      msgReady:'Сообщение готово',
+      errName:'Напишите имя — хотя бы две буквы.',
+      errPhone:'Нужен номер из 10–11 цифр, например +7 900 000-00-00.',
+      errAddr:'Укажите улицу, дом и квартиру.',
+      waOpening:'Сообщение с заказом готово и открывается в WhatsApp.',
+      waHello:'Здравствуйте! Заказ с сайта «Кормилица»:', waDishes:'Блюда: ', waPickup:'Получение: самовывоз',
+      waDelivery:'Доставка: ', waTotal:'Итого: ', waName:'Имя: ', waPhone:'Телефон: ', waAddr:'Адрес: ', waNote:'Комментарий: '
+    },
+    ar:{
+      title:AR.title,
+      langBtn:'RU', langDrawer:'Русский', langLabel:'Русский — الروسية', langCode:'ru',
+      themeToLight:'تفعيل الوضع الفاتح', themeToDark:'تفعيل الوضع الداكن',
+      navOpen:'فتح الأقسام', navClose:'إغلاق الأقسام',
+      allMenu:'كل القائمة', toCart:'إلى السلة',
+      dec:'إزالة حصة واحدة: ', inc:'إضافة حصة: ',
+      currency:' روبل', pickup:'استلام ذاتي', tbd:'يُحدَّد لاحقًا', free:'مجانًا',
+      inCart:'الأطباق في السلة: ', pickupCap:'الاستلام الذاتي', delivery:'التوصيل', plusDelivery:' + التوصيل',
+      freeLeft:'يتبقى {sum} للحصول على توصيل مجاني.',
+      added:'{name} — أُضيف إلى السلة. عدد الأطباق: {n}، بمبلغ {sum}.',
+      clear:'إفراغ', clearSure:'تأكيد الإفراغ؟', cleared:'تم إفراغ السلة.',
+      msgReady:'الرسالة جاهزة',
+      errName:'اكتبوا الاسم — حرفان على الأقل.',
+      errPhone:'يلزم رقم من 10–11 خانة، مثل \u2066+7 900 000-00-00\u2069.',
+      errAddr:'اكتبوا الشارع والمبنى والشقة.',
+      waOpening:'رسالة الطلب جاهزة وتُفتح الآن في واتساب.',
+      /* первая строка — для хозяйки кухни: клиенту удобнее отвечать по-арабски */
+      waHello:'Заказ на арабской версии сайта\nمرحبًا! طلب من موقع «كورميليتسا»:', waDishes:'الأطباق: ', waPickup:'الاستلام: استلام ذاتي',
+      waDelivery:'التوصيل: ', waTotal:'المجموع: ', waName:'الاسم: ', waPhone:'الهاتف: ', waAddr:'العنوان: ', waNote:'ملاحظة: '
+    }
+  };
 
   /* ================== дальше менять не нужно ================== */
 
   var BY_ID = {};
   MENU.forEach(function(c){ c.items.forEach(function(i){ BY_ID[i.id] = i; }); });
 
-  var rub = function(n){ return n.toLocaleString('ru-RU') + ' ₽'; };
+  var root = document.documentElement;
+
+  /* ---------- язык ---------- */
+  var lang = root.lang === 'ar' ? 'ar' : 'ru';
+  function T(key, vars){
+    var s = STR[lang][key];
+    if (vars) s = s.replace(/\{(\w+)\}/g, function(_, k){ return vars[k]; });
+    return s;
+  }
+  /* поле блюда или категории на текущем языке; нет перевода — русский */
+  function L(o, field){ return (lang === 'ar' && o.ar && o.ar[field]) || o[field]; }
+
+  var rub = function(n){ return n.toLocaleString(lang === 'ar' ? 'ar-u-nu-latn' : 'ru-RU') + T('currency'); };
   var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){
     return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
   function reduceMotion(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  /* русский текст запоминаем из разметки, арабский берём из AR */
+  var i18nEls = Array.prototype.slice.call(document.querySelectorAll('[data-i18n]'));
+  i18nEls.forEach(function(el){ el._ru = el.innerHTML; });
+  var i18nAttrEls = Array.prototype.slice.call(document.querySelectorAll('[data-i18n-attr]'));
+  i18nAttrEls.forEach(function(el){
+    el._ruAttr = {};
+    el.getAttribute('data-i18n-attr').split(';').forEach(function(pair){
+      var a = pair.split(':')[0];
+      el._ruAttr[a] = el.getAttribute(a);
+    });
+  });
+  var metaDesc = document.querySelector('meta[name="description"]');
+  var ruDesc = metaDesc.getAttribute('content');
+
+  function translateStatic(){
+    i18nEls.forEach(function(el){
+      var k = el.getAttribute('data-i18n');
+      el.innerHTML = lang === 'ar' && AR[k] != null ? AR[k] : el._ru;
+    });
+    i18nAttrEls.forEach(function(el){
+      el.getAttribute('data-i18n-attr').split(';').forEach(function(pair){
+        var p = pair.split(':');
+        el.setAttribute(p[0], lang === 'ar' && AR[p[1]] != null ? AR[p[1]] : el._ruAttr[p[0]]);
+      });
+    });
+    document.title = T('title');
+    metaDesc.setAttribute('content', lang === 'ar' ? AR.description : ruDesc);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang-toggle]'), function(b){
+      b.setAttribute('aria-label', T('langLabel'));
+      var label = b.querySelector('[data-lang-label]');
+      label.textContent = b.classList.contains('drawer-lang') ? T('langDrawer') : T('langBtn');
+      label.setAttribute('lang', T('langCode'));
+    });
+  }
 
   /* номер телефона во всех ссылках — из одной константы */
   var phonePretty = '+' + PHONE[0] + ' ' + PHONE.slice(1,4) + ' ' + PHONE.slice(4,7) + '-' + PHONE.slice(7,9) + '-' + PHONE.slice(9,11);
@@ -977,7 +1301,6 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   Array.prototype.forEach.call(document.querySelectorAll('[data-phone-text]'), function(s){ s.textContent = phonePretty; });
 
   /* ---------- тема ---------- */
-  var root = document.documentElement;
   var themeBtn = document.getElementById('themeBtn');
   function currentTheme(){
     var t = root.getAttribute('data-theme');
@@ -985,7 +1308,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
   function syncThemeLabel(){
-    themeBtn.setAttribute('aria-label', currentTheme() === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
+    themeBtn.setAttribute('aria-label', currentTheme() === 'dark' ? T('themeToLight') : T('themeToDark'));
   }
   themeBtn.addEventListener('click', function(){
     var next = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -1001,7 +1324,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   function setDrawer(open){
     drawer.hidden = !open;
     navBtn.setAttribute('aria-expanded', String(open));
-    navBtn.setAttribute('aria-label', open ? 'Закрыть разделы' : 'Открыть разделы');
+    navBtn.setAttribute('aria-label', open ? T('navClose') : T('navOpen'));
   }
   navBtn.addEventListener('click', function(){ setDrawer(drawer.hidden); });
   drawer.addEventListener('click', function(e){ if (e.target.closest('a')) setDrawer(false); });
@@ -1010,45 +1333,50 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   var tabsEl = document.getElementById('tabs');
   var panel = document.getElementById('menuPanel');
   var total = 0; MENU.forEach(function(c){ total += c.items.length; });
-  var TABS = [{id:'all', title:'Всё меню', n: total}].concat(MENU.map(function(c){ return {id:c.id, title:c.title, n:c.items.length}; }));
-
-  tabsEl.innerHTML = TABS.map(function(t, k){
-    return '<button type="button" class="tab" role="tab" id="tab-'+t.id+'" data-tab="'+t.id+'" aria-controls="menuPanel" aria-selected="'+(k===0)+'" tabindex="'+(k===0?0:-1)+'">'+
-      esc(t.title)+' <span class="count num">'+t.n+'</span></button>';
-  }).join('');
+  var tabs = [], cats = [], currentTab = 'all';
 
   function card(i){
     var pos = i.pos ? ' style="object-position:'+i.pos+'"' : '';
+    var name = esc(L(i,'name'));
     return ''+
     '<article class="card">'+
-      '<div class="card-photo"><img src="'+i.photo+'" alt="'+esc(i.alt)+'" loading="lazy" decoding="async"'+pos+'></div>'+
+      '<div class="card-photo"><img src="'+i.photo+'" alt="'+esc(L(i,'alt'))+'" loading="lazy" decoding="async"'+pos+'></div>'+
       '<div class="card-body">'+
-        '<h4>'+esc(i.name)+'</h4>'+
-        '<p class="desc'+(i.pending?' pending':'')+'">'+esc(i.desc)+'</p>'+
-        '<div class="card-meta"><span class="w">'+esc(i.w)+'</span><span class="price">'+rub(i.price)+'</span></div>'+
+        '<h4>'+name+'</h4>'+
+        '<p class="desc'+(i.pending?' pending':'')+'">'+esc(L(i,'desc'))+'</p>'+
+        '<div class="card-meta"><span class="w">'+esc(L(i,'w'))+'</span><span class="price">'+rub(i.price)+'</span></div>'+
         '<div class="card-act">'+
-          '<button type="button" class="add" data-add="'+i.id+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg>В корзину<span class="sr">: '+esc(i.name)+'</span></button>'+
+          '<button type="button" class="add" data-add="'+i.id+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg>'+T('toCart')+'<span class="sr">: '+name+'</span></button>'+
           '<div class="step" data-step="'+i.id+'" hidden>'+
-            '<button type="button" data-dec="'+i.id+'" aria-label="Убрать одну порцию: '+esc(i.name)+'"><svg class="ico" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
+            '<button type="button" data-dec="'+i.id+'" aria-label="'+T('dec')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
             '<span class="qty" data-qty="'+i.id+'" aria-live="polite">0</span>'+
-            '<button type="button" data-inc="'+i.id+'" aria-label="Добавить порцию: '+esc(i.name)+'"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
+            '<button type="button" data-inc="'+i.id+'" aria-label="'+T('inc')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
           '</div>'+
         '</div>'+
       '</div>'+
     '</article>';
   }
 
-  panel.innerHTML = MENU.map(function(c){
-    return '<section class="cat" data-cat="'+c.id+'" aria-labelledby="h-'+c.id+'" style="padding:0">'+
-      '<div class="cat-head"><h3 id="h-'+c.id+'">'+esc(c.title)+'</h3><span class="hand">'+esc(c.note)+'</span></div>'+
-      '<div class="grid">'+c.items.map(card).join('')+'</div>'+
-    '</section>';
-  }).join('');
-
-  var tabs = Array.prototype.slice.call(tabsEl.querySelectorAll('[role="tab"]'));
-  var cats = Array.prototype.slice.call(panel.querySelectorAll('[data-cat]'));
+  /* меню собирается заново при смене языка */
+  function buildMenu(){
+    var TABS = [{id:'all', title:T('allMenu'), n: total}].concat(MENU.map(function(c){ return {id:c.id, title:L(c,'title'), n:c.items.length}; }));
+    tabsEl.innerHTML = TABS.map(function(t){
+      return '<button type="button" class="tab" role="tab" id="tab-'+t.id+'" data-tab="'+t.id+'" aria-controls="menuPanel" aria-selected="false" tabindex="-1">'+
+        esc(t.title)+' <span class="count num">'+t.n+'</span></button>';
+    }).join('');
+    panel.innerHTML = MENU.map(function(c){
+      return '<section class="cat" data-cat="'+c.id+'" aria-labelledby="h-'+c.id+'" style="padding:0">'+
+        '<div class="cat-head"><h3 id="h-'+c.id+'">'+esc(L(c,'title'))+'</h3><span class="hand">'+esc(L(c,'note'))+'</span></div>'+
+        '<div class="grid">'+c.items.map(card).join('')+'</div>'+
+      '</section>';
+    }).join('');
+    tabs = Array.prototype.slice.call(tabsEl.querySelectorAll('[role="tab"]'));
+    cats = Array.prototype.slice.call(panel.querySelectorAll('[data-cat]'));
+    selectTab(currentTab);
+  }
 
   function selectTab(id, focus){
+    currentTab = id;
     tabs.forEach(function(t){
       var on = t.getAttribute('data-tab') === id;
       t.setAttribute('aria-selected', String(on));
@@ -1057,7 +1385,10 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
         panel.setAttribute('aria-labelledby', t.id);
         if (focus) t.focus();
         if (tabsEl.scrollWidth > tabsEl.clientWidth){
-          tabsEl.scrollTo({left: Math.max(0, t.offsetLeft - 16), behavior: reduceMotion() ? 'auto' : 'smooth'});
+          /* докручиваем ленту так, чтобы вкладка встала у её начала — слева или справа при арабском */
+          var tr = t.getBoundingClientRect(), cr = tabsEl.getBoundingClientRect();
+          var dx = lang === 'ar' ? tr.right - (cr.right - 16) : tr.left - (cr.left + 16);
+          if (Math.abs(dx) > 1) tabsEl.scrollBy({left: dx, behavior: reduceMotion() ? 'auto' : 'smooth'});
         }
       }
     });
@@ -1071,15 +1402,16 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     var k = tabs.indexOf(document.activeElement);
     if (k < 0) return;
     var n = null;
-    if (e.key === 'ArrowRight') n = (k + 1) % tabs.length;
-    else if (e.key === 'ArrowLeft') n = (k - 1 + tabs.length) % tabs.length;
+    /* при письме справа налево «вперёд» — это стрелка влево */
+    var fwd = lang === 'ar' ? 'ArrowLeft' : 'ArrowRight', back = lang === 'ar' ? 'ArrowRight' : 'ArrowLeft';
+    if (e.key === fwd) n = (k + 1) % tabs.length;
+    else if (e.key === back) n = (k - 1 + tabs.length) % tabs.length;
     else if (e.key === 'Home') n = 0;
     else if (e.key === 'End') n = tabs.length - 1;
     if (n === null) return;
     e.preventDefault();
     selectTab(tabs[n].getAttribute('data-tab'), true);
   });
-  selectTab('all');
 
   /* кнопки баннеров открывают нужную вкладку */
   document.addEventListener('click', function(e){
@@ -1119,9 +1451,9 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     return { n:n, sum:sum, fee:fee, total:sum + fee, pickup:pickup, feeKnown: known || free };
   }
   function deliveryText(t){
-    if (t.pickup) return 'самовывоз';
-    if (!t.feeKnown) return 'уточним';
-    return t.fee === 0 ? 'бесплатно' : rub(t.fee);
+    if (t.pickup) return T('pickup');
+    if (!t.feeKnown) return T('tbd');
+    return t.fee === 0 ? T('free') : rub(t.fee);
   }
 
   function bump(el){
@@ -1144,7 +1476,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   function renderCart(){
     var t = totals();
     els.count.textContent = t.n;
-    els.count.setAttribute('aria-label', 'Блюд в корзине: ' + t.n);
+    els.count.setAttribute('aria-label', T('inCart') + t.n);
     if (t.n > prevCount) bump(els.count);
     prevCount = t.n;
     els.fabCount.textContent = t.n;
@@ -1155,30 +1487,30 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     if (!t.n) return;
 
     els.lines.innerHTML = Object.keys(cart).map(function(id){
-      var i = BY_ID[id], q = cart[id];
+      var i = BY_ID[id], q = cart[id], name = esc(L(i,'name'));
       return ''+
       '<div class="cline">'+
         '<div class="cline-img"><img src="'+i.photo+'" alt="" width="120" height="90"></div>'+
-        '<div><b>'+esc(i.name)+'</b><span class="p">'+rub(i.price)+' · '+esc(i.w)+'</span></div>'+
+        '<div><b>'+name+'</b><span class="p">'+rub(i.price)+' · '+esc(L(i,'w'))+'</span></div>'+
         '<div class="cline-right">'+
           '<span class="cline-sum">'+rub(i.price*q)+'</span>'+
           '<span class="step-sm">'+
-            '<button type="button" data-dec="'+id+'" aria-label="Убрать одну порцию: '+esc(i.name)+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
+            '<button type="button" data-dec="'+id+'" aria-label="'+T('dec')+name+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
             '<span class="qty">'+q+'</span>'+
-            '<button type="button" data-inc="'+id+'" aria-label="Добавить порцию: '+esc(i.name)+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
+            '<button type="button" data-inc="'+id+'" aria-label="'+T('inc')+name+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
           '</span>'+
         '</div>'+
       '</div>';
     }).join('');
 
     els.sub.textContent = rub(t.sum);
-    els.delLabel.textContent = t.pickup ? 'Самовывоз' : 'Доставка';
-    els.del.textContent = t.pickup ? '0 ₽' : deliveryText(t);
-    els.all.textContent = rub(t.total) + (!t.pickup && !t.feeKnown ? ' + доставка' : '');
+    els.delLabel.textContent = t.pickup ? T('pickupCap') : T('delivery');
+    els.del.textContent = t.pickup ? rub(0) : deliveryText(t);
+    els.all.textContent = rub(t.total) + (!t.pickup && !t.feeKnown ? T('plusDelivery') : '');
 
     if (!t.pickup && typeof FREE_FROM === 'number' && t.sum < FREE_FROM){
       els.freeHint.hidden = false;
-      els.freeHint.textContent = 'До бесплатной доставки осталось ' + rub(FREE_FROM - t.sum) + '.';
+      els.freeHint.textContent = T('freeLeft', {sum: rub(FREE_FROM - t.sum)});
     } else {
       els.freeHint.hidden = true;
     }
@@ -1198,7 +1530,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
       var inc0 = document.querySelector('[data-step="'+id+'"] [data-inc]');
       if (inc0) inc0.focus();
       var t0 = totals();
-      els.live.textContent = BY_ID[id].name + ' — в корзине. Всего блюд: ' + t0.n + ', на ' + rub(t0.sum) + '.';
+      els.live.textContent = T('added', {name: L(BY_ID[id],'name'), n: t0.n, sum: rub(t0.sum)});
       return;
     }
     var inc = e.target.closest('[data-inc]');
@@ -1276,12 +1608,12 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   function disarmClear(){
     window.clearTimeout(clearTimer);
     clearBtn.removeAttribute('data-armed');
-    clearLabel.textContent = 'Очистить';
+    clearLabel.textContent = T('clear');
   }
   clearBtn.addEventListener('click', function(){
     if (clearBtn.getAttribute('data-armed') !== '1'){
       clearBtn.setAttribute('data-armed', '1');
-      clearLabel.textContent = 'Точно очистить?';
+      clearLabel.textContent = T('clearSure');
       clearTimer = window.setTimeout(disarmClear, 4000);
       return;
     }
@@ -1291,7 +1623,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     sendState('idle');
     document.getElementById('waFallback').hidden = true;
     renderCart();
-    els.live.textContent = 'Корзина очищена.';
+    els.live.textContent = T('cleared');
     document.getElementById('toMenu').focus();
   });
 
@@ -1326,19 +1658,22 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   });
 
   var sendBtn = els.form.querySelector('button[type="submit"]');
-  var sendLabel = sendBtn.innerHTML;
+  var sendIcon = sendBtn.querySelector('use');
+  var sendText = sendBtn.querySelector('[data-i18n]');
   var sendTimer = null;
   function sendState(state){
     window.clearTimeout(sendTimer);
     if (state === 'sent'){
       sendBtn.disabled = true;
       sendBtn.setAttribute('data-state', 'sent');
-      sendBtn.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Сообщение готово';
+      sendIcon.setAttribute('href', '#i-check');
+      sendText.textContent = T('msgReady');
       sendTimer = window.setTimeout(function(){ sendState('idle'); }, 3200);
     } else {
       sendBtn.disabled = false;
       sendBtn.removeAttribute('data-state');
-      sendBtn.innerHTML = sendLabel;
+      sendIcon.setAttribute('href', '#i-wa');
+      sendText.innerHTML = lang === 'ar' ? AR.send : sendText._ru;
     }
   }
 
@@ -1346,36 +1681,38 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     e.preventDefault();
     if (sendBtn.disabled) return;
     var bad = [];
-    if (fName.value.trim().length < 2){ showError(fName, eName, 'Напишите имя — хотя бы две буквы.'); bad.push(fName); } else clearError(fName, eName);
+    if (fName.value.trim().length < 2){ showError(fName, eName, T('errName')); bad.push(fName); } else clearError(fName, eName);
     var digits = fPhone.value.replace(/\D/g, '');
-    if (digits.length < 10){ showError(fPhone, ePhone, 'Нужен номер из 10–11 цифр, например +7 900 000-00-00.'); bad.push(fPhone); } else clearError(fPhone, ePhone);
+    if (digits.length < 10){ showError(fPhone, ePhone, T('errPhone')); bad.push(fPhone); } else clearError(fPhone, ePhone);
     var pickup = document.getElementById('wayPickup').checked;
-    if (!pickup && fAddr.value.trim().length < 5){ showError(fAddr, eAddr, 'Укажите улицу, дом и квартиру.'); bad.push(fAddr); } else clearError(fAddr, eAddr);
+    if (!pickup && fAddr.value.trim().length < 5){ showError(fAddr, eAddr, T('errAddr')); bad.push(fAddr); } else clearError(fAddr, eAddr);
     if (bad.length){ bad[0].focus(); return; }
 
     var t = totals();
-    var lines = ['Здравствуйте! Заказ с сайта «Кормилица»:', ''];
+    var lines = [T('waHello'), ''];
     Object.keys(cart).forEach(function(id){
       var i = BY_ID[id];
-      lines.push('• ' + i.name + ' (' + i.w + ') × ' + cart[id] + ' — ' + rub(i.price * cart[id]));
+      /* в арабском заказе рядом — русское название, чтобы на кухне сразу поняли, что готовить */
+      var name = lang === 'ar' ? L(i,'name') + ' / ' + i.name : i.name;
+      lines.push('• ' + name + ' (' + L(i,'w') + ') × ' + cart[id] + ' — ' + rub(i.price * cart[id]));
     });
     lines.push('');
-    lines.push('Блюда: ' + rub(t.sum));
-    lines.push(t.pickup ? 'Получение: самовывоз' : 'Доставка: ' + deliveryText(t));
-    lines.push('Итого: ' + rub(t.total) + (!t.pickup && !t.feeKnown ? ' + доставка' : ''));
+    lines.push(T('waDishes') + rub(t.sum));
+    lines.push(t.pickup ? T('waPickup') : T('waDelivery') + deliveryText(t));
+    lines.push(T('waTotal') + rub(t.total) + (!t.pickup && !t.feeKnown ? T('plusDelivery') : ''));
     lines.push('');
-    lines.push('Имя: ' + fName.value.trim());
-    lines.push('Телефон: ' + fPhone.value.trim());
-    if (!t.pickup) lines.push('Адрес: ' + fAddr.value.trim());
+    lines.push(T('waName') + fName.value.trim());
+    lines.push(T('waPhone') + fPhone.value.trim());
+    if (!t.pickup) lines.push(T('waAddr') + fAddr.value.trim());
     var note = document.getElementById('fNote').value.trim();
-    if (note) lines.push('Комментарий: ' + note);
+    if (note) lines.push(T('waNote') + note);
 
     var url = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(lines.join('\n'));
     document.getElementById('waLink').href = url;
     document.getElementById('waFallback').hidden = false;
     window.open(url, '_blank', 'noopener');
     sendState('sent');
-    els.live.textContent = 'Сообщение с заказом готово и открывается в WhatsApp.';
+    els.live.textContent = T('waOpening');
   });
 
   /* ---------- появление блоков при прокрутке ---------- */
@@ -1389,7 +1726,36 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     Array.prototype.forEach.call(reveals, function(el){ io.observe(el); });
   }
 
-  renderCart();
+  /* ---------- переключение языка ---------- */
+  function applyLang(){
+    root.lang = lang;
+    root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    translateStatic();
+    buildMenu();
+    Object.keys(cart).forEach(renderDish);
+    syncThemeLabel();
+    setDrawer(!drawer.hidden);
+    if (clearBtn.getAttribute('data-armed') !== '1') clearLabel.textContent = T('clear');
+    if (sendBtn.getAttribute('data-state') !== 'sent') sendState('idle');
+    /* ошибки формы, если видны, — тоже на новом языке */
+    [[fName, eName, 'errName'], [fPhone, ePhone, 'errPhone'], [fAddr, eAddr, 'errAddr']].forEach(function(f){
+      if (!f[1].hidden) f[1].textContent = T(f[2]);
+    });
+    renderCart();
+  }
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('[data-lang-toggle]')) return;
+    lang = lang === 'ar' ? 'ru' : 'ar';
+    try { localStorage.setItem('kormilitsa-lang', lang); } catch(err){}
+    /* ссылка ?lang= тоже меняется, иначе после обновления страницы вернётся старый язык */
+    if (/[?&]lang=/.test(location.search) && history.replaceState){
+      try { history.replaceState(null, '', location.href.replace(/([?&]lang=)(ar|ru)\b/, '$1' + lang)); } catch(err){}
+    }
+    applyLang();
+    if (!drawer.hidden) setDrawer(false);
+  });
+
+  applyLang();
 })();
 </script>
 </body>
