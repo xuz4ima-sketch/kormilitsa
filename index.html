@@ -1,791 +1,633 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Кормилица — домашняя халяльная кухня</title>
-<meta name="description" content="Домашняя халяльная кухня «Кормилица». Хинкал, манты, курзе и галушки ручной лепки — замороженные полуфабрикаты. Чуду, пицца, роллы, шаурма и бургеры — горячими, готовим после заказа.">
-<meta name="theme-color" content="#F6F0E4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1A1712" media="(prefers-color-scheme: dark)">
+<title>Kormilitsa — halal burgers, pizza and shawarma</title>
+<meta name="description" content="Kormilitsa is a halal home kitchen. Burgers, pizza, shawarma, rolls and chudu are cooked after you order and handed over hot. Order on WhatsApp — delivery or pickup.">
+<meta name="theme-color" content="#161412">
 <link rel="icon" href="photos/logo-mark.png">
 <script>
-  /* тема до первой отрисовки, чтобы страница не мигала */
+  /* язык до первой отрисовки, чтобы страница не мигала:
+     ?lang=ar в ссылке → сохранённый выбор → язык браузера */
   (function(){
     var d = document.documentElement;
     d.classList.add('js');
-    try { var t = localStorage.getItem('kormilitsa-theme'); if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t); } catch(e){}
-    /* язык: ?lang=ar в ссылке → сохранённый выбор → язык браузера */
-    var l = (/[?&]lang=(ar|ru)\b/.exec(location.search) || [])[1];
+    var l = (/[?&]lang=(ar|en)\b/.exec(location.search) || [])[1];
     if (!l){ try { l = localStorage.getItem('kormilitsa-lang'); } catch(e){} }
-    if (l !== 'ar' && l !== 'ru') l = /^ar\b/i.test(navigator.language || '') ? 'ar' : 'ru';
+    if (l !== 'ar' && l !== 'en') l = /^ar\b/i.test(navigator.language || '') ? 'ar' : 'en';
     if (l === 'ar'){ d.lang = 'ar'; d.dir = 'rtl'; }
   })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Onest:wght@400;500;600;700&family=Caveat:wght@500;600&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Aref+Ruqaa:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Serif:ital@1&family=Readex+Pro:wght@300..700&family=Alexandria:wght@500..800&family=Aref+Ruqaa:wght@400;700&display=swap">
 
 <style>
 /* ---------- токены ----------
-   Цвета взяты из логотипа: скалка (красно-коричневый), пшеница (золото),
-   тёмно-оливковая надпись. Фон — мука на доске. */
+   Тёмная «чугунная» основа, как в референсе со стейкхаусом.
+   Золото — пшеница с логотипа, светлая «бумага» — мука. */
 :root{
-  color-scheme: light;
-  --bg:#F6F0E4;
-  --surface:#FFFCF6;
-  --tint:#EFE3CC;
-  --ink:#2B2716;
-  --muted:#675C44;
-  --line:rgba(43,39,22,.14);
-  --line-strong:rgba(43,39,22,.28);
-  --accent:#9C3A24;          /* скалка */
-  --accent-hover:#842F1C;
-  --accent-text:#9C3A24;
-  --on-accent:#FFF8F0;
-  --wheat:#C4912B;
-  --wheat-soft:#F1DDB0;
-  --olive:#4F5B2B;
-  --olive-soft:#E4E6CE;
-  --danger:#B3261E;
-  --ok:#3D6B2E;
-  --shadow-sm:0 1px 2px rgba(70,45,10,.08);
-  --shadow:0 1px 2px rgba(70,45,10,.06), 0 10px 28px -14px rgba(70,45,10,.35);
-  --shadow-lg:0 2px 4px rgba(70,45,10,.08), 0 24px 48px -20px rgba(70,45,10,.45);
-  --photo-filter:saturate(1.06) contrast(1.03);
-  --photo-veil:linear-gradient(180deg,rgba(255,236,200,.06),rgba(80,40,0,.12));
-  --glass:rgba(246,240,228,.86);
-  --scrim:rgba(30,22,10,.5);
-
-  --r-sm:8px;
-  --r:12px;
-  --r-lg:18px;
-  --hh:64px;
-
-  --f-head:'Lora',Georgia,'Times New Roman',serif;
-  --f-body:'Onest','Segoe UI',system-ui,-apple-system,sans-serif;
-  --f-hand:'Caveat','Segoe Print',cursive;
-
-  --ornament:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath d='M18 1.5 33.5 9 18 16.5 2.5 9z' fill='none' stroke='%23000' stroke-width='1.6'/%3E%3Cpath d='M18 5.6 25 9l-7 3.4L11 9z'/%3E%3Cpath d='M0 9h2.5M33.5 9H36' stroke='%23000' stroke-width='1.6'/%3E%3C/svg%3E");
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme: dark;
-    --bg:#1A1712; --surface:#25211A; --tint:#302A20;
-    --ink:#F2E9D6; --muted:#BDAF90;
-    --line:rgba(242,233,214,.13); --line-strong:rgba(242,233,214,.26);
-    --accent:#C2522F; --accent-hover:#D0603B; --accent-text:#EE9A76; --on-accent:#FFFFFF;
-    --wheat:#E0B052; --wheat-soft:#3A3120;
-    --olive:#A9B77A; --olive-soft:#2C301E;
-    --danger:#FF8A7A; --ok:#8BC27A;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.7);
-    --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 26px 50px -20px rgba(0,0,0,.8);
-    --photo-filter:saturate(1.04) contrast(1.03) brightness(.94);
-    --photo-veil:linear-gradient(180deg,rgba(255,220,170,.03),rgba(0,0,0,.18));
-    --glass:rgba(26,23,18,.86);
-    --scrim:rgba(0,0,0,.62);
-  }
-}
-:root[data-theme="dark"]{
   color-scheme: dark;
-  --bg:#1A1712; --surface:#25211A; --tint:#302A20;
-  --ink:#F2E9D6; --muted:#BDAF90;
-  --line:rgba(242,233,214,.13); --line-strong:rgba(242,233,214,.26);
-  --accent:#C2522F; --accent-hover:#D0603B; --accent-text:#EE9A76; --on-accent:#FFFFFF;
-  --wheat:#E0B052; --wheat-soft:#3A3120;
-  --olive:#A9B77A; --olive-soft:#2C301E;
-  --danger:#FF8A7A; --ok:#8BC27A;
-  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.7);
-  --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 26px 50px -20px rgba(0,0,0,.8);
-  --photo-filter:saturate(1.04) contrast(1.03) brightness(.94);
-  --photo-veil:linear-gradient(180deg,rgba(255,220,170,.03),rgba(0,0,0,.18));
-  --glass:rgba(26,23,18,.86);
-  --scrim:rgba(0,0,0,.62);
-}
+  --bg:#161412;
+  --bg-2:#1E1B18;
+  --bg-3:#29251F;
+  --ink:#F4EEE5;
+  --muted:#ADA397;
+  --line:rgba(244,238,229,.12);
+  --line-strong:rgba(244,238,229,.28);
+  --gold:#E3AC5C;
+  --gold-hover:#EEBD75;
+  --on-gold:#1C1409;
+  --paper:#F4EEE5;
+  --paper-ink:#1D1A16;
+  --paper-muted:#5C544A;
+  --plate:#ECE6DC;
+  --danger:#FF8F7E;
+  --ok:#86C98F;
+  --shadow:0 28px 56px -26px rgba(0,0,0,.9);
+  --glass:rgba(22,20,18,.84);
+  --scrim:rgba(8,7,6,.66);
 
-/* ---------- арабская версия ----------
-   Lora, Onest и Caveat не знают арабского, поэтому у каждой своя пара:
-   Amiri — книжный насх к заголовкам, IBM Plex Sans Arabic — к тексту,
-   Aref Ruqaa — рукописный рукъа вместо Caveat. */
+  --r:4px;
+  --hh:68px;
+  --dir:1;
+
+  /* Bricolage Grotesque — современный гротеск с узкой шириной для заголовков,
+     Instrument Serif курсивом — вместо рукописных подписей из референса */
+  --f-display:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-body:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-accent:'Instrument Serif',Georgia,'Times New Roman',serif;
+}
+/* у арабской версии своя пара: Alexandria — заголовки, Readex Pro — текст,
+   Aref Ruqaa — рукописные подписи */
 :root[lang="ar"]{
-  --f-head:'Amiri','Lora',Georgia,serif;
-  --f-body:'IBM Plex Sans Arabic','Onest','Segoe UI',system-ui,sans-serif;
-  --f-hand:'Aref Ruqaa','Amiri',serif;
+  --f-display:'Alexandria','Readex Pro',system-ui,sans-serif;
+  --f-body:'Readex Pro',system-ui,'Segoe UI',sans-serif;
+  --f-accent:'Aref Ruqaa',serif;
+  --dir:-1;
 }
 
 /* ---------- основа ---------- */
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 12px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden;
-  transition:background-color .25s ease,color .25s ease}
-h1,h2,h3,h4,p,ul,ol,figure{margin:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 8px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4,p,ul,ol,figure,blockquote{margin:0}
 ul,ol{padding:0;list-style:none}
 img{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit}
 [hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.wrap{width:100%;max-width:1200px;margin-inline:auto;padding-inline:16px}
-@media (min-width:768px){.wrap{padding-inline:28px}}
+.wrap{width:100%;max-width:1240px;margin-inline:auto;padding-inline:16px}
+@media (min-width:768px){.wrap{padding-inline:32px}}
 .num{font-variant-numeric:tabular-nums}
-.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .ico-sm{width:16px;height:16px}
+.ico-fill{fill:currentColor;stroke:none}
 .sprite{position:absolute;width:0;height:0;overflow:hidden}
-:focus-visible{outline:3px solid var(--wheat);outline-offset:2px;border-radius:6px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 
-h1,h2,h3{font-family:var(--f-head);font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.12}
-.h2{font-size:clamp(1.85rem,4.4vw,2.8rem)}
-.lead{color:var(--muted);font-size:clamp(1rem,1.9vw,1.125rem);max-width:62ch;margin-top:12px}
-.hand{font-family:var(--f-hand);font-weight:600;color:var(--accent-text);line-height:1.1}
-.fill-me{background:var(--wheat-soft);border-radius:4px;padding:0 4px;color:var(--ink);font-weight:500}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.05;letter-spacing:-.015em;text-wrap:balance}
+.h2{font-size:clamp(2.25rem,5.2vw,3.75rem);font-stretch:86%}
+.lead{color:var(--muted);font-size:clamp(1rem,1.6vw,1.125rem);max-width:56ch;margin-top:14px}
+.accent{font-family:var(--f-accent);font-style:italic;font-weight:400;color:var(--gold);line-height:1.1;letter-spacing:0}
+.fill-me{background:rgba(227,172,92,.16);border-radius:2px;padding:0 5px;color:var(--ink);font-weight:500;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
 
-section{padding-block:clamp(56px,8vw,96px)}
-.sec-head{margin-bottom:clamp(26px,4vw,40px)}
+section{padding-block:clamp(64px,9vw,120px)}
+.sec-head{margin-bottom:clamp(28px,4vw,48px)}
 
-/* орнамент: ромбы, как на дагестанском ковре и на аварском хинкале */
-.ornament{height:18px;background:var(--accent);opacity:.55;
-  -webkit-mask:var(--ornament) repeat-x center/36px 18px;mask:var(--ornament) repeat-x center/36px 18px}
-.ornament.wheat{background:var(--wheat);opacity:.8}
-
-/* ---------- кнопки ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:12px 22px;
-  border:1.5px solid transparent;border-radius:999px;font-size:16px;font-weight:600;line-height:1.1;text-decoration:none;cursor:pointer;
-  transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .12s ease,box-shadow .16s ease;
+/* ---------- кнопки: прямоугольные, как в референсе ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:12px 24px;
+  border:1px solid transparent;border-radius:var(--r);font-size:16px;font-weight:600;line-height:1.1;text-decoration:none;cursor:pointer;
+  transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .12s ease;
   -webkit-tap-highlight-color:transparent}
-.btn:active:not([disabled]){transform:translateY(1px) scale(.985)}
-.btn-primary{background:var(--accent);color:var(--on-accent);box-shadow:var(--shadow-sm)}
+.btn:active:not([disabled]){transform:translateY(1px)}
+.btn-primary{background:var(--gold);color:var(--on-gold)}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
 .btn-wide{width:100%}
 @media (hover:hover) and (pointer:fine){
-  .btn-primary:hover{background:var(--accent-hover)}
-  .btn-ghost:hover{border-color:var(--ink);background:var(--surface)}
+  .btn-primary:hover{background:var(--gold-hover)}
+  .btn-ghost:hover{border-color:var(--ink)}
 }
-.btn[disabled]{cursor:default;opacity:.7}
-.btn[data-state="sent"]{background:var(--ok);color:#fff;opacity:1}
+.btn[disabled]{cursor:default}
+.btn[data-state="sent"]{background:var(--ok);color:#0E1A10}
 
 /* ---------- шапка ---------- */
 .site{position:sticky;top:0;z-index:60;height:var(--hh);background:var(--glass);
-  -webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);
-  border-bottom:1px solid var(--line)}
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .site-in{height:100%;display:flex;align-items:center;gap:8px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-inline-end:auto;min-height:44px}
-.logo img{width:62px;height:auto}
-.logo-word{display:flex;flex-direction:column;line-height:1.05}
-.logo-word b{font-family:var(--f-head);font-weight:600;font-size:20px;letter-spacing:.02em}
-.logo-word span{font-size:12px;color:var(--muted)}
-@media (max-width:379px){.logo-word span{display:none}.logo img{width:52px}}
+.logo{display:flex;align-items:center;gap:10px;margin-inline-end:auto;min-height:44px;text-decoration:none}
+.logo img{width:50px;height:auto}
+.wordmark{font-family:var(--f-accent);font-style:italic;font-size:27px;line-height:1;color:var(--gold);white-space:nowrap}
+:root[lang="ar"] .wordmark{font-style:normal;font-size:25px;line-height:1.5}
+@media (max-width:419px){.logo img{display:none}.wordmark{font-size:23px}.site-in{gap:6px}}
+
 .nav{display:none}
-@media (min-width:1080px){.nav{display:flex;gap:2px;margin-inline-end:8px}}
-.nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;white-space:nowrap;border-radius:999px;font-size:15px;font-weight:500;text-decoration:none}
-.nav a:hover{background:var(--tint)}
+@media (min-width:1024px){.nav{display:flex;gap:2px;margin-inline-end:12px}}
+.nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:15px;font-weight:500;
+  color:var(--muted);text-decoration:none;white-space:nowrap;transition:color .16s ease}
+.nav a::after{content:"";position:absolute;inset-inline:12px;bottom:6px;height:1.5px;background:var(--gold);
+  transform:scaleX(0);transition:transform .22s ease}
+.nav a:hover,.nav a.is-active{color:var(--ink)}
+.nav a.is-active::after{transform:none}
+
 .hdr-phone{display:none}
-@media (min-width:820px){.hdr-phone{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:999px;
-  font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap}.hdr-phone:hover{background:var(--tint)}}
-.icon-btn{width:44px;height:44px;flex:none;display:inline-grid;place-items:center;border:1px solid var(--line);border-radius:999px;
-  background:transparent;cursor:pointer;text-decoration:none;transition:background-color .16s ease}
-.icon-btn:hover{background:var(--tint)}
-.theme-btn .moon{display:none}
-:root[data-theme="dark"] .theme-btn .sun{display:none}
-:root[data-theme="dark"] .theme-btn .moon{display:block}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .theme-btn .sun{display:none}
-  :root:not([data-theme="light"]) .theme-btn .moon{display:block}
-}
-.tel-btn{display:none}
-@media (min-width:480px) and (max-width:819px){.tel-btn{display:inline-grid}}
-@media (max-width:479px){.site-in{gap:6px}.logo-word b{font-size:18px}}
+@media (min-width:1200px){.hdr-phone{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 10px;
+  font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap;color:var(--muted)}
+  .hdr-phone:hover{color:var(--ink)}}
+
+.icon-btn{width:44px;height:44px;flex:none;display:inline-grid;place-items:center;border:1px solid var(--line);border-radius:var(--r);
+  background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;transition:border-color .16s ease}
+.icon-btn:hover{border-color:var(--line-strong)}
 .menu-btn{display:inline-grid}
-@media (min-width:1080px){.menu-btn{display:none}}
-.order-btn{position:relative;min-height:44px;padding-block:0;padding-inline:14px 16px;gap:8px;white-space:nowrap}
+@media (min-width:1024px){.menu-btn{display:none}}
+@media (max-width:359px){.menu-btn{display:none}}
+
+/* переключатель языка: виден на любом экране */
+.lang{display:inline-flex;flex:none;gap:2px;padding:3px;border:1px solid var(--line-strong);border-radius:var(--r)}
+.lang button{min-width:38px;height:36px;padding:0 8px;border:0;border-radius:2px;background:transparent;color:var(--muted);
+  font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.02em;cursor:pointer;
+  transition:background-color .16s ease,color .16s ease}
+.lang button[lang="ar"]{font-family:'Readex Pro',system-ui,sans-serif;font-weight:600;letter-spacing:0}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.order-btn{position:relative;min-height:44px;padding:0 12px;gap:8px;white-space:nowrap}
 .order-btn .label{display:none}
-@media (min-width:480px){.order-btn .label{display:inline}}
+@media (min-width:520px){.order-btn{padding:0 16px}.order-btn .label{display:inline}}
 .badge{min-width:22px;height:22px;padding:0 6px;display:inline-grid;place-items:center;border-radius:11px;
-  background:var(--on-accent);color:var(--accent);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+  background:var(--on-gold);color:var(--gold);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
 .bump{animation:bump .32s cubic-bezier(.2,.9,.3,1.3)}
 @keyframes bump{35%{transform:translateY(-4px) scale(1.18)}}
 
-.drawer-nav{position:absolute;left:0;right:0;top:100%;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.drawer-nav{position:absolute;left:0;right:0;top:100%;background:var(--bg-2);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
 .drawer-nav ul{display:flex;flex-direction:column;padding-block:8px}
-.drawer-nav a{display:flex;align-items:center;min-height:48px;padding:0 4px;font-size:17px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--line)}
+.drawer-nav a{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 4px;font-size:17px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--line)}
 .drawer-nav li:last-child a{border-bottom:0}
+.drawer-nav .ico{color:var(--gold)}
 
-/* ---------- hero ---------- */
-.hero{padding-top:clamp(28px,5vw,64px);padding-bottom:clamp(40px,6vw,72px)}
-.hero-in{display:grid;gap:clamp(28px,4vw,56px);align-items:center}
-.hero{overflow-x:clip}
-@media (min-width:960px){.hero-in{grid-template-columns:1.1fr 1fr}}
-.hero h1{font-size:clamp(2.2rem,5vw,3.7rem);font-weight:600;line-height:1.04;letter-spacing:-.02em}
-.hero-sub{margin-top:18px;font-size:clamp(1.05rem,2vw,1.2rem);color:var(--muted);max-width:50ch}
-.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.hero-note{display:flex;align-items:center;gap:14px;margin-top:26px}
-.hero-note .hand{font-size:clamp(1.35rem,2.6vw,1.6rem);max-width:18ch}
-.seal{width:84px;height:84px;flex:none;color:var(--olive)}
+/* ---------- первый экран ---------- */
+.hero{position:relative;padding-top:clamp(12px,3vw,40px);padding-bottom:clamp(56px,8vw,104px);overflow:clip}
+.hero-in{display:grid;align-items:center}
+@media (min-width:900px){.hero-in{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);min-height:min(calc(100svh - var(--hh) - 60px),760px)}}
+.hero-copy{position:relative;z-index:2}
+.hero h1{font-size:clamp(3.4rem,8.2vw,6.4rem);font-weight:700;font-stretch:84%;line-height:.95;letter-spacing:-.012em}
+.hero-sub{margin-top:24px;max-width:44ch;color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.15rem)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero-note{display:flex;align-items:center;gap:16px;margin-top:40px}
+.hero-note .accent{font-size:clamp(1.35rem,2.2vw,1.7rem);max-width:15ch}
+.seal{width:80px;height:80px;flex:none;color:var(--gold)}
 .seal svg{width:100%;height:100%;display:block}
 
-/* коллаж: фотографии разложены на столе */
-.collage{position:relative;aspect-ratio:1/.86;width:100%;max-width:620px;margin-inline:auto}
-.ph{position:absolute;margin:0;background:var(--surface);padding:clamp(5px,1vw,9px);border-radius:var(--r-sm);
-  box-shadow:var(--shadow-lg);transform:rotate(var(--r,0deg))}
-.ph .shot{position:relative;overflow:hidden;border-radius:4px;aspect-ratio:4/3;background:var(--tint)}
-.ph img{width:100%;height:100%;object-fit:cover;filter:var(--photo-filter)}
-.ph .shot::after,.card-photo::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:var(--photo-veil);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
-.ph figcaption{font-family:var(--f-hand);font-weight:600;font-size:clamp(1rem,2.2vw,1.3rem);text-align:center;color:var(--ink);padding-top:4px;line-height:1.1}
-.ph-burger{left:0;top:9%;width:70%;--r:-2.5deg;z-index:2}
-.ph-pizza{right:0;bottom:0;width:54%;--r:3deg;z-index:3;max-width:330px}
-.ph-khinkal{left:3%;bottom:0;width:31%;--r:-5deg;z-index:4;max-width:190px}
-.ph-manty{right:2%;top:0;width:33%;--r:5deg;z-index:1;max-width:200px}
-.ph-burger .shot,.ph-pizza .shot{aspect-ratio:4/3}
-.js .ph{animation:settle .7s cubic-bezier(.2,.8,.2,1) both}
-.js .ph-manty{animation-delay:.05s}.js .ph-burger{animation-delay:.15s}
-.js .ph-pizza{animation-delay:.3s}.js .ph-khinkal{animation-delay:.45s}
-@keyframes settle{from{opacity:0;transform:translateY(-22px) rotate(calc(var(--r,0deg) - 5deg))}to{opacity:1;transform:rotate(var(--r,0deg))}}
+/* пицца на чёрном столе, вокруг мука — как сковорода в референсе */
+.hero-art{position:relative;aspect-ratio:1;z-index:1}
+.hero-art img{position:absolute}
+.hero-art .flour{inset:0;width:100%;height:100%}
+.hero-art .pizza-main{inset:14.5%;width:71%;height:71%;filter:drop-shadow(0 34px 38px rgba(0,0,0,.7))}
+.hero-art .pizza-side{width:31%;height:31%;top:0;inset-inline-end:-9%;filter:drop-shadow(0 22px 26px rgba(0,0,0,.7)) brightness(.92)}
+@media (min-width:900px){.hero-art{width:116%;margin-inline-start:-12%}}
+@media (max-width:899px){
+  .hero-art{order:-1;width:min(104vw,560px);margin-inline-start:auto;margin-inline-end:calc(-1 * min(12vw,80px));margin-bottom:-6%}
+  .hero-art .pizza-side{inset-inline-end:auto;inset-inline-start:-14%;top:auto;bottom:6%;width:28%;height:28%}
+}
+.js .hero-art .pizza-main{animation:spinIn 1.3s cubic-bezier(.16,.84,.3,1) both}
+.js .hero-art .flour{animation:dust 1.5s ease-out .2s both}
+.js .hero-art .pizza-side{animation:slideIn 1.1s cubic-bezier(.16,.84,.3,1) .45s both}
+@keyframes spinIn{from{opacity:0;transform:rotate(-80deg) scale(.86)}}
+@keyframes dust{from{opacity:0;transform:scale(.88)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(calc(40% * var(--dir))) rotate(50deg)}}
 
-/* ---------- преимущества ---------- */
-.perks{padding-block:clamp(40px,6vw,64px);border-block:1px solid var(--line);background:var(--surface)}
-.perks-list{display:grid;gap:28px 24px;grid-template-columns:1fr}
-@media (min-width:600px){.perks-list{grid-template-columns:1fr 1fr}}
-@media (min-width:1024px){.perks-list{grid-template-columns:repeat(4,1fr);gap:0}
-  .perk{padding-inline:24px;border-inline-start:1px dashed var(--line-strong)}
-  .perk:first-child{border-inline-start:0;padding-inline-start:0}}
-.perk{display:flex;gap:16px;align-items:flex-start}
-.perk h3{margin:4px 0 4px}
-.perk .gem{flex:none;width:48px;height:48px;display:grid;place-items:center;position:relative;color:var(--accent-text)}
-.perk .gem::before{content:"";position:absolute;inset:6px;border:1.5px solid currentColor;transform:rotate(45deg);border-radius:4px;opacity:.6}
-.perk h3{font-family:var(--f-body);font-weight:700;font-size:17px;letter-spacing:0;line-height:1.3}
-.perk p{font-size:15px;color:var(--muted)}
+/* ---------- о кухне: фото и светлая карточка ---------- */
+.story{padding-top:0}
+.story-in{display:grid;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){
+  .story-in{grid-template-columns:repeat(12,minmax(0,1fr));align-items:center}
+  .story-photo{grid-column:1 / 8;grid-row:1}
+  .story-card{grid-column:7 / 13;grid-row:1;margin-block:56px}
+}
+.story-photo{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:var(--r)}
+.story-photo img{width:100%;height:100%;object-fit:cover}
+.story-card{position:relative;z-index:1;padding:clamp(24px,3.4vw,48px);border-radius:var(--r);background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow)}
+.story-card :focus-visible{outline-color:var(--paper-ink)}
+@media (max-width:899px){.story-card{margin:-56px 12px 0}}
+.story-card h2{font-size:clamp(1.85rem,3.4vw,2.7rem);font-stretch:86%}
+.story-card > p{margin-top:14px;color:var(--paper-muted);max-width:46ch}
+.facts{display:grid;gap:18px;margin-top:28px}
+.facts li{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start}
+.facts .ic{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#EADFCC;color:#7E5216}
+.facts .ic .ico{width:21px;height:21px}
+.facts b{display:block;font-size:16px;font-weight:700;line-height:1.3;padding-top:2px}
+.facts span{display:block;font-size:15px;color:var(--paper-muted)}
 
 /* ---------- меню ---------- */
-.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 16px 8px;margin-inline:-16px;
-  -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.tabs{display:flex;gap:4px 28px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;
+  border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 @media (min-width:768px){.tabs{flex-wrap:wrap;overflow:visible;margin-inline:0;padding-inline:0}}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;
-  border:1.5px solid var(--line-strong);border-radius:999px;background:transparent;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;
-  transition:background-color .16s ease,color .16s ease,border-color .16s ease}
-.tab .count{font-size:13px;color:var(--muted);font-weight:500}
-@media (hover:hover) and (pointer:fine){.tab:hover{border-color:var(--ink)}}
-.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.tab[aria-selected="true"] .count{color:inherit;opacity:.7}
+.tab{position:relative;flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:7px;min-height:54px;padding:0 2px;
+  border:0;background:transparent;color:var(--muted);font-size:17px;font-weight:600;cursor:pointer;white-space:nowrap;transition:color .16s ease}
+.tab .count{font-size:12px;font-weight:600;opacity:.75}
+.tab::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .22s ease}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{transform:none}
 
-.menu-panel{margin-top:28px}
-.cat + .cat{margin-top:clamp(40px,6vw,64px)}
-.cat-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin-bottom:20px}
-.cat-head h3{font-size:clamp(1.45rem,3vw,1.9rem)}
-.cat-head .hand{font-size:1.35rem}
+/* общая сетка на всё меню: маленькие категории (1–3 блюда) встают в один ряд,
+   а не оставляют пустоту справа. data-n — сколько колонок занимает категория */
+.menu-panel{--cat-gap:clamp(52px,7vw,84px);margin-top:calc(40px - var(--cat-gap));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:0}
+@media (min-width:640px){.menu-panel{column-gap:20px}}
+@media (min-width:860px){.menu-panel{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1180px){.menu-panel{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* у каждой категории две строки общей сетки — заголовок и карточки, —
+   поэтому у соседних категорий карточки начинаются на одной высоте */
+.cat{grid-column:1 / -1;grid-row:span 2;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid}
+.cat[data-n="1"]{grid-column:span 1}
+@media (min-width:860px){.cat[data-n="2"]{grid-column:span 2}}
+@media (min-width:1180px){.cat[data-n="3"]{grid-column:span 3}}
+.cat-head{grid-column:1 / -1;align-self:start;display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:var(--cat-gap);margin-bottom:24px}
+.cat-head h3{font-size:clamp(1.75rem,3vw,2.35rem);font-stretch:86%}
+.cat-head .accent{font-size:1.4rem}
 
-/* на телефоне две колонки: маленькие фото не растягиваются, меню короче */
-.grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
-@media (min-width:560px){.grid{gap:18px}}
-@media (min-width:700px){.grid{grid-template-columns:repeat(3,1fr);gap:20px}}
-@media (min-width:1180px){.grid{grid-template-columns:repeat(4,1fr)}}
-@media (max-width:559px){
-  .card{padding:6px;border-radius:14px}
-  .card-photo{border-radius:9px}
-  .card-body{padding:10px 4px 4px}
-  .card h4{font-size:15px}
+.grid{grid-column:1 / -1;display:grid;gap:12px;grid-template-columns:subgrid}
+@media (min-width:640px){.grid{gap:20px}}
+@supports not (grid-template-columns:subgrid){
+  .menu-panel,.cat{display:block}
+  .menu-panel{margin-top:40px}
+  .cat-head{margin-top:0}
+  .cat + .cat{margin-top:64px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media (min-width:860px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (min-width:1180px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+}
+
+.card{display:flex;flex-direction:column;padding:24px 20px 20px;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r)}
+/* фото подаём на тарелке: круг с ободком */
+.plate{width:100%;aspect-ratio:4/3;margin:0 0 20px;border-radius:calc(var(--r) - 2px);overflow:hidden;background:var(--bg)}
+.plate img{display:block;width:100%;height:100%;object-fit:cover}
+.plate.spin img{animation:plateSpin .7s cubic-bezier(.3,.7,.3,1)}
+@keyframes plateSpin{40%{transform:scale(1.06)}}
+.card h4{font-size:19px;font-weight:700;font-stretch:92%;line-height:1.2;overflow-wrap:break-word;hyphens:auto}
+.card .desc{margin-top:8px;font-size:14px;line-height:1.5;color:var(--muted)}
+.card .desc.pending{font-style:italic}
+.card-meta{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:auto;padding-top:16px}
+.card-meta .w{font-size:13px;color:var(--muted)}
+.card-meta .price{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card-act{margin-top:14px;min-height:46px;display:flex}
+.add{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 14px;
+  border:1px solid var(--line-strong);border-radius:var(--r);background:transparent;color:var(--ink);font-weight:600;font-size:15px;cursor:pointer;
+  transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .12s ease}
+.add:active{transform:scale(.98)}
+@media (hover:hover) and (pointer:fine){.add:hover{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}}
+.step{flex:1;display:flex;align-items:center;justify-content:space-between;border-radius:var(--r);background:var(--gold);color:var(--on-gold);
+  animation:pop .22s cubic-bezier(.2,.9,.3,1.25)}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.step button,.step-sm button{width:46px;height:46px;display:grid;place-items:center;border:0;background:transparent;color:inherit;cursor:pointer;
+  border-radius:var(--r);-webkit-tap-highlight-color:transparent;transition:background-color .14s ease}
+.step button:hover{background:rgba(0,0,0,.1)}
+.step .qty{font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+@media (max-width:639px){
+  .card{padding:14px 12px 12px}
+  .plate{margin:0 0 14px}
+  .card h4{font-size:16px}
   .card .desc{font-size:13px;line-height:1.45}
-  .card-meta{flex-direction:column;align-items:flex-start;gap:2px;padding-top:10px}
-  .card-meta .w{font-size:13px}
-  .card-meta .price{font-size:17px}
+  .card-meta{flex-direction:column;align-items:flex-start;gap:0;padding-top:12px}
+  .card-meta .price{font-size:18px}
   .card-act{margin-top:10px;min-height:44px}
-  .add{min-height:44px;padding:0 10px;font-size:14px;gap:6px}
+  .add{min-height:44px;padding:0 8px;font-size:14px;gap:6px}
   .step button{width:44px;height:44px}
 }
 
-.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:10px;box-shadow:var(--shadow-sm);transition:box-shadow .2s ease,border-color .2s ease}
-@media (hover:hover) and (pointer:fine){.card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}}
-.card-photo{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:var(--r);background:var(--tint)}
-.card-photo img{width:100%;height:100%;object-fit:cover;filter:var(--photo-filter)}
-.card-body{display:flex;flex-direction:column;flex:1;padding:14px 6px 6px}
-.card h4{font-size:17px;font-weight:700;line-height:1.3;overflow-wrap:break-word;hyphens:auto}
-.card .desc{margin-top:6px;font-size:14px;line-height:1.5;color:var(--muted)}
-.card .desc.pending{font-style:italic}
-.card-meta{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px}
-.card-meta .w{font-size:14px;color:var(--muted)}
-.card-meta .price{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.card-act{margin-top:12px;min-height:48px;display:flex}
-.add{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;
-  border:1.5px solid var(--accent);border-radius:999px;background:transparent;color:var(--accent-text);font-weight:600;font-size:15px;cursor:pointer;
-  transition:background-color .16s ease,color .16s ease,transform .12s ease}
-.add:active{transform:scale(.98)}
-@media (hover:hover) and (pointer:fine){.add:hover{background:var(--accent);color:var(--on-accent)}}
-.step{flex:1;display:flex;align-items:center;justify-content:space-between;border-radius:999px;background:var(--accent);color:var(--on-accent);
-  animation:pop .22s cubic-bezier(.2,.9,.3,1.25)}
-@keyframes pop{from{transform:scale(.92);opacity:0}}
-.step button,.step-sm button{width:48px;height:48px;display:grid;place-items:center;border:0;background:transparent;color:inherit;cursor:pointer;
-  border-radius:999px;-webkit-tap-highlight-color:transparent;transition:background-color .14s ease}
-.step button:hover{background:rgba(255,255,255,.14)}
-.step .qty{font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+/* ---------- акция во всю ширину, как «Book your table» ---------- */
+.band{position:relative;isolation:isolate;overflow:hidden;padding-block:clamp(110px,15vw,190px);text-align:center}
+.band > img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.band::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,var(--bg) 0%,rgba(22,20,18,.7) 24%,rgba(22,20,18,.74) 76%,var(--bg) 100%)}
+.band .accent{font-size:clamp(1.5rem,2.8vw,2.1rem)}
+.band h2{margin-top:6px}
+.band .terms{margin-top:16px}
+.band .btn{margin-top:30px;border-color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.band .btn:hover{background:var(--ink);color:var(--bg)}}
 
-/* ---------- баннеры акций ---------- */
-.promos{display:grid;gap:18px;grid-template-columns:1fr}
-@media (min-width:900px){.promos{grid-template-columns:1fr 1fr;gap:22px}}
-.promo{position:relative;overflow:hidden;border-radius:var(--r-lg);display:grid;grid-template-columns:1fr;min-height:260px}
-@media (min-width:520px){.promo{grid-template-columns:1.1fr .9fr}}
-.promo-body{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:10px;padding:clamp(26px,3vw,34px) clamp(22px,3vw,32px)}
-.promo h3{font-size:clamp(1.5rem,2.8vw,2rem)}
-.promo p{font-size:15px;max-width:34ch}
-.promo .btn{margin-top:10px}
-.promo-a{background:var(--olive);color:#F7F3E6}
-.promo-a p{color:rgba(247,243,230,.86)}
-.promo-a .btn{background:#F7F3E6;color:#2B2716}
-.promo-a .hand{color:#F1D38E;font-size:1.4rem}
-.promo-b{background:var(--wheat-soft);color:var(--ink)}
-.promo-b p{color:var(--muted)}
-.promo-b .hand{font-size:1.4rem}
-:root[data-theme="dark"] .promo-a{background:#39401F}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .promo-a{background:#39401F}}
-.promo .ornament{position:absolute;left:0;right:0;top:0;opacity:.35;background:currentColor}
-.promo-art{position:relative;min-height:200px}
-.promo-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--photo-filter)}
-.promo-a .promo-art{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-block:18px;padding-inline:0 18px}
-@media (max-width:519px){.promo-a .promo-art{padding:0 18px 18px}}
-.promo-a .promo-art .pic{position:relative;border-radius:var(--r);overflow:hidden;background:rgba(0,0,0,.15)}
-.promo-a .promo-art .pic:first-child{grid-row:span 2}
-@media (max-width:519px){.promo-b .promo-art{order:-1;aspect-ratio:16/9;min-height:0}}
-
-/* ---------- шаги ---------- */
-.steps{display:grid;gap:14px;grid-template-columns:1fr;counter-reset:s}
-@media (min-width:640px){.steps{grid-template-columns:1fr 1fr}}
-@media (min-width:1024px){.steps{grid-template-columns:repeat(4,1fr);gap:18px}}
-.stepc{position:relative;padding:22px 20px 22px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
-.stepc .no{position:absolute;top:14px;inset-inline-end:18px;font-family:var(--f-head);font-size:2.4rem;font-weight:600;line-height:1;color:var(--wheat);opacity:.8}
-.stepc .ic{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:var(--wheat-soft);color:var(--accent-text);margin-bottom:16px}
-.stepc .ic .ico{width:22px;height:22px}
-.stepc h3{font-family:var(--f-body);font-size:17px;font-weight:700;letter-spacing:0;line-height:1.3}
-.stepc p{margin-top:6px;font-size:15px;color:var(--muted)}
-
-/* ---------- как приготовить ---------- */
-.cook{background:var(--surface);border-block:1px solid var(--line)}
-.cook-grid{display:grid;gap:16px;grid-template-columns:1fr}
-@media (min-width:600px){.cook-grid{grid-template-columns:1fr 1fr}}
-@media (min-width:1024px){.cook-grid{grid-template-columns:repeat(3,1fr)}}
-.recipe{display:grid;grid-template-columns:44px 1fr;gap:2px 14px;align-content:start;padding:22px;border-radius:var(--r-lg);background:var(--bg);border:1px solid var(--line)}
-.recipe .m{grid-row:span 3;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:var(--wheat-soft);color:var(--accent-text)}
-.recipe h3{font-size:1.35rem}
-.recipe .way{font-size:14px;font-weight:600;color:var(--olive)}
-.recipe p:not(.way){margin-top:6px;font-size:15px;color:var(--muted)}
-.recipe.hot{background:transparent;border:1.5px dashed var(--line-strong)}
-@media (min-width:1024px){.recipe.hot{grid-column:span 2}}
-.cook-foot{margin-top:22px;font-size:1.4rem}
+/* ---------- как заказать ---------- */
+.steps{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line)}
+@media (min-width:640px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1024px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stepc{padding:26px 0 30px;border-bottom:1px solid var(--line)}
+@media (min-width:640px){.stepc{padding-inline-end:28px}}
+@media (min-width:1024px){.stepc{border-bottom:0}.stepc + .stepc{padding-inline-start:28px;border-inline-start:1px solid var(--line)}}
+.stepc .no{display:block;font-family:var(--f-accent);font-style:italic;font-size:3.5rem;line-height:1;color:var(--gold)}
+.stepc h3{margin-top:14px;font-size:19px;font-stretch:92%;line-height:1.25}
+.stepc p{margin-top:8px;font-size:15px;color:var(--muted);max-width:34ch}
 
 /* ---------- отзывы (шаблон) ---------- */
-.reviews-grid{display:grid;gap:16px;grid-template-columns:1fr}
-@media (min-width:720px){.reviews-grid{grid-template-columns:repeat(3,1fr)}}
-.review-slot{min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;text-align:center;
-  padding:24px;border:2px dashed var(--line-strong);border-radius:var(--r-lg);color:var(--muted)}
-.review-slot .ico{width:28px;height:28px;color:var(--wheat)}
+.reviews-grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){.reviews-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.review-slot{min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;
+  padding:24px;border:1px dashed var(--line-strong);border-radius:var(--r);color:var(--muted)}
+@media (max-width:719px){.review-slot{min-height:128px}}
+.review-slot .ico{width:28px;height:28px;color:var(--gold)}
 .review-slot p{font-size:15px;max-width:26ch}
-.reviews-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:24px}
+.reviews-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:28px}
 .reviews-cta p{color:var(--muted);max-width:52ch}
 /* готовая карточка отзыва — для будущих настоящих отзывов */
-.review{padding:22px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
-.review blockquote{margin:0;font-family:var(--f-head);font-size:1.1rem;line-height:1.5}
+.review{padding:24px;border-radius:var(--r);background:var(--bg-2);border:1px solid var(--line)}
+.review blockquote{font-size:1.1rem;line-height:1.55}
 .review figcaption{margin-top:12px;font-size:14px;color:var(--muted)}
 
 /* ---------- контакты ---------- */
-.contacts{display:grid;gap:18px;grid-template-columns:1fr}
-@media (min-width:880px){.contacts{grid-template-columns:1.15fr .85fr;gap:22px}}
-.panel{padding:clamp(18px,3vw,28px);border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
-.crow{display:grid;grid-template-columns:24px 1fr;gap:14px;padding-block:14px;border-bottom:1px dashed var(--line-strong)}
+.contacts{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.contacts{grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}}
+.panel{padding:clamp(20px,3vw,32px);border-radius:var(--r);background:var(--bg-2);border:1px solid var(--line)}
+.crow{display:grid;grid-template-columns:24px 1fr;gap:16px;padding-block:16px;border-bottom:1px solid var(--line)}
 .crow:first-child{padding-top:0}
 .crow:last-child{border-bottom:0;padding-bottom:0}
-.crow .ico{color:var(--accent-text);margin-top:3px}
+.crow .ico{color:var(--gold);margin-top:3px}
 .crow .k{font-size:14px;color:var(--muted)}
 .crow .v{font-size:17px;font-weight:600;text-decoration:none}
-.crow a.v:hover{color:var(--accent-text)}
-.logo-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
-.logo-card img{width:min(260px,80%);height:auto;border-radius:var(--r);background:#fff}
-.logo-card .lead{margin-top:0}
+.crow a.v:hover{color:var(--gold)}
+.order-card{position:relative;margin-top:clamp(48px,6vw,72px);padding:clamp(28px,3.6vw,44px);border-radius:var(--r);background:var(--paper);color:var(--paper-ink)}
+.order-card :focus-visible{outline-color:var(--paper-ink)}
+.order-card .pie{position:absolute;width:clamp(120px,14vw,160px);height:auto;aspect-ratio:1;top:clamp(-72px,-6vw,-56px);inset-inline-end:-6px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.55))}
+.order-card h3{font-size:clamp(1.65rem,2.6vw,2.1rem);font-stretch:86%;max-width:11ch}
+.order-card p{margin-top:12px;color:var(--paper-muted);max-width:34ch}
+.order-card .btn{margin-top:24px;background:var(--paper-ink);color:var(--paper)}
+@media (hover:hover) and (pointer:fine){.order-card .btn:hover{background:#3A342C}}
 
-footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
-.foot-in{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
-.foot-nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+footer{padding-block:40px calc(40px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.foot-in{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
+.foot-in .wordmark{font-size:24px}
+.foot-nav{display:flex;flex-wrap:wrap;gap:4px 20px}
 .foot-nav a{text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
 .foot-nav a:hover{color:var(--ink)}
-@media (max-width:1079px){footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:1023px){footer{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}}
 
 /* ---------- корзина ---------- */
 .scrim{position:fixed;inset:0;z-index:70;background:var(--scrim);opacity:0;transition:opacity .22s ease}
 .scrim.on{opacity:1}
 .cart{position:fixed;top:0;inset-inline-end:0;z-index:80;height:100%;width:min(440px,100%);display:flex;flex-direction:column;
-  background:var(--bg);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+  background:var(--bg-2);border-inline-start:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
 .cart.on{transform:none}
 [dir="rtl"] .cart:not(.on){transform:translateX(-100%)}
 .cart-head{display:flex;align-items:center;gap:12px;padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));
-  border-bottom:1px solid var(--line);background:var(--surface)}
-.cart-head h2{font-size:1.5rem;margin-inline-end:auto}
+  border-bottom:1px solid var(--line);background:var(--bg)}
+.cart-head h2{font-size:1.6rem;font-stretch:86%;margin-inline-end:auto}
 .cart-body{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .cart-empty{text-align:center;padding:48px 8px}
-.cart-empty .ico{width:40px;height:40px;margin:0 auto;color:var(--wheat)}
-.cart-empty p{color:var(--muted);margin:12px auto 20px;max-width:30ch}
+.cart-empty .ico{width:40px;height:40px;margin:0 auto;color:var(--gold)}
+.cart-empty p{color:var(--muted);margin:14px auto 22px;max-width:30ch}
 .cart-lines-head{display:flex;align-items:center;gap:12px}
 .cart-lines-head h3{font-family:var(--f-body);font-size:15px;font-weight:600;letter-spacing:0;color:var(--muted)}
 .clear-all{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--line);
-  border-radius:999px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer}
+  border-radius:var(--r);background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer}
 .clear-all:hover{color:var(--ink);border-color:var(--line-strong)}
-.clear-all[data-armed="1"]{background:var(--danger);border-color:var(--danger);color:#fff}
-.cline{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding-block:12px;border-bottom:1px dashed var(--line-strong)}
+.clear-all[data-armed="1"]{background:var(--danger);border-color:var(--danger);color:#2A0E09}
+.cline{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding-block:12px;border-bottom:1px solid var(--line)}
 .cline.leaving{animation:lineOut .24s ease-in forwards}
-@keyframes lineOut{to{opacity:0;transform:translateX(24px)}}
-[dir="rtl"] .cline.leaving{animation-name:lineOutRtl}
-@keyframes lineOutRtl{to{opacity:0;transform:translateX(-24px)}}
-.cline-img{width:60px;height:45px;border-radius:6px;overflow:hidden;background:var(--tint)}
+@keyframes lineOut{to{opacity:0;transform:translateX(calc(24px * var(--dir)))}}
+.cline-img{width:56px;height:56px;border-radius:10px;overflow:hidden;background:var(--bg)}
 .cline-img img{width:100%;height:100%;object-fit:cover}
 .cline b{display:block;font-size:15px;font-weight:600;line-height:1.3}
 .cline .p{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .cline-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .cline-sum{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.step-sm{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:999px}
+.step-sm{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:var(--r)}
 .step-sm button{width:40px;height:40px}
-.step-sm button:hover{background:var(--tint)}
+.step-sm button:hover{background:var(--bg-3)}
 .step-sm .qty{min-width:24px;text-align:center;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-.totals{margin-top:16px;padding:14px 16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.totals{margin-top:16px;padding:14px 16px;border-radius:var(--r);background:var(--bg);border:1px solid var(--line)}
 .trow{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding-block:4px;font-variant-numeric:tabular-nums}
 .trow.big{margin-top:6px;padding-top:10px;border-top:1px solid var(--line);font-size:19px;font-weight:700}
-.freehint{margin-top:6px;font-size:13px;color:var(--olive);font-weight:600}
-.form{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+.freehint{margin-top:6px;font-size:13px;color:var(--gold);font-weight:600}
+.form{margin-top:24px;display:flex;flex-direction:column;gap:14px}
 .form h3{font-family:var(--f-body);font-size:17px;font-weight:700;letter-spacing:0}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label,.field .label{font-size:14px;font-weight:600}
 .req{color:var(--danger)}
-.field input,.field textarea{width:100%;min-height:48px;padding:12px 14px;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
-  border:1.5px solid var(--line-strong);border-radius:var(--r);transition:border-color .14s ease}
+.field input,.field textarea{width:100%;min-height:48px;padding:12px 14px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line-strong);border-radius:var(--r);transition:border-color .14s ease}
 .field textarea{min-height:80px;resize:vertical}
-.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.7}
-.field input:focus,.field textarea:focus{border-color:var(--wheat);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--wheat) 30%,transparent)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.75}
+.field input:focus,.field textarea:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(227,172,92,.25)}
 .field [aria-invalid="true"]{border-color:var(--danger)}
 .err{font-size:13px;font-weight:600;color:var(--danger)}
-.segmented{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:999px;background:var(--tint)}
-.seg{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer}
+.segmented{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:var(--r);background:var(--bg)}
+.seg{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:2px;font-size:15px;font-weight:600;cursor:pointer;color:var(--muted)}
 .seg input{position:absolute;opacity:0;width:1px;height:1px}
-.seg:has(input:checked){background:var(--surface);box-shadow:var(--shadow-sm)}
-.seg:has(input:focus-visible){outline:3px solid var(--wheat);outline-offset:1px}
+.seg:has(input:checked){background:var(--bg-3);color:var(--ink)}
+.seg:has(input:focus-visible){outline:2px solid var(--gold);outline-offset:1px}
 .fine{font-size:13px;color:var(--muted)}
-.fallback{padding:12px;border:1.5px dashed var(--wheat);border-radius:var(--r);font-size:14px}
+.fallback{padding:12px;border:1px dashed var(--gold);border-radius:var(--r);font-size:14px}
 .fallback p{margin-bottom:10px}
 
 .fab{position:fixed;left:16px;right:16px;bottom:0;z-index:55;margin-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  display:flex;align-items:center;gap:10px;min-height:56px;padding:0 20px;border:0;border-radius:999px;background:var(--accent);color:var(--on-accent);
-  font-size:16px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-lg);animation:pop .24s cubic-bezier(.2,.9,.3,1.25)}
+  display:flex;align-items:center;gap:10px;min-height:56px;padding:0 20px;border:0;border-radius:var(--r);background:var(--gold);color:var(--on-gold);
+  font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 18px 40px -12px rgba(0,0,0,.9);animation:pop .24s cubic-bezier(.2,.9,.3,1.25)}
 .fab .fab-sum{margin-inline-start:auto;font-variant-numeric:tabular-nums}
-@media (min-width:1080px){.fab{display:none!important}}
+@media (min-width:1024px){.fab{display:none!important}}
 
-/* ---------- арабский: высота строк и выключка ---------- */
-/* арабскому письму нужна высокая строка и нулевой трекинг — иначе связки рвутся */
-:root[lang="ar"] body{line-height:1.7}
-:root[lang="ar"] h1,:root[lang="ar"] h2,:root[lang="ar"] h3,:root[lang="ar"] .logo-word b{letter-spacing:0;line-height:1.4}
-:root[lang="ar"] .hero h1{line-height:1.35;font-weight:700;font-size:clamp(2.3rem,5.2vw,3.8rem)}
-:root[lang="ar"] .h2{font-weight:700;font-size:clamp(2rem,4.8vw,3rem)}
-:root[lang="ar"] .hand{line-height:1.5;font-weight:400}
-:root[lang="ar"] .card h4{line-height:1.45}
+/* ---------- арабский: высокая строка и нулевой трекинг, иначе связки рвутся ---------- */
+:root[lang="ar"] body{line-height:1.75}
+:root[lang="ar"] h1,:root[lang="ar"] h2,:root[lang="ar"] h3,:root[lang="ar"] h4{letter-spacing:0;line-height:1.35;font-stretch:normal}
+:root[lang="ar"] .hero h1{font-size:clamp(2.5rem,6vw,4.6rem);font-weight:800;line-height:1.25}
+:root[lang="ar"] .accent{font-style:normal;line-height:1.5}
+:root[lang="ar"] .stepc .no{font-style:normal}
 :root[lang="ar"] .card .desc.pending{font-style:normal}
-:root[lang="ar"] .ph figcaption{font-size:clamp(.95rem,2vw,1.15rem);padding-top:2px}
 [dir="rtl"] #fPhone{text-align:right}
 
-/* ---------- переключатель языка ---------- */
-.lang-btn{display:none;width:auto;min-width:44px;padding:0 12px;font-size:15px;font-weight:700;line-height:1}
-.lang-btn [lang="ar"]{font-family:'IBM Plex Sans Arabic',var(--f-body)}
-@media (min-width:820px){.lang-btn{display:inline-grid}}
-/* на узком десктопе рядом с разделами места мало: у телефона остаётся только иконка */
-@media (min-width:1080px) and (max-width:1279px){
-  .hdr-phone span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .nav a{padding:0 8px}
-  .logo img{width:52px}
-}
-.drawer-nav .drawer-lang{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 4px;border:0;border-top:1px solid var(--line);
-  background:transparent;font-size:17px;font-weight:500;text-align:start;cursor:pointer}
-.drawer-lang .ico{color:var(--accent-text)}
-
-/* ---------- появление блоков ---------- */
-.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.75,.2,1)}
-.js .reveal.in{opacity:1;transform:none}
+/* появление блоков при прокрутке */
+.rv-on .rv{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+.rv-on .rv.in{opacity:1;transform:none}
+.rv-on .band > img{transform:scale(1.08);transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.rv-on .band.in > img{transform:none}
 
 @media (prefers-reduced-motion:reduce){
+  .rv-on .rv{opacity:1;transform:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-  .js .reveal{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
 
+<!-- иконки: Lucide (ISC), значок WhatsApp — Simple Icons (CC0) -->
 <svg class="sprite" aria-hidden="true" focusable="false">
   <defs>
-    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
-    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3h3l1.5 4-2 1.4a12 12 0 0 0 6.6 6.6L17 13l4 1.5v3a2.5 2.5 0 0 1-2.8 2.5C10.9 19.3 4.7 13.1 4 5.8A2.5 2.5 0 0 1 6.5 3Z"/></symbol>
-    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
     <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
-    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
-    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3.2 2"/></symbol>
-    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2 7h10v9H2zM12 10h4.5l3.5 3v3h-8"/><circle cx="6" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/></symbol>
-    <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/><path d="M9.4 4.8 12 7l2.6-2.2M9.4 19.2 12 17l2.6 2.2"/></symbol>
-    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 20 6.5"/></symbol>
-    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-14 15-15 1 10-4 16-12 16H5Z"/><path d="M7 17c3-4 6-6 10-7.5"/></symbol>
-    <symbol id="i-hands" viewBox="0 0 24 24"><path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V5a1.5 1.5 0 0 1 3 0v5M13 10V6a1.5 1.5 0 0 1 3 0v6"/><path d="M16 11.5V9.8a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.6a6 6 0 0 1-4.6-2.2L4 15.3a1.6 1.6 0 0 1 2.4-2.1L7 13.8V11"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 2.6v5.6c0 4.3-2.9 7.9-7 9.2-4.1-1.3-7-4.9-7-9.2V5.6L12 3Z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
-    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M20 11.8A8 8 0 0 1 8.4 19l-4.4 1.2 1.2-4.3A8 8 0 1 1 20 11.8Z"/><path d="M9.2 9c-.3 0-.7.2-.9.6-.5 1 .1 2.4 1.2 3.5 1.1 1.1 2.5 1.7 3.5 1.2.4-.2.6-.6.6-.9l-1.3-.7-.7.7c-.7-.3-1.6-1.2-1.9-1.9l.7-.7L9.2 9Z"/></symbol>
-    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
-    <symbol id="i-pot" viewBox="0 0 24 24"><path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-6Z"/><path d="M2 10h20M9 6.5c0-1 .8-1.3.8-2.5M14 6.5c0-1 .8-1.3.8-2.5"/></symbol>
-    <symbol id="i-pan" viewBox="0 0 24 24"><ellipse cx="10" cy="13" rx="7.5" ry="4.5"/><path d="M17 12.5h5"/><path d="M7 7.5c0-1 .8-1.3.8-2.5M11 7.5c0-1 .8-1.3.8-2.5"/></symbol>
-    <symbol id="i-oven" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 8h17"/><rect x="7" y="11" width="10" height="6.5" rx="1"/><path d="M7 5.8h.01M10 5.8h.01"/></symbol>
-    <symbol id="i-steam" viewBox="0 0 24 24"><path d="M4 14h16l-1.2 5.2A2 2 0 0 1 16.9 21H7.1a2 2 0 0 1-1.9-1.8L4 14Z"/><path d="M8 10c-1-1.2 1-2 0-3.5M12 10c-1-1.2 1-2 0-3.5M16 10c-1-1.2 1-2 0-3.5"/></symbol>
-    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M9.5 7C6.5 8 5 10.2 5 13.5V17h4.5v-4.5H7.2c.1-1.8 1-3 2.8-3.7L9.5 7ZM18.5 7c-3 1-4.5 3.2-4.5 6.5V17h4.5v-4.5h-2.3c.1-1.8 1-3 2.8-3.7L18.5 7Z"/></symbol>
-    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol>
-    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4 18-7Z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5"/><path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244"/><path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+    <symbol id="i-wheat" viewBox="0 0 24 24"><path d="M2 22 16 8"/><path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"/><path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/><path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/><path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
   </defs>
 </svg>
 
 <header class="site" id="top">
   <div class="wrap site-in">
-    <a class="logo" href="#top" aria-label="Кормилица — в начало страницы" data-i18n-attr="aria-label:logoAria">
+    <a class="logo" href="#top" aria-label="Kormilitsa — back to top" data-i18n-attr="aria-label:logoAria">
       <img src="photos/logo-mark.png" alt="" width="364" height="216" decoding="async">
-      <span class="logo-word"><b data-i18n="brand">Кормилица</b><span data-i18n="brandSub">домашняя кухня</span></span>
+      <span class="wordmark" data-i18n="brand">Kormilitsa</span>
     </a>
-    <nav class="nav" aria-label="Разделы сайта" data-i18n-attr="aria-label:navAria">
-      <a href="#menu" data-i18n="navMenu">Меню</a>
-      <a href="#how" data-i18n="navHow">Как заказать</a>
-      <a href="#cook" data-i18n="navCook">Как приготовить</a>
-      <a href="#reviews" data-i18n="navReviews">Отзывы</a>
-      <a href="#contacts" data-i18n="navContacts">Контакты</a>
+    <nav class="nav" aria-label="Site sections" data-i18n-attr="aria-label:navAria">
+      <a href="#menu" data-i18n="navMenu">Menu</a>
+      <a href="#how" data-i18n="navHow">How to order</a>
+      <a href="#reviews" data-i18n="navReviews">Reviews</a>
+      <a href="#contacts" data-i18n="navContacts">Contacts</a>
     </nav>
     <a class="hdr-phone" data-phone-link href="tel:+79286813532"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span data-phone-text dir="ltr">+7 928 681-35-32</span></a>
-    <a class="icon-btn tel-btn" data-phone-link href="tel:+79286813532" aria-label="Позвонить" data-i18n-attr="aria-label:call"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
-    <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-label="Arabic — عربي"><span data-lang-label lang="ar">عربي</span></button>
-    <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Переключить тему">
-      <svg class="ico sun" aria-hidden="true"><use href="#i-sun"/></svg>
-      <svg class="ico moon" aria-hidden="true"><use href="#i-moon"/></svg>
-    </button>
-    <button class="icon-btn menu-btn" id="navBtn" type="button" aria-expanded="false" aria-controls="drawerNav" aria-label="Открыть разделы">
+    <div class="lang" role="group" aria-label="Language" data-i18n-attr="aria-label:langAria">
+      <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="ar" lang="ar" aria-pressed="false">عربي</button>
+    </div>
+    <button class="icon-btn menu-btn" id="navBtn" type="button" aria-expanded="false" aria-controls="drawerNav" aria-label="Open sections">
       <svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>
     </button>
     <button class="btn btn-primary order-btn" id="cartOpen" type="button" aria-expanded="false" aria-controls="cartPanel">
       <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-      <span class="label" data-i18n="order">Заказать</span>
-      <span class="badge" id="cartCount" aria-label="Блюд в корзине">0</span>
+      <span class="label" data-i18n="order">Order</span>
+      <span class="badge" id="cartCount" aria-label="Dishes in cart">0</span>
     </button>
   </div>
-  <nav class="drawer-nav" id="drawerNav" aria-label="Разделы сайта" data-i18n-attr="aria-label:navAria" hidden>
+  <nav class="drawer-nav" id="drawerNav" aria-label="Site sections" data-i18n-attr="aria-label:navAria" hidden>
     <ul class="wrap">
-      <li><a href="#menu" data-i18n="navMenu">Меню</a></li>
-      <li><a href="#how" data-i18n="navHow">Как заказать</a></li>
-      <li><a href="#cook" data-i18n="navCook">Как приготовить</a></li>
-      <li><a href="#reviews" data-i18n="navReviews">Отзывы</a></li>
-      <li><a href="#contacts" data-i18n="navContactsFull">Контакты и доставка</a></li>
-      <li><a data-phone-link href="tel:+79286813532"><span data-i18n="callColon">Позвонить:</span>&nbsp;<span data-phone-text dir="ltr">+7 928 681-35-32</span></a></li>
-      <li><button class="drawer-lang" type="button" data-lang-toggle><svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-label lang="ar">العربية</span></button></li>
+      <li><a href="#menu" data-i18n="navMenu">Menu</a></li>
+      <li><a href="#how" data-i18n="navHow">How to order</a></li>
+      <li><a href="#reviews" data-i18n="navReviews">Reviews</a></li>
+      <li><a href="#contacts" data-i18n="navContactsFull">Contacts and delivery</a></li>
+      <li><a data-phone-link href="tel:+79286813532"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span data-i18n="callColon">Call:</span>&nbsp;<span data-phone-text dir="ltr">+7 928 681-35-32</span></a></li>
     </ul>
   </nav>
 </header>
 
 <main>
   <!-- 1. первый экран -->
-  <section class="hero" aria-labelledby="heroTitle">
+  <section class="hero" id="home" aria-labelledby="heroTitle">
     <div class="wrap hero-in">
-      <div>
-        <h1 id="heroTitle" data-i18n="heroTitle">Домашняя еда: горячая к&nbsp;столу и&nbsp;в&nbsp;запас</h1>
-        <p class="hero-sub" data-i18n="heroSub">Хинкал, манты, курзе и галушки лепим руками и замораживаем — дома останется только сварить. А чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими. Мясо только халяль.</p>
+      <div class="hero-copy">
+        <h1 id="heroTitle" data-i18n="heroTitle">Halal fast food, cooked to&nbsp;order</h1>
+        <p class="hero-sub" data-i18n="heroSub">Burgers, pizza, shawarma, rolls and chudu from a home kitchen. We start cooking when your order arrives — pizza, rolls, shawarma and burgers are ready in 15–20 minutes.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#menu" data-i18n="heroMenu">Смотреть меню</a>
-          <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="heroWa">Написать в WhatsApp</span></a>
+          <a class="btn btn-primary" href="#menu" data-i18n="heroMenu">See the menu</a>
+          <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico ico-fill" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="heroWa">Message us on WhatsApp</span></a>
         </div>
         <div class="hero-note">
           <div class="seal">
-            <svg viewBox="0 0 120 120" role="img" aria-label="Халяль" data-i18n-attr="aria-label:halal">
+            <svg viewBox="0 0 120 120" role="img" aria-label="Halal" data-i18n-attr="aria-label:halal">
               <defs><path id="sealRing" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" fill="none"/></defs>
-              <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" stroke-width="2"/>
-              <circle cx="60" cy="60" r="33" fill="none" stroke="currentColor" stroke-width="1.5"/>
-              <text direction="ltr" font-family="Onest, sans-serif" font-size="11" font-weight="700" letter-spacing="3.2" fill="currentColor">
-                <textPath href="#sealRing" startOffset="2%">ХАЛЯЛЬ · HALAL · ХАЛЯЛЬ · HALAL ·</textPath>
+              <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="60" cy="60" r="33" fill="none" stroke="currentColor" stroke-width="1.2"/>
+              <text direction="ltr" font-family="'Bricolage Grotesque', sans-serif" font-size="11" font-weight="700" letter-spacing="4.4" fill="currentColor">
+                <textPath href="#sealRing" startOffset="1%">HALAL · HALAL · HALAL · HALAL ·</textPath>
               </text>
-              <text x="60" y="68" text-anchor="middle" font-size="24" fill="currentColor" lang="ar" direction="rtl">حلال</text>
+              <text x="60" y="68" text-anchor="middle" font-family="'Readex Pro', sans-serif" font-weight="600" font-size="21" fill="currentColor" lang="ar" direction="rtl">حلال</text>
             </svg>
           </div>
-          <p class="hand" data-i18n="heroNote">Готовим как для своей семьи</p>
+          <p class="accent" data-i18n="heroNote">We cook like it’s for our own family</p>
         </div>
       </div>
 
-      <div class="collage" aria-label="Наши блюда" data-i18n-attr="aria-label:collage">
-        <figure class="ph ph-manty">
-          <div class="shot"><img src="photos/manty.jpg" alt="Манты ручной лепки на белой тарелке с зелёным луком" data-i18n-attr="alt:altManty" width="547" height="365" decoding="async"></div>
-          <figcaption data-i18n="capManty">манты</figcaption>
-        </figure>
-        <figure class="ph ph-burger">
-          <div class="shot"><img src="photos/burger-double.jpg" alt="Двойной чизбургер с двумя говяжьими котлетами, сыром, томатом и салатом" data-i18n-attr="alt:altBurger" width="1200" height="900" fetchpriority="high" decoding="async"></div>
-        </figure>
-        <figure class="ph ph-pizza">
-          <div class="shot"><img src="photos/pizza-pepperoni.jpg" alt="Пицца пепперони на деревянной доске, один кусок приподнят лопаткой" data-i18n-attr="alt:altPizza" width="610" height="503" decoding="async"></div>
-        </figure>
-        <figure class="ph ph-khinkal">
-          <div class="shot"><img src="photos/khinkal-dar.jpg" alt="Даргинский хинкал с отварной говядиной и картофелем" data-i18n-attr="alt:altKhinkal" width="554" height="554" decoding="async"></div>
-          <figcaption data-i18n="capKhinkal">хинкал</figcaption>
-        </figure>
+      <div class="hero-art">
+        <img class="flour" src="photos/flour.webp" alt="" width="1100" height="1100" decoding="async">
+        <img class="pizza-side" src="photos/cut-pizza-meat.webp" alt="" width="434" height="434" decoding="async">
+        <img class="pizza-main" src="photos/cut-pizza-caesar.webp" alt="Caesar pizza with chicken, lettuce, cherry tomatoes and parmesan, seen from above" data-i18n-attr="alt:altHeroPizza" width="492" height="492" fetchpriority="high" decoding="async">
       </div>
     </div>
   </section>
 
-  <!-- 2. преимущества -->
-  <section class="perks" aria-label="Почему у нас вкусно" data-i18n-attr="aria-label:perksAria">
-    <div class="wrap">
-      <ul class="perks-list">
-        <li class="perk reveal">
-          <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-hands"/></svg></span>
-          <div><h3 data-i18n="perk1">Лепим руками</h3><p data-i18n="perk1t">Каждый хинкал и каждый защип курзе — вручную, небольшими партиями.</p></div>
-        </li>
-        <li class="perk reveal">
-          <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
-          <div><h3 data-i18n="perk2">Только халяль</h3><p data-i18n="perk2t">Всё меню халяль — от хинкала до бургеров.</p></div>
-        </li>
-        <li class="perk reveal">
-          <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-leaf"/></svg></span>
-          <div><h3 data-i18n="perk3">Простые продукты</h3><p data-i18n="perk3t">Мясо, мука, овощи и зелень — то же, что у вас на кухне.</p></div>
-        </li>
-        <li class="perk reveal">
-          <span class="gem" aria-hidden="true"><svg class="ico"><use href="#i-snow"/></svg></span>
-          <div><h3 data-i18n="perk4">Заморозка бережёт вкус</h3><p data-i18n="perk4t">Замораживаем сразу после лепки, поэтому сочность доживает до вашего ужина.</p></div>
-        </li>
-      </ul>
+  <!-- 2. о кухне -->
+  <section class="story" aria-labelledby="storyTitle">
+    <div class="wrap story-in">
+      <figure class="story-photo">
+        <img src="photos/burger-classic.jpg" alt="Classic burger with a beef patty, cheese, tomato and lettuce in a sesame bun" data-i18n-attr="alt:altStory" width="1200" height="900" loading="lazy" decoding="async">
+      </figure>
+      <div class="story-card">
+        <h2 id="storyTitle" data-i18n="storyTitle">A home kitchen that cooks after you order</h2>
+        <p data-i18n="storyText">Your burger, pizza or shawarma is made once your order comes in, and handed over hot.</p>
+        <ul class="facts">
+          <li><span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
+            <div><b data-i18n="fact1">Halal only</b><span data-i18n="fact1t">The whole menu is halal, from shawarma to burgers.</span></div></li>
+          <li><span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-timer"/></svg></span>
+            <div><b data-i18n="fact2">Ready in 15–20 minutes</b><span data-i18n="fact2t">Pizza, rolls, shawarma and burgers.</span></div></li>
+          <li><span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-wheat"/></svg></span>
+            <div><b data-i18n="fact3">Simple ingredients</b><span data-i18n="fact3t">Meat, flour, vegetables and herbs — the same as in your kitchen.</span></div></li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- 3. меню -->
-  <section id="menu" aria-labelledby="menuTitle">
+  <section id="menu" aria-labelledby="menuTitle" style="padding-top:0">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2" id="menuTitle" data-i18n="navMenu">Меню</h2>
-        <p class="lead" data-i18n="menuLead">Хинкал, манты, курзе и галушки — замороженные полуфабрикаты ручной лепки. Чуду, пиццу, роллы, шаурму и бургеры готовим после заказа и отдаём горячими.</p>
+      <div class="sec-head">
+        <h2 class="h2" id="menuTitle" data-i18n="navMenu">Menu</h2>
+        <p class="lead" data-i18n="menuLead">Everything is cooked after you order and handed over hot. Add dishes to the cart and change the quantity right on the card.</p>
       </div>
-      <div class="tabs" role="tablist" aria-label="Категории меню" data-i18n-attr="aria-label:tabsAria" id="tabs"></div>
+      <div class="tabs" role="tablist" aria-label="Menu categories" data-i18n-attr="aria-label:tabsAria" id="tabs"></div>
       <div class="menu-panel" id="menuPanel" role="tabpanel" tabindex="-1"></div>
     </div>
   </section>
 
-  <!-- 4. баннеры акций -->
-  <section class="promos-sec" aria-label="Акции" data-i18n-attr="aria-label:promosAria" style="padding-top:0">
-    <div class="wrap promos">
-      <article class="promo promo-a reveal">
-        <span class="ornament" aria-hidden="true"></span>
-        <div class="promo-body">
-          <p class="hand" data-i18n="promoAHand">про запас</p>
-          <h3 data-i18n="promoA">Морозилка, полная домашнего</h3>
-          <p><span class="fill-me" data-i18n="fillPromo">[Условия акции — уточнить]</span></p>
-          <a class="btn" href="#menu" data-go-tab="national" data-i18n="promoABtn">Собрать набор</a>
-        </div>
-        <div class="promo-art" aria-hidden="true">
-          <div class="pic"><img src="photos/khinkal-avar.jpg" alt="" loading="lazy" decoding="async" width="420" height="420"></div>
-          <div class="pic"><img src="photos/kurze.jpg" alt="" loading="lazy" decoding="async" width="400" height="400"></div>
-          <div class="pic"><img src="photos/manty.jpg" alt="" loading="lazy" decoding="async" width="547" height="365"></div>
-        </div>
-      </article>
-      <article class="promo promo-b reveal">
-        <span class="ornament" aria-hidden="true"></span>
-        <div class="promo-body">
-          <p class="hand" data-i18n="promoBHand">на выходные</p>
-          <h3 data-i18n="promoB">Бургеры к семейному вечеру</h3>
-          <p><span class="fill-me" data-i18n="fillPromo">[Условия акции — уточнить]</span></p>
-          <a class="btn btn-primary" href="#menu" data-go-tab="burgers" data-i18n="promoBBtn">Выбрать бургеры</a>
-        </div>
-        <div class="promo-art">
-          <img src="photos/burger-onion.jpg" alt="Бургер с двумя котлетами, сыром и карамелизированным луком" data-i18n-attr="alt:altOnion" loading="lazy" decoding="async" width="1200" height="900">
-        </div>
-      </article>
+  <!-- 4. акция во всю ширину -->
+  <section class="band" aria-labelledby="promoTitle">
+    <img src="photos/burger-onion.jpg" alt="" width="1200" height="900" loading="lazy" decoding="async">
+    <div class="wrap">
+      <p class="accent" data-i18n="promoHand">For the weekend</p>
+      <h2 class="h2" id="promoTitle" data-i18n="promo">Burgers for a family evening</h2>
+      <p class="terms"><span class="fill-me" data-i18n="fillPromo">[Offer terms — to be confirmed]</span></p>
+      <a class="btn btn-ghost" href="#menu" data-go-tab="burgers" data-i18n="promoBtn">Choose burgers</a>
     </div>
   </section>
-
-  <div class="wrap" aria-hidden="true"><div class="ornament wheat"></div></div>
 
   <!-- 5. как заказать -->
   <section id="how" aria-labelledby="howTitle">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2" id="howTitle" data-i18n="navHow">Как заказать</h2>
-        <p class="lead" data-i18n="howLead">Без регистрации и оплаты на сайте. Заказ уходит нам сообщением в WhatsApp.</p>
+      <div class="sec-head">
+        <h2 class="h2" id="howTitle" data-i18n="navHow">How to order</h2>
+        <p class="lead" data-i18n="howLead">No sign-up and no payment on the site. Your order reaches us as a WhatsApp message.</p>
       </div>
       <ol class="steps">
-        <li class="stepc reveal">
+        <li class="stepc">
           <span class="no num" aria-hidden="true">1</span>
-          <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-list"/></svg></span>
-          <h3 data-i18n="step1">Выберите блюда</h3>
-          <p data-i18n="step1t">Нажимайте «В корзину» — количество можно поменять прямо в карточке.</p>
+          <h3 data-i18n="step1">Choose dishes</h3>
+          <p data-i18n="step1t">Tap “Add” — you can change the quantity right on the card.</p>
         </li>
-        <li class="stepc reveal">
+        <li class="stepc">
           <span class="no num" aria-hidden="true">2</span>
-          <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-bag"/></svg></span>
-          <h3 data-i18n="step2">Проверьте корзину</h3>
-          <p data-i18n="step2t">Укажите имя, телефон и адрес, если нужна доставка.</p>
+          <h3 data-i18n="step2">Check your cart</h3>
+          <p data-i18n="step2t">Enter your name and phone, and your address if you need delivery.</p>
         </li>
-        <li class="stepc reveal">
+        <li class="stepc">
           <span class="no num" aria-hidden="true">3</span>
-          <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-wa"/></svg></span>
-          <h3 data-i18n="step3">Отправьте в WhatsApp</h3>
-          <p data-i18n="step3t">Сообщение со списком блюд и суммой мы соберём сами — останется нажать «Отправить».</p>
+          <h3 data-i18n="step3">Send it on WhatsApp</h3>
+          <p data-i18n="step3t">We put together the message with your dishes and total — you just tap “Send”.</p>
         </li>
-        <li class="stepc reveal">
+        <li class="stepc">
           <span class="no num" aria-hidden="true">4</span>
-          <span class="ic" aria-hidden="true"><svg class="ico"><use href="#i-truck"/></svg></span>
-          <h3 data-i18n="step4">Получите заказ</h3>
-          <p data-i18n="step4t">Ответим, подтвердим время и привезём. Или заберёте сами.</p>
+          <h3 data-i18n="step4">Get your order</h3>
+          <p data-i18n="step4t">We reply, confirm the time and deliver. Or pick it up yourself.</p>
         </li>
       </ol>
     </div>
   </section>
 
-  <!-- 6. как приготовить -->
-  <section id="cook" class="cook" aria-labelledby="cookTitle">
+  <!-- 6. отзывы: пустой шаблон, отзывы добавляются вручную -->
+  <section id="reviews" aria-labelledby="revTitle" style="padding-top:0">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2" id="cookTitle" data-i18n="cookTitle">Как приготовить полуфабрикаты</h2>
-        <p class="lead" data-i18n="cookLead">Размораживать заранее не нужно — готовьте прямо из морозилки. Время указано примерно: точное написано на этикетке.</p>
-      </div>
-      <div class="cook-grid">
-        <article class="recipe reveal">
-          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3 data-i18n="cook1">Хинкал</h3>
-          <p class="way" data-i18n="boil">Варить</p>
-          <p data-i18n="cook1t">Опустите в кипящую подсоленную воду и помешайте, чтобы не прилип. Варите 12–15 минут после всплытия.</p>
-        </article>
-        <article class="recipe reveal">
-          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-steam"/></svg></span>
-          <h3 data-i18n="cook2">Манты</h3>
-          <p class="way" data-i18n="steam">На пару</p>
-          <p data-i18n="cook2t">Смажьте ярусы мантоварки маслом и выложите манты с зазором. Готовьте на пару 35–40 минут.</p>
-        </article>
-        <article class="recipe reveal">
-          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3 data-i18n="cook3">Курзе</h3>
-          <p class="way" data-i18n="boil">Варить</p>
-          <p data-i18n="cook3t">В кипящую подсоленную воду, 8–10 минут после всплытия. Подавайте с растопленным маслом или сметаной.</p>
-        </article>
-        <article class="recipe reveal">
-          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-pot"/></svg></span>
-          <h3 data-i18n="cook4">Галушки</h3>
-          <p class="way" data-i18n="boil">Варить</p>
-          <p data-i18n="cook4t">Варите в бульоне или подсоленной воде 10–12 минут. Мясо разогрейте отдельно.</p>
-        </article>
-        <aside class="recipe hot reveal">
-          <span class="m" aria-hidden="true"><svg class="ico"><use href="#i-clock"/></svg></span>
-          <h3 data-i18n="cook5">Чуду, пицца, роллы, шаурма, бургеры</h3>
-          <p class="way" data-i18n="cook5way">Готовить не нужно</p>
-          <p data-i18n="cook5t">Их мы готовим сами после заказа и отдаём горячими. Пицца, роллы, шаурма и бургеры будут готовы за 15–20 минут.</p>
-        </aside>
-      </div>
-      <p class="hand cook-foot" data-i18n="cookFoot">Приятного аппетита — и приходите за добавкой!</p>
-    </div>
-  </section>
-
-  <!-- 7. отзывы: пустой шаблон, отзывы добавляются вручную -->
-  <section id="reviews" aria-labelledby="revTitle">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2" id="revTitle" data-i18n="navReviews">Отзывы</h2>
-        <p class="lead" data-i18n="revLead">Здесь будут отзывы наших покупателей.</p>
+      <div class="sec-head">
+        <h2 class="h2" id="revTitle" data-i18n="navReviews">Reviews</h2>
+        <p class="lead" data-i18n="revLead">Reviews from our customers will appear here.</p>
       </div>
       <div class="reviews-grid" id="reviewsGrid">
         <!--
@@ -797,40 +639,41 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
             <figcaption>Имя, город · месяц и год</figcaption>
           </figure>
         -->
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev1">Место для первого отзыва</p></div>
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev2">Место для второго отзыва</p></div>
-        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev3">Место для третьего отзыва</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev1">Space for the first review</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev2">Space for the second review</p></div>
+        <div class="review-slot"><svg class="ico" aria-hidden="true"><use href="#i-quote"/></svg><p data-i18n="rev3">Space for the third review</p></div>
       </div>
       <div class="reviews-cta">
-        <p data-i18n="revCta">Уже пробовали нашу еду? Напишите пару слов в WhatsApp — с вашего разрешения опубликуем отзыв здесь.</p>
-        <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="revBtn">Оставить отзыв</span></a>
+        <p data-i18n="revCta">Tried our food? Send us a few words on WhatsApp — with your permission, we’ll publish your review here.</p>
+        <a class="btn btn-ghost" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><svg class="ico ico-fill" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="revBtn">Leave a review</span></a>
       </div>
     </div>
   </section>
 
-  <!-- 8. контакты и доставка -->
-  <section id="contacts" aria-labelledby="conTitle">
+  <!-- 7. контакты и доставка -->
+  <section id="contacts" aria-labelledby="conTitle" style="padding-top:0">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2" id="conTitle" data-i18n="navContactsFull">Контакты и доставка</h2>
+      <div class="sec-head">
+        <h2 class="h2" id="conTitle" data-i18n="navContactsFull">Contacts and delivery</h2>
       </div>
       <div class="contacts">
-        <div class="panel reveal">
+        <div class="panel">
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>
-            <div><div class="k" data-i18n="phone">Телефон</div><a class="v num" data-phone-link href="tel:+79286813532"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
-          <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>
-            <div><div class="k" data-i18n="waK">WhatsApp — сюда же приходят заказы</div><a class="v num" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
+            <div><div class="k" data-i18n="phone">Phone</div><a class="v num" data-phone-link href="tel:+79286813532"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
+          <div class="crow"><svg class="ico ico-fill" aria-hidden="true"><use href="#i-wa"/></svg>
+            <div><div class="k" data-i18n="waK">WhatsApp — orders arrive here too</div><a class="v num" data-wa-link href="https://wa.me/79286813532" target="_blank" rel="noopener"><span data-phone-text dir="ltr">+7 928 681-35-32</span></a></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
-            <div><div class="k" data-i18n="pickupCap">Самовывоз</div><div class="v"><span class="fill-me" data-i18n="fillAddr">[Адрес — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="pickupCap">Pickup</div><div class="v"><span class="fill-me" data-i18n="fillAddr">[Address — to be confirmed]</span></div></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>
-            <div><div class="k" data-i18n="hoursK">Когда принимаем заказы</div><div class="v"><span class="fill-me" data-i18n="fillHours">[Часы работы — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="hoursK">When we take orders</div><div class="v"><span class="fill-me" data-i18n="fillHours">[Opening hours — to be confirmed]</span></div></div></div>
           <div class="crow"><svg class="ico" aria-hidden="true"><use href="#i-truck"/></svg>
-            <div><div class="k" data-i18n="delivery">Доставка</div><div class="v"><span class="fill-me" data-i18n="fillDelivery">[Зона, стоимость и порог бесплатной доставки — уточнить]</span></div></div></div>
+            <div><div class="k" data-i18n="delivery">Delivery</div><div class="v"><span class="fill-me" data-i18n="fillDelivery">[Delivery area, cost and free-delivery threshold — to be confirmed]</span></div></div></div>
         </div>
-        <div class="panel logo-card reveal">
-          <img src="photos/logo.jpg" data-i18n-attr="alt:altLogo" alt="Логотип «Кормилица»: доска с мукой, колосья пшеницы и скалка, подпись «Полуфабрикаты домашнего производства»" width="640" height="640" loading="lazy" decoding="async">
-          <p class="lead" data-i18n="logoLead">Соберите корзину — мы подготовим сообщение со списком блюд, вам останется отправить его.</p>
-          <button class="btn btn-primary" type="button" data-open-cart data-i18n="openCart">Открыть корзину</button>
+        <div class="order-card">
+          <img class="pie" src="photos/cut-pizza-4cheese.webp" alt="" width="402" height="402" loading="lazy" decoding="async">
+          <h3 data-i18n="orderTitle">Your order in one message</h3>
+          <p data-i18n="orderLead">Fill your cart and we’ll prepare a message with your dishes — you just send it.</p>
+          <button class="btn" type="button" data-open-cart><svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg><span data-i18n="openCart">Open cart</span></button>
         </div>
       </div>
     </div>
@@ -838,20 +681,18 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 </main>
 
 <footer>
-  <div class="wrap">
-    <div class="ornament" aria-hidden="true" style="margin-bottom:24px"></div>
-    <div class="foot-in">
-      <div data-i18n="copy">© <span class="num">2026</span> «Кормилица» — домашняя халяльная кухня</div>
-      <nav class="foot-nav" aria-label="Разделы в подвале" data-i18n-attr="aria-label:footAria">
-        <a href="#menu" data-i18n="navMenu">Меню</a><a href="#how" data-i18n="navHow">Как заказать</a><a href="#cook" data-i18n="navCook">Как приготовить</a><a href="#reviews" data-i18n="navReviews">Отзывы</a><a href="#contacts" data-i18n="navContacts">Контакты</a>
-      </nav>
-    </div>
+  <div class="wrap foot-in">
+    <span class="wordmark" data-i18n="brand">Kormilitsa</span>
+    <div data-i18n="copy">© <span class="num">2026</span> Kormilitsa — halal home kitchen</div>
+    <nav class="foot-nav" aria-label="Footer sections" data-i18n-attr="aria-label:footAria">
+      <a href="#menu" data-i18n="navMenu">Menu</a><a href="#how" data-i18n="navHow">How to order</a><a href="#reviews" data-i18n="navReviews">Reviews</a><a href="#contacts" data-i18n="navContacts">Contacts</a>
+    </nav>
   </div>
 </footer>
 
 <button class="fab" id="fab" type="button" hidden aria-controls="cartPanel">
   <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-  <span><span data-i18n="cart">Корзина</span> · <span class="num" id="fabCount">0</span></span>
+  <span><span data-i18n="cart">Cart</span> · <span class="num" id="fabCount">0</span></span>
   <span class="fab-sum" id="fabSum">0 ₽</span>
 </button>
 
@@ -859,63 +700,63 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 
 <aside class="cart" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
   <div class="cart-head">
-    <h2 id="cartTitle" data-i18n="cart">Корзина</h2>
-    <button class="icon-btn" id="cartClose" type="button" aria-label="Закрыть корзину" data-i18n-attr="aria-label:cartClose"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2 id="cartTitle" data-i18n="cart">Cart</h2>
+    <button class="icon-btn" id="cartClose" type="button" aria-label="Close cart" data-i18n-attr="aria-label:cartClose"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="cart-body">
     <div id="cartEmpty" class="cart-empty">
       <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
-      <p data-i18n="cartEmpty">Пока пусто. Загляните в меню — там хинкал, манты, пицца и бургеры.</p>
-      <button class="btn btn-primary" id="toMenu" type="button" data-i18n="toMenu">Перейти в меню</button>
+      <p data-i18n="cartEmpty">Your cart is empty. Pick something from the menu — burgers, pizza, shawarma or rolls.</p>
+      <button class="btn btn-primary" id="toMenu" type="button" data-i18n="toMenu">Go to the menu</button>
     </div>
 
     <div id="cartFilled" hidden>
       <div class="cart-lines-head">
-        <h3 data-i18n="yourOrder">Ваш заказ</h3>
-        <button type="button" class="clear-all" id="clearAll"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-x"/></svg><span id="clearAllLabel">Очистить</span></button>
+        <h3 data-i18n="yourOrder">Your order</h3>
+        <button type="button" class="clear-all" id="clearAll"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-x"/></svg><span id="clearAllLabel">Clear</span></button>
       </div>
       <div id="cartLines"></div>
 
       <div class="totals">
-        <div class="trow"><span data-i18n="dishes">Блюда</span><span id="tSub">0 ₽</span></div>
-        <div class="trow"><span id="tDelLabel">Доставка</span><span id="tDel"></span></div>
-        <div class="trow big"><span data-i18n="total">Итого</span><span id="tAll">0 ₽</span></div>
+        <div class="trow"><span data-i18n="dishes">Dishes</span><span id="tSub">0 ₽</span></div>
+        <div class="trow"><span id="tDelLabel">Delivery</span><span id="tDel"></span></div>
+        <div class="trow big"><span data-i18n="total">Total</span><span id="tAll">0 ₽</span></div>
         <p class="freehint" id="freeHint" hidden></p>
       </div>
 
       <form class="form" id="orderForm" novalidate>
-        <h3 data-i18n="formTitle">Куда и кому привезти</h3>
+        <h3 data-i18n="formTitle">Who and where to deliver</h3>
         <div class="field">
-          <span class="label" id="wayLabel" data-i18n="way">Способ получения</span>
+          <span class="label" id="wayLabel" data-i18n="way">How you’ll get it</span>
           <div class="segmented" role="radiogroup" aria-labelledby="wayLabel">
-            <label class="seg"><input type="radio" name="way" id="wayDelivery" value="delivery" checked><svg class="ico ico-sm" aria-hidden="true"><use href="#i-truck"/></svg><span data-i18n="delivery">Доставка</span></label>
-            <label class="seg"><input type="radio" name="way" id="wayPickup" value="pickup"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="pickupCap">Самовывоз</span></label>
+            <label class="seg"><input type="radio" name="way" id="wayDelivery" value="delivery" checked><svg class="ico ico-sm" aria-hidden="true"><use href="#i-truck"/></svg><span data-i18n="delivery">Delivery</span></label>
+            <label class="seg"><input type="radio" name="way" id="wayPickup" value="pickup"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-store"/></svg><span data-i18n="pickupCap">Pickup</span></label>
           </div>
         </div>
         <div class="field">
-          <label for="fName"><span data-i18n="name">Имя</span> <span class="req" aria-hidden="true">*</span></label>
-          <input id="fName" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" data-i18n-attr="placeholder:namePh" aria-describedby="eName">
+          <label for="fName"><span data-i18n="name">Name</span> <span class="req" aria-hidden="true">*</span></label>
+          <input id="fName" name="name" type="text" autocomplete="name" placeholder="What should we call you" data-i18n-attr="placeholder:namePh" aria-describedby="eName">
           <p class="err" id="eName" hidden></p>
         </div>
         <div class="field">
-          <label for="fPhone"><span data-i18n="phone">Телефон</span> <span class="req" aria-hidden="true">*</span></label>
+          <label for="fPhone"><span data-i18n="phone">Phone</span> <span class="req" aria-hidden="true">*</span></label>
           <input id="fPhone" dir="ltr" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00" aria-describedby="ePhone">
           <p class="err" id="ePhone" hidden></p>
         </div>
         <div class="field" id="addrField">
-          <label for="fAddr"><span data-i18n="addr">Адрес доставки</span> <span class="req" aria-hidden="true">*</span></label>
-          <input id="fAddr" name="addr" type="text" autocomplete="street-address" placeholder="Улица, дом, квартира, этаж" data-i18n-attr="placeholder:addrPh" aria-describedby="eAddr">
+          <label for="fAddr"><span data-i18n="addr">Delivery address</span> <span class="req" aria-hidden="true">*</span></label>
+          <input id="fAddr" name="addr" type="text" autocomplete="street-address" placeholder="Street, building, apartment, floor" data-i18n-attr="placeholder:addrPh" aria-describedby="eAddr">
           <p class="err" id="eAddr" hidden></p>
         </div>
         <div class="field">
-          <label for="fNote" data-i18n="note">Комментарий</label>
-          <textarea id="fNote" name="note" placeholder="Когда удобно получить, код домофона" data-i18n-attr="placeholder:notePh"></textarea>
+          <label for="fNote" data-i18n="note">Comment</label>
+          <textarea id="fNote" name="note" placeholder="A convenient time, the door code" data-i18n-attr="placeholder:notePh"></textarea>
         </div>
-        <button class="btn btn-primary btn-wide" type="submit"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="send">Отправить заказ в WhatsApp</span></button>
-        <p class="fine" data-i18n="fine">Платить на сайте не нужно. Мы ответим в WhatsApp, подтвердим заказ и время.</p>
+        <button class="btn btn-primary btn-wide" type="submit"><svg class="ico ico-fill" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="send">Send order on WhatsApp</span></button>
+        <p class="fine" data-i18n="fine">No payment on the site. We’ll reply on WhatsApp to confirm the order and time.</p>
         <div class="fallback" id="waFallback" hidden>
-          <p data-i18n="fallback"><b>WhatsApp не открылся?</b> Нажмите кнопку ниже — сообщение уже готово.</p>
-          <a class="btn btn-ghost btn-wide" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="openWa">Открыть WhatsApp</a>
+          <p data-i18n="fallback"><b>WhatsApp didn’t open?</b> Tap the button below — the message is ready.</p>
+          <a class="btn btn-ghost btn-wide" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="openWa">Open WhatsApp</a>
         </div>
       </form>
     </div>
@@ -939,216 +780,157 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   var FREE_FROM    = null;   // например 2000
 
   /* Меню. price — цена-заглушка в рублях, w — вес или количество.
-     ar — то же название, описание, вес и подпись к фото по-арабски.
+     Основные поля — по-английски, ar — то же по-арабски.
+     pos — какой частью фото попасть в круглую «тарелку».
      Чтобы добавить блюдо: скопируйте строку, поменяйте id, фото и текст на обоих языках. */
   var MENU = [
-    { id:'national', title:'Национальная кухня', note:'лепим руками',
-      ar:{title:'المطبخ التقليدي', note:'نصنعها بأيدينا'}, items:[
-      {id:'khinkal-avar', photo:'photos/khinkal-avar.jpg', name:'Хинкал аварский', price:450, w:'1 кг',
-        desc:'Пышные ромбики из домашнего теста, говядина халяль, томатный соус с чесноком',
-        alt:'Аварский хинкал: ромбики из теста, отварная говядина и томатный соус в пиале',
-        ar:{name:'خينكال أواري', w:'1 كغ',
-          desc:'قطع منتفخة على شكل معيّنات من عجين بيتي، لحم بقر حلال، صلصة طماطم بالثوم',
-          alt:'خينكال أواري: قطع عجين على شكل معيّنات ولحم بقر مسلوق وصلصة طماطم في وعاء'}},
-      {id:'khinkal-dar', photo:'photos/khinkal-dar.jpg', name:'Хинкал даргинский', price:450, w:'1 кг',
-        desc:'Тесто рулетиками-«улитками», отварная говядина халяль, картофель, томатный соус',
-        alt:'Даргинский хинкал: тесто улитками, отварная говядина и картофель с укропом',
-        ar:{name:'خينكال دارغيني', w:'1 كغ',
-          desc:'عجين ملفوف على شكل حلزونات، لحم بقر حلال مسلوق، بطاطس، صلصة طماطم',
-          alt:'خينكال دارغيني: عجين ملفوف كالحلزون ولحم بقر مسلوق وبطاطس مع الشبت'}},
-      {id:'manty', photo:'photos/manty.jpg', name:'Манты с говядиной', price:520, w:'1 кг · около 20 шт',
-        desc:'Говядина халяль с луком в тонком тесте ручной лепки',
-        alt:'Манты ручной лепки на белой тарелке с зелёным луком',
-        ar:{name:'مانتي بلحم البقر', w:'1 كغ · نحو 20 قطعة',
-          desc:'لحم بقر حلال مع البصل في عجين رقيق مشكَّل يدويًا',
-          alt:'مانتي مصنوعة يدويًا على طبق أبيض مع البصل الأخضر'}},
-      {id:'kurze', photo:'photos/kurze.jpg', name:'Курзе с мясом', price:500, w:'1 кг',
-        desc:'Говядина халяль с луком, защип косичкой',
-        alt:'Курзе с защипом косичкой, зеленью и сметаной на белой тарелке',
-        ar:{name:'كورزه باللحم', w:'1 كغ',
-          desc:'لحم بقر حلال مع البصل، بحافة مضفورة',
-          alt:'كورزه بحافة مضفورة مع الأعشاب والقشدة الحامضة على طبق أبيض'}},
-      {id:'chudu', photo:'photos/chudu.jpg', name:'Чуду с мясом', price:400, w:'4 шт',
-        desc:'Тонкое тесто, говяжий фарш халяль с луком. Подаём горячим',
-        alt:'Чуду с мясной начинкой, разрезанное на доске',
-        ar:{name:'تشودو باللحم', w:'4 قطع',
-          desc:'عجين رقيق، لحم بقر مفروم حلال مع البصل. نقدّمه ساخنًا',
-          alt:'تشودو محشو باللحم ومقطّع على لوح'}},
-      {id:'galushki', photo:'photos/galushki.jpg', name:'Галушки с курицей', price:480, w:'1 кг',
-        desc:'Галушки из домашнего теста, отварная курица халяль, бульон',
-        alt:'Галушки с отварной курицей и пиалой бульона на большом блюде', pos:'50% 70%',
-        ar:{name:'غالوشكي بالدجاج', w:'1 كغ',
-          desc:'قطع عجين بيتي، دجاج حلال مسلوق، مرق',
-          alt:'غالوشكي مع دجاج مسلوق ووعاء مرق على طبق كبير'}}
+    { id:'burgers', title:'Burgers', note:'hot, in 15–20 minutes',
+      ar:{title:'البرغر', note:'ساخن، خلال 15–20 دقيقة'}, items:[
+      {id:'burger-classic', photo:'photos/burger-classic.jpg', name:'Classic burger', price:350, w:'1 pc · 280 g',
+        desc:'Halal beef patty, cheese, tomato, onion, lettuce, sauce',
+        alt:'Classic burger with a beef patty, cheese, tomato and lettuce in a sesame bun', pos:'50% 55%',
+        ar:{name:'برغر كلاسيكي', w:'1 قطعة · 280 غ',
+          desc:'قطعة لحم بقر حلال، جبن، طماطم، بصل، خس، صلصة',
+          alt:'برغر كلاسيكي بقطعة لحم بقر وجبن وطماطم وخس في خبز بالسمسم'}},
+      {id:'burger-double', photo:'photos/burger-double.jpg', name:'Double cheeseburger', price:420, w:'1 pc · 380 g',
+        desc:'Two halal beef patties, cheddar, tomato, onion, lettuce, sauce',
+        alt:'Double cheeseburger with two beef patties, cheddar and sauce', pos:'50% 50%',
+        ar:{name:'تشيز برغر مزدوج', w:'1 قطعة · 380 غ',
+          desc:'قطعتا لحم بقر حلال، شيدر، طماطم، بصل، خس، صلصة',
+          alt:'تشيز برغر مزدوج بقطعتي لحم بقر وجبن شيدر وصلصة'}},
+      {id:'burger-onion', photo:'photos/burger-onion.jpg', name:'Caramelised onion burger', price:430, w:'1 pc · 380 g',
+        desc:'Two halal beef patties, cheddar, caramelised onion, sweet pepper, sauce',
+        alt:'Burger with two patties, melted cheese and caramelised onion', pos:'50% 50%',
+        ar:{name:'برغر بالبصل المكرمل', w:'1 قطعة · 380 غ',
+          desc:'قطعتا لحم بقر حلال، شيدر، بصل مكرمل، فلفل حلو، صلصة',
+          alt:'برغر بقطعتي لحم وجبن ذائب وبصل مكرمل'}},
+      {id:'burger-chicken', photo:'photos/burger-chicken.jpg', name:'Chicken burger', price:340, w:'1 pc · 300 g',
+        desc:'Crispy breaded halal chicken fillet, cheddar, red onion, sauce',
+        alt:'Chicken burger with crispy breaded fillet, cheese and red onion', pos:'50% 45%',
+        ar:{name:'برغر دجاج', w:'1 قطعة · 300 غ',
+          desc:'فيليه دجاج حلال بغلاف مقرمش، شيدر، بصل أحمر، صلصة',
+          alt:'برغر دجاج بفيليه مقرمش وجبن وبصل أحمر'}}
     ]},
-    { id:'pizza', title:'Пицца', note:'горячая, 15–20 минут',
+    { id:'pizza', title:'Pizza', note:'hot, in 15–20 minutes',
       ar:{title:'البيتزا', note:'ساخنة، خلال 15–20 دقيقة'}, items:[
-      {id:'pizza-pepperoni', photo:'photos/pizza-pepperoni.jpg', name:'Пепперони', price:620, w:'30 см · 650 г',
-        desc:'Говяжья пепперони халяль, моцарелла, томатный соус',
-        alt:'Пицца пепперони на деревянной доске, один кусок приподнят',
+      {id:'pizza-pepperoni', photo:'photos/pizza-pepperoni.jpg', name:'Pepperoni', price:620, w:'30 cm · 650 g',
+        desc:'Halal beef pepperoni, mozzarella, tomato sauce',
+        alt:'Pepperoni pizza on a wooden board, one slice lifted', pos:'58% 62%',
         ar:{name:'ببروني', w:'30 سم · 650 غ',
           desc:'ببروني لحم بقر حلال، موتزاريلا، صلصة طماطم',
           alt:'بيتزا ببروني على لوح خشبي، وإحدى القطع مرفوعة'}},
-      {id:'pizza-meat', photo:'photos/pizza-meat.jpg', name:'Мясная', price:680, w:'30 см · 700 г',
-        desc:'Говяжий фарш халяль, моцарелла, томатный соус',
-        alt:'Мясная пицца с говяжьим фаршем и моцареллой',
+      {id:'pizza-meat', photo:'photos/pizza-meat.jpg', name:'Meat pizza', price:680, w:'30 cm · 700 g',
+        desc:'Halal minced beef, mozzarella, tomato sauce',
+        alt:'Meat pizza with minced beef and mozzarella',
         ar:{name:'بيتزا اللحم', w:'30 سم · 700 غ',
           desc:'لحم بقر مفروم حلال، موتزاريلا، صلصة طماطم',
           alt:'بيتزا باللحم البقري المفروم والموتزاريلا'}},
-      {id:'pizza-4cheese', photo:'photos/pizza-4cheese.jpg', name:'Четыре сыра', price:650, w:'30 см · 600 г',
-        desc:'Моцарелла, чеддер, пармезан, сыр с голубой плесенью, сливочный соус',
-        alt:'Пицца «Четыре сыра», нарезанная на восемь кусков',
+      {id:'pizza-4cheese', photo:'photos/pizza-4cheese.jpg', name:'Four cheese', price:650, w:'30 cm · 600 g',
+        desc:'Mozzarella, cheddar, parmesan, blue cheese, cream sauce',
+        alt:'Four cheese pizza cut into eight slices',
         ar:{name:'أربعة أجبان', w:'30 سم · 600 غ',
           desc:'موتزاريلا، شيدر، بارميزان، جبنة زرقاء، صلصة كريمية',
           alt:'بيتزا «أربعة أجبان» مقطّعة إلى ثماني قطع'}},
-      {id:'pizza-mushroom', photo:'photos/pizza-mushroom.jpg', name:'Курица с грибами', price:600, w:'30 см · 650 г',
-        desc:'Куриное филе халяль, шампиньоны, моцарелла, томатный соус',
-        alt:'Пицца с курицей и шампиньонами на деревянной подставке',
+      {id:'pizza-mushroom', photo:'photos/pizza-mushroom.jpg', name:'Chicken and mushroom', price:600, w:'30 cm · 650 g',
+        desc:'Halal chicken fillet, mushrooms, mozzarella, tomato sauce',
+        alt:'Chicken and mushroom pizza on a wooden stand', pos:'50% 52%',
         ar:{name:'دجاج بالفطر', w:'30 سم · 650 غ',
           desc:'فيليه دجاج حلال، فطر، موتزاريلا، صلصة طماطم',
           alt:'بيتزا بالدجاج والفطر على حامل خشبي'}},
-      {id:'pizza-caesar', photo:'photos/pizza-caesar.jpg', name:'Цезарь', price:650, w:'30 см · 650 г',
-        desc:'Курица халяль, листья салата, томаты черри, пармезан, сливочный соус',
-        alt:'Пицца «Цезарь» с курицей, листьями салата, томатами черри и пармезаном',
+      {id:'pizza-caesar', photo:'photos/pizza-caesar.jpg', name:'Caesar', price:650, w:'30 cm · 650 g',
+        desc:'Halal chicken, lettuce, cherry tomatoes, parmesan, cream sauce',
+        alt:'Caesar pizza with chicken, lettuce, cherry tomatoes and parmesan',
         ar:{name:'سيزر', w:'30 سم · 650 غ',
           desc:'دجاج حلال، أوراق خس، طماطم كرزية، بارميزان، صلصة كريمية',
           alt:'بيتزا «سيزر» بالدجاج وأوراق الخس والطماطم الكرزية والبارميزان'}}
     ]},
-    { id:'rolls', title:'Роллы', note:'готовим к заказу, 15–20 минут',
+    { id:'rolls', title:'Rolls', note:'made to order, in 15–20 minutes',
       ar:{title:'الرولات', note:'نحضّرها عند الطلب، خلال 15–20 دقيقة'}, items:[
-      {id:'rolls-baked', photo:'photos/rolls-baked.jpg', name:'Запечённые роллы', price:450, w:'8 шт', pending:true,
-        desc:'Состав уточняется',
-        alt:'Восемь запечённых роллов с золотистой корочкой в белом контейнере',
+      {id:'rolls-baked', photo:'photos/rolls-baked.jpg', name:'Baked rolls', price:450, w:'8 pcs', pending:true,
+        desc:'Ingredients to be confirmed',
+        alt:'Eight baked rolls with a golden crust in a white tray',
         ar:{name:'رولات مخبوزة', w:'8 قطع',
           desc:'المكوّنات قيد التحديد',
           alt:'ثماني رولات مخبوزة بقشرة ذهبية في علبة بيضاء'}},
-      {id:'rolls-tobiko', photo:'photos/rolls-tobiko.jpg', name:'Роллы с тобико', price:480, w:'8 шт', pending:true,
-        desc:'Состав уточняется',
-        alt:'Роллы в хрустящей панировке с огурцом и сливочным сыром, сверху икра тобико',
+      {id:'rolls-tobiko', photo:'photos/rolls-tobiko.jpg', name:'Tobiko rolls', price:480, w:'8 pcs', pending:true,
+        desc:'Ingredients to be confirmed',
+        alt:'Crispy breaded rolls with cucumber and cream cheese, topped with tobiko roe',
         ar:{name:'رولات بالتوبيكو', w:'8 قطع',
           desc:'المكوّنات قيد التحديد',
           alt:'رولات بغلاف مقرمش مع الخيار والجبن الكريمي، وفوقها بيض سمك التوبيكو'}}
     ]},
-    { id:'shawarma', title:'Шаурма', note:'горячая, 15–20 минут',
+    { id:'shawarma', title:'Shawarma', note:'hot, in 15–20 minutes',
       ar:{title:'الشاورما', note:'ساخنة، خلال 15–20 دقيقة'}, items:[
-      {id:'shawarma', photo:'photos/shawarma.jpg', name:'Шаурма с курицей', price:300, w:'1 шт · 400 г',
-        desc:'Курица халяль, свежие овощи, лаваш, чесночный соус',
-        alt:'Две шаурмы в лаваше с полосками гриля, в разрезе курица, томаты и зелень',
+      {id:'shawarma', photo:'photos/shawarma.jpg', name:'Chicken shawarma', price:300, w:'1 pc · 400 g',
+        desc:'Halal chicken, fresh vegetables, lavash, garlic sauce',
+        alt:'Two grilled shawarma wraps, cut to show chicken, tomatoes and herbs',
         ar:{name:'شاورما دجاج', w:'1 قطعة · 400 غ',
           desc:'دجاج حلال، خضار طازجة، خبز صاج، صلصة الثوم',
           alt:'لفّتا شاورما بخطوط الشواء، وفي المقطع دجاج وطماطم وأعشاب'}}
     ]},
-    { id:'burgers', title:'Бургеры', note:'горячие, 15–20 минут',
-      ar:{title:'البرغر', note:'ساخن، خلال 15–20 دقيقة'}, items:[
-      {id:'burger-classic', photo:'photos/burger-classic.jpg', name:'Классический бургер', price:350, w:'1 шт · 280 г',
-        desc:'Котлета из говядины халяль, сыр, томат, лук, листья салата, соус',
-        alt:'Классический бургер с говяжьей котлетой, сыром, томатом и салатом в булочке с кунжутом',
-        ar:{name:'برغر كلاسيكي', w:'1 قطعة · 280 غ',
-          desc:'قطعة لحم بقر حلال، جبن، طماطم، بصل، خس، صلصة',
-          alt:'برغر كلاسيكي بقطعة لحم بقر وجبن وطماطم وخس في خبز بالسمسم'}},
-      {id:'burger-double', photo:'photos/burger-double.jpg', name:'Двойной чизбургер', price:420, w:'1 шт · 380 г',
-        desc:'Две котлеты из говядины халяль, чеддер, томат, лук, листья салата, соус',
-        alt:'Двойной чизбургер с двумя говяжьими котлетами, чеддером и соусом',
-        ar:{name:'تشيز برغر مزدوج', w:'1 قطعة · 380 غ',
-          desc:'قطعتا لحم بقر حلال، شيدر، طماطم، بصل، خس، صلصة',
-          alt:'تشيز برغر مزدوج بقطعتي لحم بقر وجبن شيدر وصلصة'}},
-      {id:'burger-onion', photo:'photos/burger-onion.jpg', name:'С карамелизированным луком', price:430, w:'1 шт · 380 г',
-        desc:'Две котлеты из говядины халяль, чеддер, карамелизированный лук, сладкий перец, соус',
-        alt:'Бургер с двумя котлетами, плавленым сыром и карамелизированным луком',
-        ar:{name:'بالبصل المكرمل', w:'1 قطعة · 380 غ',
-          desc:'قطعتا لحم بقر حلال، شيدر، بصل مكرمل، فلفل حلو، صلصة',
-          alt:'برغر بقطعتي لحم وجبن ذائب وبصل مكرمل'}},
-      {id:'burger-chicken', photo:'photos/burger-chicken.jpg', name:'Куриный бургер', price:340, w:'1 шт · 300 г',
-        desc:'Куриное филе халяль в хрустящей панировке, чеддер, красный лук, соус',
-        alt:'Куриный бургер с филе в хрустящей панировке, сыром и красным луком',
-        ar:{name:'برغر دجاج', w:'1 قطعة · 300 غ',
-          desc:'فيليه دجاج حلال بغلاف مقرمش، شيدر، بصل أحمر، صلصة',
-          alt:'برغر دجاج بفيليه مقرمش وجبن وبصل أحمر'}}
+    { id:'chudu', title:'Chudu', note:'Dagestani pie, served hot',
+      ar:{title:'التشودو', note:'فطيرة داغستانية تُقدَّم ساخنة'}, items:[
+      {id:'chudu', photo:'photos/chudu.jpg', name:'Chudu with meat', price:400, w:'4 pcs',
+        desc:'Thin dough, halal minced beef with onion. Served hot',
+        alt:'Chudu with meat filling, cut on a board', pos:'40% 50%',
+        ar:{name:'تشودو باللحم', w:'4 قطع',
+          desc:'عجين رقيق، لحم بقر مفروم حلال مع البصل. نقدّمه ساخنًا',
+          alt:'تشودو محشو باللحم ومقطّع على لوح'}}
     ]}
   ];
 
   /* Арабский перевод текстов страницы. Ключ — значение data-i18n в разметке,
-     русский текст берётся прямо из разметки. */
+     английский текст берётся прямо из разметки. */
   var AR = {
-    title:'كورميليتسا — مطبخ منزلي حلال',
-    description:'مطبخ «كورميليتسا» المنزلي الحلال. خينكال ومانتي وكورزه وغالوشكي مصنوعة يدويًا ومجمّدة. تشودو وبيتزا ورولات وشاورما وبرغر نحضّرها ساخنة بعد الطلب.',
+    title:'كورميليتسا — برغر وبيتزا وشاورما حلال',
+    description:'كورميليتسا مطبخ منزلي حلال. نحضّر البرغر والبيتزا والشاورما والرولات والتشودو بعد الطلب ونسلّمها ساخنة. اطلبوا عبر واتساب — توصيل أو استلام ذاتي.',
     logoAria:'كورميليتسا — إلى أعلى الصفحة',
     brand:'كورميليتسا',
-    brandSub:'مطبخ منزلي',
     navAria:'أقسام الموقع',
     navMenu:'القائمة',
     navHow:'كيف تطلبون',
-    navCook:'طريقة التحضير',
     navReviews:'آراء العملاء',
     navContacts:'التواصل',
     navContactsFull:'التواصل والتوصيل',
-    call:'اتصال',
     callColon:'اتصلوا بنا:',
+    langAria:'اللغة',
     order:'اطلبوا الآن',
 
-    heroTitle:'طعام بيتي: ساخن إلى المائدة، ومجمّد للأيام القادمة',
-    heroSub:'نصنع الخينكال والمانتي والكورزه والغالوشكي بأيدينا ونجمّدها — ولا يبقى عليكم في البيت إلا سلقها. أما التشودو والبيتزا والرولات والشاورما والبرغر فنحضّرها بعد الطلب ونسلّمها ساخنة. اللحم حلال فقط.',
+    heroTitle:'وجبات سريعة حلال تُحضَّر عند الطلب',
+    heroSub:'برغر وبيتزا وشاورما ورولات وتشودو من مطبخ منزلي. نبدأ الطهي حين يصلنا طلبكم — والبيتزا والرولات والشاورما والبرغر تكون جاهزة خلال 15–20 دقيقة.',
     heroMenu:'تصفّحوا القائمة',
     heroWa:'راسلونا على واتساب',
     halal:'حلال',
     heroNote:'نطبخ كما نطبخ لعائلتنا',
-    collage:'أطباقنا',
-    altManty:'مانتي مصنوعة يدويًا على طبق أبيض مع البصل الأخضر',
-    capManty:'مانتي',
-    altBurger:'تشيز برغر مزدوج بقطعتين من لحم البقر مع الجبن والطماطم والخس',
-    altPizza:'بيتزا ببروني على لوح خشبي، وإحدى القطع مرفوعة بالمجرفة',
-    altKhinkal:'خينكال دارغيني مع لحم بقر مسلوق وبطاطس',
-    capKhinkal:'خينكال',
+    altHeroPizza:'بيتزا سيزر بالدجاج والخس والطماطم الكرزية والبارميزان، من الأعلى',
 
-    perksAria:'لماذا طعامنا لذيذ',
-    perk1:'نصنعها بأيدينا',
-    perk1t:'كل قطعة خينكال وكل حافة كورزه تُشكَّل يدويًا، وبكميات صغيرة.',
-    perk2:'حلال فقط',
-    perk2t:'القائمة كلها حلال — من الخينكال إلى البرغر.',
-    perk3:'مكوّنات بسيطة',
-    perk3t:'لحم ودقيق وخضار وأعشاب — كالتي في مطبخكم تمامًا.',
-    perk4:'التجميد يحفظ الطعم',
-    perk4t:'نجمّدها فور تشكيلها، فتبقى طريّة وغنية بالعصارة حتى موعد عشائكم.',
+    storyTitle:'مطبخ منزلي يطبخ بعد طلبكم',
+    storyText:'نحضّر البرغر أو البيتزا أو الشاورما بعد وصول طلبكم، ونسلّمها ساخنة.',
+    altStory:'برغر كلاسيكي بقطعة لحم بقر وجبن وطماطم وخس في خبز بالسمسم',
+    fact1:'حلال فقط',
+    fact1t:'القائمة كلها حلال — من الشاورما إلى البرغر.',
+    fact2:'جاهزة خلال 15–20 دقيقة',
+    fact2t:'البيتزا والرولات والشاورما والبرغر.',
+    fact3:'مكوّنات بسيطة',
+    fact3t:'لحم ودقيق وخضار وأعشاب — كالتي في مطبخكم تمامًا.',
 
-    menuLead:'الخينكال والمانتي والكورزه والغالوشكي — منتجات نصف جاهزة مجمّدة مصنوعة يدويًا. أما التشودو والبيتزا والرولات والشاورما والبرغر فنحضّرها بعد الطلب ونسلّمها ساخنة.',
+    menuLead:'كل شيء يُحضَّر بعد الطلب ويُسلَّم ساخنًا. أضيفوا الأطباق إلى السلة وغيّروا الكمية مباشرة في البطاقة.',
     tabsAria:'أصناف القائمة',
 
-    promosAria:'العروض',
-    promoAHand:'للمؤونة',
-    promoA:'فريزر مليء بالطعام البيتي',
-    promoABtn:'كوّنوا مجموعتكم',
-    promoBHand:'لعطلة نهاية الأسبوع',
-    promoB:'برغر لسهرة عائلية',
-    promoBBtn:'اختاروا البرغر',
+    promoHand:'لعطلة نهاية الأسبوع',
+    promo:'برغر لسهرة عائلية',
+    promoBtn:'اختاروا البرغر',
     fillPromo:'[شروط العرض — قيد التحديد]',
-    altOnion:'برغر بقطعتي لحم وجبن وبصل مكرمل',
 
     howLead:'بلا تسجيل وبلا دفع على الموقع. يصلنا طلبكم رسالةً على واتساب.',
     step1:'اختاروا الأطباق',
-    step1t:'اضغطوا «إلى السلة» — ويمكن تغيير الكمية مباشرة في البطاقة.',
+    step1t:'اضغطوا «أضف» — ويمكن تغيير الكمية مباشرة في البطاقة.',
     step2:'راجعوا السلة',
     step2t:'اكتبوا الاسم ورقم الهاتف، والعنوان إن كنتم تحتاجون التوصيل.',
     step3:'أرسلوا الطلب عبر واتساب',
     step3t:'نجهّز الرسالة بقائمة الأطباق والمبلغ بأنفسنا — ويبقى عليكم الضغط على «إرسال».',
     step4:'استلموا طلبكم',
     step4t:'سنرد عليكم ونؤكد الوقت ونوصل الطلب. أو تستلمونه بأنفسكم.',
-
-    cookTitle:'طريقة تحضير المنتجات نصف الجاهزة',
-    cookLead:'لا حاجة لإذابتها مسبقًا — اطبخوها مباشرة من الفريزر. الأوقات تقريبية، والوقت الدقيق مكتوب على الملصق.',
-    boil:'بالسلق',
-    steam:'على البخار',
-    cook1:'الخينكال',
-    cook1t:'ضعوه في ماء مغلي مملّح وحرّكوه كي لا يلتصق. اسلقوه 12–15 دقيقة بعد أن يطفو.',
-    cook2:'المانتي',
-    cook2t:'ادهنوا طبقات قدر البخار بالزيت ورتّبوا المانتي مع ترك مسافات بينها. اطهوها على البخار 35–40 دقيقة.',
-    cook3:'الكورزه',
-    cook3t:'في ماء مغلي مملّح، 8–10 دقائق بعد أن تطفو. قدّموها مع الزبدة المذابة أو القشدة الحامضة.',
-    cook4:'الغالوشكي',
-    cook4t:'اسلقوها في المرق أو في ماء مملّح 10–12 دقيقة. سخّنوا اللحم على حدة.',
-    cook5:'التشودو والبيتزا والرولات والشاورما والبرغر',
-    cook5way:'لا تحتاج إلى طهي',
-    cook5t:'نحضّرها نحن بعد الطلب ونسلّمها ساخنة. البيتزا والرولات والشاورما والبرغر تكون جاهزة خلال 15–20 دقيقة.',
-    cookFoot:'بالهناء والشفاء — وعودوا إلينا لطلب المزيد!',
 
     revLead:'هنا ستظهر آراء عملائنا.',
     rev1:'مكان للرأي الأول',
@@ -1165,15 +947,15 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     fillHours:'[ساعات العمل — قيد التحديد]',
     delivery:'التوصيل',
     fillDelivery:'[منطقة التوصيل وتكلفته وحدّ التوصيل المجاني — قيد التحديد]',
-    altLogo:'شعار «كورميليتسا»: لوح عليه دقيق وسنابل قمح ونشّابة، مع عبارة «منتجات نصف جاهزة منزلية الصنع» بالروسية',
-    logoLead:'املؤوا السلة — وسنجهّز رسالة بقائمة الأطباق، ولا يبقى عليكم إلا إرسالها.',
+    orderTitle:'طلبكم في رسالة واحدة',
+    orderLead:'املؤوا السلة — وسنجهّز رسالة بقائمة الأطباق، ولا يبقى عليكم إلا إرسالها.',
     openCart:'افتحوا السلة',
-    copy:'© <span class="num">2026</span> «كورميليتسا» — مطبخ منزلي حلال',
+    copy:'© <span class="num">2026</span> كورميليتسا — مطبخ منزلي حلال',
     footAria:'أقسام الموقع في التذييل',
 
     cart:'السلة',
     cartClose:'إغلاق السلة',
-    cartEmpty:'السلة فارغة حتى الآن. ألقوا نظرة على القائمة — ففيها الخينكال والمانتي والبيتزا والبرغر.',
+    cartEmpty:'السلة فارغة حتى الآن. اختاروا من القائمة — برغر أو بيتزا أو شاورما أو رولات.',
     toMenu:'إلى القائمة',
     yourOrder:'طلبكم',
     dishes:'الأطباق',
@@ -1194,104 +976,104 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 
   /* Строки, которые собирает скрипт: корзина, ошибки формы, сообщение в WhatsApp */
   var STR = {
-    ru:{
-      title:'Кормилица — домашняя халяльная кухня',
-      langBtn:'عربي', langDrawer:'العربية', langLabel:'Arabic — عربي', langCode:'ar',
-      themeToLight:'Включить светлую тему', themeToDark:'Включить тёмную тему',
-      navOpen:'Открыть разделы', navClose:'Закрыть разделы',
-      allMenu:'Всё меню', toCart:'В корзину',
-      dec:'Убрать одну порцию: ', inc:'Добавить порцию: ',
-      currency:' ₽', pickup:'самовывоз', tbd:'уточним', free:'бесплатно',
-      inCart:'Блюд в корзине: ', pickupCap:'Самовывоз', delivery:'Доставка', plusDelivery:' + доставка',
-      freeLeft:'До бесплатной доставки осталось {sum}.',
-      added:'{name} — в корзине. Всего блюд: {n}, на {sum}.',
-      clear:'Очистить', clearSure:'Точно очистить?', cleared:'Корзина очищена.',
-      msgReady:'Сообщение готово',
-      errName:'Напишите имя — хотя бы две буквы.',
-      errPhone:'Нужен номер из 10–11 цифр, например +7 900 000-00-00.',
-      errAddr:'Укажите улицу, дом и квартиру.',
-      waOpening:'Сообщение с заказом готово и открывается в WhatsApp.',
-      waHello:'Здравствуйте! Заказ с сайта «Кормилица»:', waDishes:'Блюда: ', waPickup:'Получение: самовывоз',
-      waDelivery:'Доставка: ', waTotal:'Итого: ', waName:'Имя: ', waPhone:'Телефон: ', waAddr:'Адрес: ', waNote:'Комментарий: '
+    en:{
+      title:'Kormilitsa — halal burgers, pizza and shawarma',
+      navOpen:'Open sections', navClose:'Close sections',
+      allMenu:'All', toCart:'Add',
+      dec:'Remove one: ', inc:'Add one more: ',
+      currency:' ₽', pickup:'pickup', tbd:'to be confirmed', free:'free',
+      inCart:'Dishes in cart: ', pickupCap:'Pickup', delivery:'Delivery', plusDelivery:' + delivery',
+      freeLeft:'{sum} more for free delivery.',
+      added:'{name} added to cart. Dishes: {n}, total {sum}.',
+      clear:'Clear', clearSure:'Clear the cart?', cleared:'Cart cleared.',
+      msgReady:'Message ready',
+      errName:'Enter your name — at least two letters.',
+      errPhone:'Enter a phone number with at least 10 digits, for example +7 900 000-00-00.',
+      errAddr:'Enter the street, building and apartment.',
+      waOpening:'Your order message is ready and opening in WhatsApp.',
+      waHello:'Hello! An order from the Kormilitsa website:', waDishes:'Dishes: ', waPickup:'Pickup',
+      waDelivery:'Delivery: ', waTotal:'Total: ', waName:'Name: ', waPhone:'Phone: ', waAddr:'Address: ', waNote:'Comment: '
     },
     ar:{
       title:AR.title,
-      langBtn:'RU', langDrawer:'Русский', langLabel:'Русский — الروسية', langCode:'ru',
-      themeToLight:'تفعيل الوضع الفاتح', themeToDark:'تفعيل الوضع الداكن',
       navOpen:'فتح الأقسام', navClose:'إغلاق الأقسام',
-      allMenu:'كل القائمة', toCart:'إلى السلة',
-      dec:'إزالة حصة واحدة: ', inc:'إضافة حصة: ',
-      currency:' روبل', pickup:'استلام ذاتي', tbd:'يُحدَّد لاحقًا', free:'مجانًا',
+      allMenu:'الكل', toCart:'أضف',
+      dec:'إزالة واحدة: ', inc:'إضافة واحدة: ',
+      currency:' روبل', pickup:'استلام ذاتي', tbd:'يُحدَّد لاحقًا', free:'مجانًا',
       inCart:'الأطباق في السلة: ', pickupCap:'الاستلام الذاتي', delivery:'التوصيل', plusDelivery:' + التوصيل',
       freeLeft:'يتبقى {sum} للحصول على توصيل مجاني.',
       added:'{name} — أُضيف إلى السلة. عدد الأطباق: {n}، بمبلغ {sum}.',
       clear:'إفراغ', clearSure:'تأكيد الإفراغ؟', cleared:'تم إفراغ السلة.',
       msgReady:'الرسالة جاهزة',
       errName:'اكتبوا الاسم — حرفان على الأقل.',
-      errPhone:'يلزم رقم من 10–11 خانة، مثل \u2066+7 900 000-00-00\u2069.',
+      errPhone:'اكتبوا رقم هاتف من 10 خانات على الأقل، مثل ⁦+7 900 000-00-00⁩.',
       errAddr:'اكتبوا الشارع والمبنى والشقة.',
       waOpening:'رسالة الطلب جاهزة وتُفتح الآن في واتساب.',
-      /* первая строка — для хозяйки кухни: клиенту удобнее отвечать по-арабски */
-      waHello:'Заказ на арабской версии сайта\nمرحبًا! طلب من موقع «كورميليتسا»:', waDishes:'الأطباق: ', waPickup:'الاستلام: استلام ذاتي',
+      /* первая строка — для кухни: заказ пришёл с арабской версии */
+      waHello:'Order from the Arabic version of the site\nمرحبًا! طلب من موقع «كورميليتسا»:', waDishes:'الأطباق: ', waPickup:'الاستلام: استلام ذاتي',
       waDelivery:'التوصيل: ', waTotal:'المجموع: ', waName:'الاسم: ', waPhone:'الهاتف: ', waAddr:'العنوان: ', waNote:'ملاحظة: '
     }
   };
 
   /* ================== дальше менять не нужно ================== */
 
+  /* диапазоны вроде «15–20» не рвём переносом строки (особенно заметно в арабском) */
+  function keepRange(s){ return typeof s === 'string' ? s.replace(/(\d)–(\d)/g, '$1⁠–⁠$2') : s; }
+  Object.keys(AR).forEach(function(k){ AR[k] = keepRange(AR[k]); });
+
   var BY_ID = {};
-  MENU.forEach(function(c){ c.items.forEach(function(i){ BY_ID[i.id] = i; }); });
+  MENU.forEach(function(c){
+    c.note = keepRange(c.note);
+    if (c.ar) c.ar.note = keepRange(c.ar.note);
+    c.items.forEach(function(i){ BY_ID[i.id] = i; });
+  });
 
   var root = document.documentElement;
 
   /* ---------- язык ---------- */
-  var lang = root.lang === 'ar' ? 'ar' : 'ru';
+  var lang = root.lang === 'ar' ? 'ar' : 'en';
   function T(key, vars){
     var s = STR[lang][key];
     if (vars) s = s.replace(/\{(\w+)\}/g, function(_, k){ return vars[k]; });
     return s;
   }
-  /* поле блюда или категории на текущем языке; нет перевода — русский */
+  /* поле блюда или категории на текущем языке; нет перевода — английский */
   function L(o, field){ return (lang === 'ar' && o.ar && o.ar[field]) || o[field]; }
 
-  var rub = function(n){ return n.toLocaleString(lang === 'ar' ? 'ar-u-nu-latn' : 'ru-RU') + T('currency'); };
+  var rub = function(n){ return n.toLocaleString(lang === 'ar' ? 'ar-u-nu-latn' : 'en-US') + T('currency'); };
   var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){
     return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
   function reduceMotion(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
-  /* русский текст запоминаем из разметки, арабский берём из AR */
+  /* английский текст запоминаем из разметки, арабский берём из AR */
   var i18nEls = Array.prototype.slice.call(document.querySelectorAll('[data-i18n]'));
-  i18nEls.forEach(function(el){ el._ru = el.innerHTML; });
+  i18nEls.forEach(function(el){ el._en = keepRange(el.innerHTML); });
   var i18nAttrEls = Array.prototype.slice.call(document.querySelectorAll('[data-i18n-attr]'));
   i18nAttrEls.forEach(function(el){
-    el._ruAttr = {};
+    el._enAttr = {};
     el.getAttribute('data-i18n-attr').split(';').forEach(function(pair){
       var a = pair.split(':')[0];
-      el._ruAttr[a] = el.getAttribute(a);
+      el._enAttr[a] = el.getAttribute(a);
     });
   });
   var metaDesc = document.querySelector('meta[name="description"]');
-  var ruDesc = metaDesc.getAttribute('content');
+  var enDesc = metaDesc.getAttribute('content');
+  var langBtns = Array.prototype.slice.call(document.querySelectorAll('[data-lang]'));
 
   function translateStatic(){
     i18nEls.forEach(function(el){
       var k = el.getAttribute('data-i18n');
-      el.innerHTML = lang === 'ar' && AR[k] != null ? AR[k] : el._ru;
+      el.innerHTML = lang === 'ar' && AR[k] != null ? AR[k] : el._en;
     });
     i18nAttrEls.forEach(function(el){
       el.getAttribute('data-i18n-attr').split(';').forEach(function(pair){
         var p = pair.split(':');
-        el.setAttribute(p[0], lang === 'ar' && AR[p[1]] != null ? AR[p[1]] : el._ruAttr[p[0]]);
+        el.setAttribute(p[0], lang === 'ar' && AR[p[1]] != null ? AR[p[1]] : el._enAttr[p[0]]);
       });
     });
     document.title = T('title');
-    metaDesc.setAttribute('content', lang === 'ar' ? AR.description : ruDesc);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-lang-toggle]'), function(b){
-      b.setAttribute('aria-label', T('langLabel'));
-      var label = b.querySelector('[data-lang-label]');
-      label.textContent = b.classList.contains('drawer-lang') ? T('langDrawer') : T('langBtn');
-      label.setAttribute('lang', T('langCode'));
-    });
+    metaDesc.setAttribute('content', lang === 'ar' ? AR.description : enDesc);
+    langBtns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
   }
 
   /* номер телефона во всех ссылках — из одной константы */
@@ -1299,24 +1081,6 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   Array.prototype.forEach.call(document.querySelectorAll('[data-phone-link]'), function(a){ a.href = 'tel:+' + PHONE; });
   Array.prototype.forEach.call(document.querySelectorAll('[data-wa-link]'), function(a){ a.href = 'https://wa.me/' + PHONE; });
   Array.prototype.forEach.call(document.querySelectorAll('[data-phone-text]'), function(s){ s.textContent = phonePretty; });
-
-  /* ---------- тема ---------- */
-  var themeBtn = document.getElementById('themeBtn');
-  function currentTheme(){
-    var t = root.getAttribute('data-theme');
-    if (t) return t;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  function syncThemeLabel(){
-    themeBtn.setAttribute('aria-label', currentTheme() === 'dark' ? T('themeToLight') : T('themeToDark'));
-  }
-  themeBtn.addEventListener('click', function(){
-    var next = currentTheme() === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('kormilitsa-theme', next); } catch(e){}
-    syncThemeLabel();
-  });
-  syncThemeLabel();
 
   /* ---------- мобильное меню разделов ---------- */
   var navBtn = document.getElementById('navBtn');
@@ -1329,6 +1093,52 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   navBtn.addEventListener('click', function(){ setDrawer(drawer.hidden); });
   drawer.addEventListener('click', function(e){ if (e.target.closest('a')) setDrawer(false); });
 
+  /* ---------- подсветка раздела в шапке ---------- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  function markNav(id){
+    navLinks.forEach(function(a){
+      var on = a.getAttribute('href') === '#' + id;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+  }
+  if ('IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) markNav(en.target.id); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['home','menu','how','reviews','contacts'].forEach(function(id){ spy.observe(document.getElementById(id)); });
+  }
+
+  /* ---------- появление блоков при прокрутке ---------- */
+  if ('IntersectionObserver' in window && !reduceMotion()){
+    document.documentElement.classList.add('rv-on');
+    var rvIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        rvIO.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    var rvWatch = function(el, i){
+      if (el.classList.contains('rv')) return;
+      el.classList.add('rv');
+      el.style.setProperty('--d', (Math.min(i, 5) * 0.08) + 's');
+      rvIO.observe(el);
+    };
+    var rvGroup = function(sel){
+      Array.prototype.forEach.call(document.querySelectorAll(sel), rvWatch);
+    };
+    rvGroup('.sec-head, .tabs, .story-photo, .story-card, .band .wrap, .steps > *, .reviews-grid > *, .contacts > *, footer .wrap');
+    Array.prototype.forEach.call(document.querySelectorAll('.band'), function(b){ rvIO.observe(b); });
+    var cardsSeen = function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#menuPanel .cat'), function(cat){
+        Array.prototype.forEach.call(cat.querySelectorAll('.cat-head, .card'), rvWatch);
+      });
+    };
+    cardsSeen();
+    new MutationObserver(cardsSeen).observe(document.getElementById('menuPanel'), { childList: true });
+  }
+
   /* ---------- меню и вкладки ---------- */
   var tabsEl = document.getElementById('tabs');
   var panel = document.getElementById('menuPanel');
@@ -1340,18 +1150,16 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     var name = esc(L(i,'name'));
     return ''+
     '<article class="card">'+
-      '<div class="card-photo"><img src="'+i.photo+'" alt="'+esc(L(i,'alt'))+'" loading="lazy" decoding="async"'+pos+'></div>'+
-      '<div class="card-body">'+
-        '<h4>'+name+'</h4>'+
-        '<p class="desc'+(i.pending?' pending':'')+'">'+esc(L(i,'desc'))+'</p>'+
-        '<div class="card-meta"><span class="w">'+esc(L(i,'w'))+'</span><span class="price">'+rub(i.price)+'</span></div>'+
-        '<div class="card-act">'+
-          '<button type="button" class="add" data-add="'+i.id+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg>'+T('toCart')+'<span class="sr">: '+name+'</span></button>'+
-          '<div class="step" data-step="'+i.id+'" hidden>'+
-            '<button type="button" data-dec="'+i.id+'" aria-label="'+T('dec')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
-            '<span class="qty" data-qty="'+i.id+'" aria-live="polite">0</span>'+
-            '<button type="button" data-inc="'+i.id+'" aria-label="'+T('inc')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
-          '</div>'+
+      '<div class="plate"><img src="'+i.photo+'" alt="'+esc(L(i,'alt'))+'" loading="lazy" decoding="async"'+pos+'></div>'+
+      '<h4>'+name+'</h4>'+
+      '<p class="desc'+(i.pending?' pending':'')+'">'+esc(L(i,'desc'))+'</p>'+
+      '<div class="card-meta"><span class="w">'+esc(L(i,'w'))+'</span><span class="price">'+rub(i.price)+'</span></div>'+
+      '<div class="card-act">'+
+        '<button type="button" class="add" data-add="'+i.id+'"><svg class="ico ico-sm" aria-hidden="true"><use href="#i-plus"/></svg>'+T('toCart')+'<span class="sr">: '+name+'</span></button>'+
+        '<div class="step" data-step="'+i.id+'" hidden>'+
+          '<button type="button" data-dec="'+i.id+'" aria-label="'+T('dec')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-minus"/></svg></button>'+
+          '<span class="qty" data-qty="'+i.id+'" aria-live="polite">0</span>'+
+          '<button type="button" data-inc="'+i.id+'" aria-label="'+T('inc')+name+'"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></button>'+
         '</div>'+
       '</div>'+
     '</article>';
@@ -1365,8 +1173,8 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
         esc(t.title)+' <span class="count num">'+t.n+'</span></button>';
     }).join('');
     panel.innerHTML = MENU.map(function(c){
-      return '<section class="cat" data-cat="'+c.id+'" aria-labelledby="h-'+c.id+'" style="padding:0">'+
-        '<div class="cat-head"><h3 id="h-'+c.id+'">'+esc(L(c,'title'))+'</h3><span class="hand">'+esc(L(c,'note'))+'</span></div>'+
+      return '<section class="cat" data-cat="'+c.id+'" data-n="'+Math.min(c.items.length, 4)+'" aria-labelledby="h-'+c.id+'" style="padding:0">'+
+        '<div class="cat-head"><h3 id="h-'+c.id+'">'+esc(L(c,'title'))+'</h3><span class="accent">'+esc(L(c,'note'))+'</span></div>'+
         '<div class="grid">'+c.items.map(card).join('')+'</div>'+
       '</section>';
     }).join('');
@@ -1413,7 +1221,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     selectTab(tabs[n].getAttribute('data-tab'), true);
   });
 
-  /* кнопки баннеров открывают нужную вкладку */
+  /* кнопка акции открывает нужную вкладку */
   document.addEventListener('click', function(e){
     var go = e.target.closest('[data-go-tab]');
     if (go) selectTab(go.getAttribute('data-go-tab'));
@@ -1488,9 +1296,10 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
 
     els.lines.innerHTML = Object.keys(cart).map(function(id){
       var i = BY_ID[id], q = cart[id], name = esc(L(i,'name'));
+      var pos = i.pos ? ' style="object-position:'+i.pos+'"' : '';
       return ''+
       '<div class="cline">'+
-        '<div class="cline-img"><img src="'+i.photo+'" alt="" width="120" height="90"></div>'+
+        '<div class="cline-img"><img src="'+i.photo+'" alt="" width="112" height="112"'+pos+'></div>'+
         '<div><b>'+name+'</b><span class="p">'+rub(i.price)+' · '+esc(L(i,'w'))+'</span></div>'+
         '<div class="cline-right">'+
           '<span class="cline-sum">'+rub(i.price*q)+'</span>'+
@@ -1522,10 +1331,20 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     renderCart();
   }
 
+  /* тарелка чуть поворачивается, когда блюдо легло в корзину */
+  function spinPlate(btn){
+    if (reduceMotion()) return;
+    var card = btn.closest('.card');
+    var plate = card && card.querySelector('.plate');
+    if (!plate) return;
+    plate.classList.remove('spin'); void plate.offsetWidth; plate.classList.add('spin');
+  }
+
   document.addEventListener('click', function(e){
     var add = e.target.closest('[data-add]');
     if (add){
       var id = add.getAttribute('data-add');
+      spinPlate(add);
       setQty(id, (cart[id] || 0) + 1);
       var inc0 = document.querySelector('[data-step="'+id+'"] [data-inc]');
       if (inc0) inc0.focus();
@@ -1534,7 +1353,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
       return;
     }
     var inc = e.target.closest('[data-inc]');
-    if (inc){ var i1 = inc.getAttribute('data-inc'); setQty(i1, (cart[i1] || 0) + 1); return; }
+    if (inc){ var i1 = inc.getAttribute('data-inc'); spinPlate(inc); setQty(i1, (cart[i1] || 0) + 1); return; }
     var dec = e.target.closest('[data-dec]');
     if (dec){
       var i2 = dec.getAttribute('data-dec');
@@ -1658,7 +1477,8 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
   });
 
   var sendBtn = els.form.querySelector('button[type="submit"]');
-  var sendIcon = sendBtn.querySelector('use');
+  var sendIcon = sendBtn.querySelector('svg');
+  var sendIconUse = sendIcon.querySelector('use');
   var sendText = sendBtn.querySelector('[data-i18n]');
   var sendTimer = null;
   function sendState(state){
@@ -1666,14 +1486,16 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     if (state === 'sent'){
       sendBtn.disabled = true;
       sendBtn.setAttribute('data-state', 'sent');
-      sendIcon.setAttribute('href', '#i-check');
+      sendIcon.classList.remove('ico-fill');
+      sendIconUse.setAttribute('href', '#i-check');
       sendText.textContent = T('msgReady');
       sendTimer = window.setTimeout(function(){ sendState('idle'); }, 3200);
     } else {
       sendBtn.disabled = false;
       sendBtn.removeAttribute('data-state');
-      sendIcon.setAttribute('href', '#i-wa');
-      sendText.innerHTML = lang === 'ar' ? AR.send : sendText._ru;
+      sendIcon.classList.add('ico-fill');
+      sendIconUse.setAttribute('href', '#i-wa');
+      sendText.innerHTML = lang === 'ar' ? AR.send : sendText._en;
     }
   }
 
@@ -1692,7 +1514,7 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     var lines = [T('waHello'), ''];
     Object.keys(cart).forEach(function(id){
       var i = BY_ID[id];
-      /* в арабском заказе рядом — русское название, чтобы на кухне сразу поняли, что готовить */
+      /* в арабском заказе рядом — английское название, чтобы на кухне сразу поняли, что готовить */
       var name = lang === 'ar' ? L(i,'name') + ' / ' + i.name : i.name;
       lines.push('• ' + name + ' (' + L(i,'w') + ') × ' + cart[id] + ' — ' + rub(i.price * cart[id]));
     });
@@ -1715,17 +1537,6 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     els.live.textContent = T('waOpening');
   });
 
-  /* ---------- появление блоков при прокрутке ---------- */
-  var reveals = document.querySelectorAll('.reveal');
-  if (!('IntersectionObserver' in window) || reduceMotion()){
-    Array.prototype.forEach.call(reveals, function(el){ el.classList.add('in'); });
-  } else {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    Array.prototype.forEach.call(reveals, function(el){ io.observe(el); });
-  }
-
   /* ---------- переключение языка ---------- */
   function applyLang(){
     root.lang = lang;
@@ -1733,7 +1544,6 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     translateStatic();
     buildMenu();
     Object.keys(cart).forEach(renderDish);
-    syncThemeLabel();
     setDrawer(!drawer.hidden);
     if (clearBtn.getAttribute('data-armed') !== '1') clearLabel.textContent = T('clear');
     if (sendBtn.getAttribute('data-state') !== 'sent') sendState('idle');
@@ -1743,16 +1553,18 @@ footer{padding-block:32px calc(32px + env(safe-area-inset-bottom,0px));border-to
     });
     renderCart();
   }
-  document.addEventListener('click', function(e){
-    if (!e.target.closest('[data-lang-toggle]')) return;
-    lang = lang === 'ar' ? 'ru' : 'ar';
-    try { localStorage.setItem('kormilitsa-lang', lang); } catch(err){}
-    /* ссылка ?lang= тоже меняется, иначе после обновления страницы вернётся старый язык */
-    if (/[?&]lang=/.test(location.search) && history.replaceState){
-      try { history.replaceState(null, '', location.href.replace(/([?&]lang=)(ar|ru)\b/, '$1' + lang)); } catch(err){}
-    }
-    applyLang();
-    if (!drawer.hidden) setDrawer(false);
+  langBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var next = b.getAttribute('data-lang');
+      if (next === lang) return;
+      lang = next;
+      try { localStorage.setItem('kormilitsa-lang', lang); } catch(err){}
+      /* ссылка ?lang= тоже меняется, иначе после обновления страницы вернётся старый язык */
+      if (/[?&]lang=/.test(location.search) && history.replaceState){
+        try { history.replaceState(null, '', location.href.replace(/([?&]lang=)[a-z]+/, '$1' + lang)); } catch(err){}
+      }
+      applyLang();
+    });
   });
 
   applyLang();
